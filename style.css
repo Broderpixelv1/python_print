@@ -1,0 +1,27 @@
+/*
+Theme Name: Theme Python Print
+Theme URI: https://broderpixel.com
+Author: Jorge Sozoranga
+Author URI: https://broderpixel.com
+Description: Tema personalizable compatible con Elementor para Python Print
+Version: 1.0
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: Python print theme escalable
+*/
+
+/* Estilos básicos - Elementor manejará la mayoría */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+

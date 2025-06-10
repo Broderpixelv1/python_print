@@ -1,0 +1,26 @@
+/python_print/  (nombre de tu tema)
+│
+├── style.css                 (Archivo principal de estilos y metadatos del tema)
+├── functions.php             (Funcionalidades principales del tema)
+├── index.php                 (Plantilla principal)
+├── header.php                (Cabecera del sitio)
+├── footer.php                (Pie de página)
+├── page.php                  (Plantilla para páginas)
+├── single.php                (Plantilla para entradas individuales)
+├── archive.php               (Plantilla para archivos)
+│
+├── /assets/                  (Carpeta para recursos)
+│   ├── /css/
+│   │   └── main.css          (Estilos adicionales)
+│   ├── /js/
+│   │   └── main.js           (Scripts JavaScript)
+│   └── /images/              (Imágenes del tema)
+│
+├── /template-parts/          (Fragmentos reutilizables)
+│   ├── content-none.php       (Contenido cuando no hay posts)
+│   ├── content-page.php       (Plantilla para contenido de página)
+│   ├── content-single.php     (Plantilla para contenido de entrada individual)
+│   └── content.php           (Plantilla base para contenido)
+│
+└── /languages/               (Traducciones - se creará al internacionalizar)
+    └── mi-tema-personalizable.pot  (Archivo de traducción)
