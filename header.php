@@ -42,23 +42,22 @@
         <!-- Menú de usuario -->
         <div class="user-menu">
             <div class="help">
-                <span>🗨️</span>
-                <a href="<?php echo esc_url(home_url('/help')); ?>"><?php esc_html_e('Help is here', 'mi-tema-personalizable'); ?></a>
-                <small>1.866.207.4955</small>
+                <a href="<?php echo esc_url(home_url('/help')); ?>"><span class="muser-icon"><i class="fa-solid fa-comments"></i></span><?php esc_html_e('Ayuda', 'mi-tema-personalizable'); ?></a>
+                <small>0995932259</small>
             </div>
             
             <?php if (is_user_logged_in()): ?>
-                <a href="<?php echo esc_url(home_url('/my-projects')); ?>"><?php esc_html_e('My Projects', 'mi-tema-personalizable'); ?></a>
-                <a href="<?php echo esc_url(home_url('/favorites')); ?>"><?php esc_html_e('My Favorites', 'mi-tema-personalizable'); ?></a>
-                <a href="<?php echo wp_logout_url(); ?>"><?php esc_html_e('Logout', 'mi-tema-personalizable'); ?></a>
+                <a href="<?php echo esc_url(home_url('/my-projects')); ?>"><span class="muser-icon"><i class="fa-solid fa-folder-open"></i></span><?php esc_html_e('My Projects', 'mi-tema-personalizable'); ?></a>
+                <a href="<?php echo wp_logout_url(); ?>"><span class="muser-icon"><i class="fa-solid fa-right-from-bracket"></i></span><?php esc_html_e('Logout', 'mi-tema-personalizable'); ?></a>
             <?php else: ?>
-                <a href="<?php echo wp_login_url(); ?>"><?php esc_html_e('Sign in', 'mi-tema-personalizable'); ?></a>
+                <a href="<?php echo esc_url(home_url('/favorites')); ?>"><span class="muser-icon"><i class="fa-solid fa-heart"></i></span><?php esc_html_e('My Favorites', 'mi-tema-personalizable'); ?></a>
+                <a href="<?php echo wp_login_url(); ?>"><span class="muser-icon"><i class="fa-solid fa-circle-user"></i></span><?php esc_html_e('Sign in', 'mi-tema-personalizable'); ?></a>
             <?php endif; ?>
             
             <?php if (class_exists('WooCommerce')): ?>
-                <a href="<?php echo esc_url(wc_get_cart_url()); ?>">🛒 <?php esc_html_e('Cart', 'mi-tema-personalizable'); ?></a>
+                <a href="<?php echo esc_url(wc_get_cart_url()); ?>"><span class="muser-icon"><i class="fa-solid fa-cart-shopping"></i> </span><?php esc_html_e('Cart', 'mi-tema-personalizable'); ?></a>
             <?php else: ?>
-                <a href="<?php echo esc_url(home_url('/cart')); ?>">🛒 <?php esc_html_e('Cart', 'mi-tema-personalizable'); ?></a>
+                <a href="<?php echo esc_url(home_url('/cart')); ?>"><span class="muser-icon"><i class="fa-solid fa-cart-shopping"></i></span> <?php esc_html_e('Cart', 'mi-tema-personalizable'); ?></a>
             <?php endif; ?>
         </div>
 
