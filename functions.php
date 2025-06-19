@@ -153,3 +153,85 @@ function mi_tema_soporte_elementor() {
     add_theme_support('elementor-theme-builder');
 }
 add_action('after_setup_theme', 'mi_tema_soporte_elementor');
+
+//habilitamos la pagina de productos de woocommerce
+add_theme_support('woocommerce');
+
+//vamos a crear un carrucel de categorias de woocommerce
+function carrusel_categorias_shortcode() {
+    ob_start();
+    // Obtener categoría "Sin categoría" para excluirla por su ID
+    $excluded = get_term_by('slug', 'sin-categorizar', 'product_cat');
+    $exclude_id = $excluded ? $excluded->term_id : 0;
+
+    $terms = get_terms([
+        'taxonomy'   => 'product_cat',
+        'hide_empty' => false,
+        'parent'     => 0,
+        'exclude'    => [$exclude_id],
+        
+    ]);
+
+if (!empty($terms) && !is_wp_error($terms)) {
+    ?>
+    <div class="swiper category-carousel">
+        <div class="swiper-wrapper">
+            <?php foreach ($terms as $term):
+                $thumb_id = get_term_meta($term->term_id, 'thumbnail_id', true);
+                $img_url = wp_get_attachment_url($thumb_id);
+                $term_link = get_term_link($term); // Obtener URL de la categoría
+            ?>
+                <div class="swiper-slide">
+                    <a href="<?php echo esc_url($term_link); ?>" class="category-card">
+                        <img src="<?php echo esc_url($img_url); ?>" alt="<?php echo esc_attr($term->name); ?>">
+                        <h4><?php echo esc_html($term->name); ?></h4>
+                    </a>
+                </div>
+            <?php endforeach; ?>
+        </div>
+        <div class="swiper-scrollbar"></div>
+    </div>
+    <?php
+}
+
+
+    return ob_get_clean();
+}
+add_shortcode('carrusel_categorias', 'carrusel_categorias_shortcode');
+
+
+//encolamos swiper.js
+function cargar_swiper() {
+    wp_enqueue_style('swiper-css', 'https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css');
+    wp_enqueue_script('swiper-js', 'https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js', [], null, true);
+    wp_add_inline_script('swiper-js', "
+    document.addEventListener('DOMContentLoaded', function () {
+       new Swiper('.category-carousel', {
+            slidesPerView: 6,           // Muestra solo 6 a la vez
+            spaceBetween: 20,
+            grabCursor: true,
+            speed: 600,
+            freeMode: false,            // Desactiva scroll libre (mejor con scroll normal)
+            scrollbar: {
+                el: '.swiper-scrollbar',
+                draggable: true,
+                hide: false,
+                dragSize: 'auto'
+            },
+             preventClicks: false,
+             preventClicksPropagation: false,
+            breakpoints: {
+                0:    { slidesPerView: 2 },
+                480:  { slidesPerView: 3 },
+                768:  { slidesPerView: 4 },
+                1024: { slidesPerView: 6 }
+            }
+        });
+
+
+    });
+");
+
+}
+add_action('wp_enqueue_scripts', 'cargar_swiper');
+

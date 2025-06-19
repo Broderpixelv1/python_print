@@ -362,3 +362,79 @@ body:has(.mega-menu-container ul li:hover) .cortina {
 .user-menu{
  
 }
+
+/* ==================== */
+/* woocommerce carrusel categorias*/
+/* ==================== */
+
+.category-card {
+  text-align: center;
+  padding: 10px;
+}
+.category-card img {
+  max-width: 100%;
+  border-radius: 12px;
+  transition: transform 0.4s ease;
+}
+.category-card img:hover {
+  transform: scale(1.05);
+}
+.category-card h4 {
+  margin-top: 10px;
+  font-size: 1rem;
+  font-family: 'Rubik', Arial, sans-serif;
+}
+
+/* Scrollbar personalizada */
+.category-carousel {
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  margin-top: 10px;
+}
+
+.swiper-slide {
+  flex-shrink: 0;
+  width: auto; /* o elimina esto si los slides se ven bien en fila */
+}
+
+.category-card {
+  display: block;
+  text-align: center;
+  padding: 10px;
+  text-decoration: none;
+  color: inherit;
+}
+.category-card img {
+  width: 100%;
+  transition: transform 0.4s ease;
+}
+
+.category-card > img {
+  border-radius: 12px!important;
+}
+
+.category-card img:hover {
+  transform: scale(1.05);
+}
+.category-card h4 {
+  margin-top: 10px;
+  font-size: 1rem;
+  font-family: 'Rubik', Arial, sans-serif;
+}
+
+/* Scrollbar personalizada */
+.swiper-scrollbar {
+  height: 9px!important;
+  background-color: #eee;
+  margin-top: 10px;
+  border-radius: 10px;
+  position: relative!important;
+}
+
+.swiper-scrollbar-drag {
+  background: #ff4e4e !important;
+  border-radius: 10px;
+  height: 100%;
+}
+
