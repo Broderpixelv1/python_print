@@ -157,18 +157,25 @@ add_action('after_setup_theme', 'mi_tema_soporte_elementor');
 //habilitamos la pagina de productos de woocommerce
 add_theme_support('woocommerce');
 
-//vamos a crear un carrucel de categorias de woocommerce
+//vamos a crear un carrucel de categorias padre de woocommerce
 function carrusel_categorias_shortcode() {
     ob_start();
     // Obtener categoría "Sin categoría" para excluirla por su ID
-    $excluded = get_term_by('slug', 'sin-categorizar', 'product_cat');
-    $exclude_id = $excluded ? $excluded->term_id : 0;
+    $exclude_slugs = ['sin-categorizar', 'inspiracion'];
+    $exclude_ids = [];
+
+foreach ($exclude_slugs as $slug) {
+    $term = get_term_by('slug', $slug, 'product_cat');
+    if ($term) {
+        $exclude_ids[] = $term->term_id;
+    }
+}
 
     $terms = get_terms([
         'taxonomy'   => 'product_cat',
         'hide_empty' => false,
-        'parent'     => 0,
-        'exclude'    => [$exclude_id],
+        'parent' => intval($atts['parent']),
+        'exclude' => $exclude_ids,
         
     ]);
 
@@ -235,3 +242,68 @@ function cargar_swiper() {
 }
 add_action('wp_enqueue_scripts', 'cargar_swiper');
 
+//carrusel de subcategorias de productos con navegacion horizontal
+
+function carrusel_subcategorias_shortcode($atts) {
+    $atts = shortcode_atts([
+        'parent' => 0,       // ID de categoría padre
+        'visible' => 4       // Cantidad de subcategorías visibles
+    ], $atts, 'carrusel_subcategorias');
+
+    $terms = get_terms([
+        'taxonomy' => 'product_cat',
+        'hide_empty' => false,
+        'parent' => intval($atts['parent']),
+    ]);
+
+    if (!empty($terms) && !is_wp_error($terms)) {
+        ob_start();
+        ?>
+        <div class="swiper subcategory-carousel">
+            <div class="swiper-wrapper">
+                <?php foreach ($terms as $term):
+                    $thumb_id = get_term_meta($term->term_id, 'thumbnail_id', true);
+                    $img_url = wp_get_attachment_url($thumb_id);
+                    $term_link = get_term_link($term);
+                ?>
+                    <div class="swiper-slide">
+                        <a href="<?php echo esc_url($term_link); ?>" class="subcategory-card">
+                            <img src="<?php echo esc_url($img_url); ?>" alt="<?php echo esc_attr($term->name); ?>">
+                            <h4><?php echo esc_html($term->name); ?></h4>
+                        </a>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+
+            <!-- Flechas de navegación -->
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+        </div>
+
+        <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            new Swiper('.subcategory-carousel', {
+                slidesPerView: <?php echo intval($atts['visible']); ?>,
+                spaceBetween: 20,
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+                speed: 500,
+                grabCursor: true,
+                breakpoints: {
+                    0:    { slidesPerView: 1 },
+                    480:  { slidesPerView: 2 },
+                    768:  { slidesPerView: 3 },
+                    1024: { slidesPerView: <?php echo intval($atts['visible']); ?> }
+                }
+            });
+        });
+        </script>
+        <?php
+        return ob_get_clean();
+    }
+
+    return '<p>No subcategories found.</p>';
+}
+add_shortcode('carrusel_subcategorias', 'carrusel_subcategorias_shortcode');

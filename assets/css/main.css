@@ -359,9 +359,7 @@ body:has(.mega-menu-container ul li:hover) .cortina {
 /* USER MENU */
 /* ==================== */
 
-.user-menu{
- 
-}
+
 
 /* ==================== */
 /* woocommerce carrusel categorias*/
@@ -438,3 +436,33 @@ body:has(.mega-menu-container ul li:hover) .cortina {
   height: 100%;
 }
 
+/*carrusel simple*/
+
+.subcategory-card {
+  display: block;
+  text-align: center;
+  padding: 10px;
+  text-decoration: none;
+  color: inherit;
+}
+.subcategory-card img {
+  max-width: 100%;
+  border-radius: 12px;
+  transition: transform 0.4s ease;
+}
+.subcategory-card img:hover {
+  transform: scale(1.05);
+}
+.subcategory-card h4 {
+  margin-top: 10px;
+  font-size: 1rem;
+  font-family: 'Rubik', Arial, sans-serif;
+}
+
+/* Flechas Swiper */
+.swiper-button-prev,
+.swiper-button-next {
+  color: red;
+  width: 35px;
+  height: 35px;
+}
