@@ -7,6 +7,7 @@ if (!defined('ABSPATH')) {
     exit; // Salir si se accede directamente
 }
 
+
 // Configuración básica del tema
 function mi_tema_setup() {
     // Soporte para traducciones
@@ -21,7 +22,10 @@ function mi_tema_setup() {
     // Soporte para menús
     register_nav_menus(array(
         'menu-principal' => __('Menú Principal', 'mi-tema-personalizable'),
-        'menu-footer' => __('Menú Footer', 'mi-tema-personalizable')
+        'menu-footer' => __('Menú Footer', 'mi-tema-personalizable'),
+        'menu-footer-help' => __('Menú help', 'mi-tema-personalizable'),
+        'menu-footer-about' => __('Menú about', 'mi-tema-personalizable'),
+        'menu-footer-policies' => __('Menú policies', 'mi-tema-personalizable')
     ));
     
     // Soporte para widgets
