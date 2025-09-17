@@ -23,6 +23,16 @@
 
 <header class="site-header">
     <div class="grid-container">
+        <!-- Botones (móvil/tablet) -->
+        <div class="mobile-actions">
+            <button class="icon-btn" id="btn-open-menu" aria-expanded="false" aria-controls="mega-menu" aria-label="<?php esc_attr_e('Abrir menú', 'mi-tema-personalizable'); ?>">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            <button class="icon-btn" id="btn-open-search" aria-expanded="false" aria-controls="search-overlay" aria-label="<?php esc_attr_e('Buscar', 'mi-tema-personalizable'); ?>">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+        </div>
+
         <!-- Logo -->
         <div class="logo">
             <?php 
@@ -119,6 +129,17 @@
         </nav>
     </div>
 </header>
+<!-- Overlay de Búsqueda (móvil/tablet) -->
+<div class="search-overlay" id="search-overlay" aria-hidden="true">
+  <div class="search-box" role="dialog" aria-modal="true" aria-label="<?php esc_attr_e('Buscar', 'mi-tema-personalizable'); ?>">
+    <button class="icon-btn close-search" aria-label="<?php esc_attr_e('Cerrar búsqueda', 'mi-tema-personalizable'); ?>">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+    <div class="search-form-wrap">
+      <?php get_search_form(); ?>
+    </div>
+  </div>
+</div>
 
 <!-- Cortina para el menú mega -->
 <div class="cortina"></div>

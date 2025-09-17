@@ -550,3 +550,178 @@ width: 100%;
   font-size: 30px;   /* tamaño de los íconos */
   color: #fff;       /* color por defecto */
 }
+
+/* ==== Basicos -  Menu responsivo  ==== */
+
+/* ======= Overrides móvil/tablet para header ======= */
+@media (max-width: 991px) {
+  /* Grid compacto: menu | buscar | logo | user-icons */
+  .grid-container {
+    grid-template-columns: auto auto 1fr auto;
+    gap: 12px;
+    padding: 10px 16px 0; /* menos padding lateral */
+  }
+
+  /* Ocultar buscador fijo; en móvil usaremos overlay */
+  .search-bar { display: none; }
+
+  /* Logo centrado */
+  .logo { justify-self: center; }
+  .logo img { height: 36px; }
+
+  /* User menu solo iconos y a la derecha */
+  .user-menu {
+    justify-content: flex-end;
+    gap: 10px;
+    font-size: 0; /* oculta texto, dejamos solo iconos */
+  }
+  .user-menu a { padding: 6px; }
+  .muser-icon .fa-comments,
+  .muser-icon .fa-folder-open,
+  .muser-icon .fa-heart,
+  .muser-icon .fa-circle-user,
+  .muser-icon .fa-right-from-bracket,
+  .muser-icon .fa-cart-shopping {
+    font-size: 1.35rem;
+  }
+
+  /* Mega menú como overlay */
+  .mega-menu-container {
+    position: fixed !important;
+    inset: 0 !important;
+    background: rgba(0,0,0,0.75);
+    display: none;               /* se abre con body.menu-open */
+    z-index: 10001;              /* por encima del header (9999) */
+    margin-top: 0;               /* neutraliza margen del desktop */
+    border-bottom: 0;
+  }
+  body.menu-open .mega-menu-container { display: block; }
+
+  /* Panel interno (el nav real que ya tienes dentro) */
+  .mega-menu-container > * {
+    position: relative;
+    width: min(900px, 92vw);
+    max-height: 90vh;
+    margin: 5vh auto 0;
+    background: #fff;
+    border-radius: 12px;
+    padding: 8px 0;
+    overflow: auto;
+  }
+
+  /* Lista raíz del menú (tu walker suele imprimir .menu) */
+  .mega-menu-container > ul,
+  .mega-menu-container .menu {
+    display: block !important;   /* deshacer el flex de desktop */
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .mega-menu-container .menu > li {
+    border-bottom: 1px solid #eee;
+  }
+  .mega-menu-container .menu > li > a {
+    display: block;
+    padding: 12px 16px;
+    font-size: 1rem;
+  }
+
+  /* Acordeón: cerramos el mega-subcontainer “hover” en móvil */
+  .mega-menu-subcontainer {
+    position: static;
+    top: auto; left: auto;
+    width: 100%;
+    opacity: 1 !important;
+    transform: none !important;
+    pointer-events: auto !important;
+    box-shadow: none;
+    border-radius: 0;
+    padding: 0;
+    display: block;
+  }
+
+  /* Columnas internas del mega en móvil: apilar */
+  .mega-menu-subcontainer .col-submenu,
+  .mega-menu-subcontainer .col-minibanner {
+    flex: 1 1 100%;
+    margin-right: 0;
+    border-radius: 0;
+  }
+  .mega-menu-subcontainer .col-submenu > ul {
+    padding: 0;                  /* quitamos paddings grandes */
+  }
+  .mega-menu-subcontainer .col-submenu > ul > li {
+    margin-left: 0;
+    font-size: 1rem;
+  }
+  .mega-menu-subcontainer .col-submenu > ul > li > a {
+    font-weight: 600;
+  }
+
+  /* Submenús colapsables (acordeón) */
+  .menu-item-has-children { position: relative; }
+  .menu-item-has-children > a { padding-right: 44px; }
+  .menu-item-has-children > ul {
+    overflow: hidden;
+    max-height: 0;               /* JS ajusta scrollHeight al abrir */
+    transition: max-height .25s ease;
+    background: #fafafa;
+  }
+  .menu-item-has-children.is-open > ul {
+    /* max-height la maneja JS */
+  }
+  /* Botón toggle que inyecta JS */
+  .submenu-toggle {
+    position: absolute;
+    right: 8px; top: 8px;
+    width: 32px; height: 32px;
+    border: 0; background: #f7f7f7;
+    border-radius: 8px; cursor: pointer;
+  }
+
+  /* El subrayado rojo de desktop bajo los items (pseudo after) no lo usamos en móvil */
+  .mega-menu-container > ul > li > a::after { display: none; }
+
+  /* Cortina general cuando hay overlays activos */
+  .cortina.is-active {
+    display: block;
+    width: 100%; height: 100%;
+    position: fixed; inset: 0;
+    z-index: 10000;
+    backdrop-filter: blur(0.5rem);
+    -webkit-backdrop-filter: blur(0.5rem);
+    background-color: rgba(255, 255, 255, 0.192);
+    opacity: 1;
+    animation: fadeIn 0.2s ease-in-out;
+  }
+}
+
+/* ====== Overlay de búsqueda (si lo usas) ====== */
+.search-overlay { position: fixed; inset:0; background: rgba(0,0,0,0.75); display:none; z-index:11002; }
+body.search-open .search-overlay { display:block; }
+.search-overlay .search-box {
+  position: relative; width: min(900px,92vw); margin: 10vh auto 0; background:#fff;
+  border-radius:12px; padding:16px; max-height:80vh; overflow:auto;
+}
+.search-overlay .close-search { position: absolute; right:8px; top:8px; }
+.search-overlay .search-form-wrap { padding:24px 12px; }
+.search-overlay .search-form-wrap form { display:flex; gap:8px; align-items:center; }
+.search-overlay .search-form-wrap input[type="search"] {
+  flex:1; font-size:1.1rem; padding:12px 14px; border:1px solid #ddd; border-radius:8px;
+}
+
+/* Desktop: oculto SIEMPRE */
+@media (min-width: 992px) {
+  .site-header .grid-container .mobile-actions {
+    display: none !important;
+  }
+}
+
+/* Móvil/Tablet: mostrar */
+@media (max-width: 991px) {
+  .site-header .grid-container .mobile-actions {
+    display: inline-flex !important; /* o flex */
+    gap: 8px;
+    align-items: center;
+  }
+}
