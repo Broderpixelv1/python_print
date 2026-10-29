@@ -1,0 +1,86 @@
+/* ==================== */
+/* LOGO */
+/* ==================== */
+.logo {
+  grid-column: span 2;
+  display: flex;
+  gap: 0.625rem;
+  color: #ff4e4e;
+  font-size: 1.5rem;
+}
+
+.logo img {
+  width: auto;
+  height: 2.8125rem;
+  display: block;
+}
+
+/* ==================== */
+/* BUSCADOR */
+/* ==================== */
+.search-bar {
+  grid-column: span 6;
+}
+
+.search-bar input {
+  width: 100%;
+  padding: 0.6rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 999px;
+  font-size: 1rem;
+  font-family: "Rubik",Arial, sans-serif ;
+}
+
+/* ==================== */
+/* MENÚ DE USUARIO */
+/* ==================== */
+.user-menu {
+  grid-column: span 4;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+  font-size: 0.9rem;
+}
+
+.muser-icon{
+ padding-right: 10px;
+ display:inline-block;
+}
+
+.muser-icon .fa-comments,
+.muser-icon .fa-folder-open,
+.muser-icon .fa-heart,
+.muser-icon .fa-circle-user,
+.muser-icon .fa-right-from-bracket,
+.muser-icon .fa-cart-shopping{
+  font-size: 1.2rem ;
+  color: #C0C0C0;
+}
+
+.user-menu a:hover{
+ color: #ff4e4e;
+}
+
+.help {
+  display: flex;
+  flex-direction: column;
+  align-items:center ;
+  margin-right: 1rem;
+}
+
+.help span {
+  font-size: 1.2rem;
+}
+
+.help a {
+  color: #000;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.help small {
+  font-size: 0.75rem;
+  color: #555;
+}

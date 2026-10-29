@@ -43,7 +43,8 @@ function mi_tema_scripts() {
     
     // Estilos adicionales
     wp_enqueue_style('mi-tema-main', get_template_directory_uri() . '/assets/css/main.css');
-    
+    wp_enqueue_style('mi-tema-menu', get_template_directory_uri() . '/assets/css/menu.css');
+    wp_enqueue_style('mi-tema-header', get_template_directory_uri() . '/assets/css/header.css');
     // Scripts
     wp_enqueue_script('mi-tema-main-js', get_template_directory_uri() . '/assets/js/main.js', array('jquery'), '1.0', true);
     wp_enqueue_script('mi-tema-main-js', get_template_directory_uri() . '/assets/js/menu-responsivo.js', array('jquery'), '1.0', true);
