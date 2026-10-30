@@ -440,6 +440,13 @@ width: 100%;
   }
 }
 
+/* Corregir capas del menú móvil */
+@media (max-width: 991px) {
+    header.site-header {
+        z-index: 10002;
+    }
+}
+
 /* ====== Overlay de búsqueda (si lo usas) ====== */
 .search-overlay { position: fixed; inset:0; background: rgba(0,0,0,0.75); display:none; z-index:11002; }
 body.search-open .search-overlay { display:block; }
