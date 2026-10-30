@@ -62,43 +62,94 @@ document.addEventListener('DOMContentLoaded', function(){
   }
 
   // --- Acordeón dentro del mega menú SOLO en móvil/tablet ---
-  function hydrateAccordion(){
-    if (!mega) return;
-    const menuRoot = mega.querySelector('.menu, nav .menu, .overlay-menu') || mega;
-    if (!menuRoot) return;
 
-    $$('.menu-item-has-children', menuRoot).forEach(li=>{
-      if (li.querySelector('.submenu-toggle')) return; // evitar duplicados
-      const a = li.querySelector(':scope > a');
-      const ul = li.querySelector(':scope > ul');
-      if (!a || !ul) return;
+function hydrateAccordion() {
+  if (!mega || !window.matchMedia('(max-width: 991px)').matches) return;
 
-      const btn = document.createElement('button');
-      btn.className = 'submenu-toggle';
-      btn.setAttribute('aria-expanded','false');
-      btn.setAttribute('aria-label','<?php echo esc_js(__('Desplegar submenú', 'mi-tema-personalizable')); ?>');
-      btn.innerHTML = '<i class="fa-solid fa-chevron-down"></i>';
-      a.after(btn);
+  const menuItems = $$('.menu-item-has-children', mega);
 
-      // Estado inicial cerrado
-      ul.style.maxHeight = '';
+  menuItems.forEach(li => {
+    // Evitar crear botones duplicados
+    if (li.querySelector(':scope > .submenu-toggle')) return;
 
-      btn.addEventListener('click', ()=>{
-        const isOpen = li.classList.toggle('is-open');
-        btn.setAttribute('aria-expanded', String(isOpen));
-        ul.style.maxHeight = isOpen ? (ul.scrollHeight + 'px') : '';
-        // Acordeón exclusivo: cerramos hermanos
-        const siblings = Array.from(li.parentElement.children).filter(n=>n!==li && n.classList.contains('menu-item-has-children') && n.classList.contains('is-open'));
-        siblings.forEach(s=>{
-          s.classList.remove('is-open');
-          const sull = s.querySelector(':scope > ul');
-          const sbtn = s.querySelector(':scope > .submenu-toggle');
-          if (sull) sull.style.maxHeight = '';
-          if (sbtn) sbtn.setAttribute('aria-expanded','false');
+    const link = li.querySelector(':scope > a');
+
+    // Primer nivel: mega-menu-subcontainer
+    // Niveles internos: ul.sub-menu
+    const panel =
+      li.querySelector(':scope > .mega-menu-subcontainer') ||
+      li.querySelector(':scope > ul.sub-menu');
+
+    if (!link || !panel) return;
+
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'submenu-toggle';
+    btn.setAttribute('aria-expanded', 'false');
+    btn.setAttribute('aria-label', 'Desplegar submenú');
+    btn.innerHTML = '<i class="fa-solid fa-chevron-down"></i>';
+
+    link.after(btn);
+
+    btn.addEventListener('click', () => {
+      const isOpen = li.classList.toggle('is-open');
+
+      btn.setAttribute('aria-expanded', String(isOpen));
+
+      if (isOpen) {
+        // Cerrar otros elementos abiertos del mismo nivel
+        Array.from(li.parentElement.children).forEach(sibling => {
+          if (
+            sibling !== li &&
+            sibling.classList.contains('menu-item-has-children')
+          ) {
+            closeAccordionItem(sibling);
+          }
         });
-      });
+
+        panel.style.maxHeight = panel.scrollHeight + 'px';
+      } else {
+        closeAccordionItem(li);
+      }
+
+      // Actualizar la altura de los paneles superiores abiertos
+      let parent = li.parentElement.closest('.is-open');
+
+      while (parent) {
+        const parentPanel =
+          parent.querySelector(':scope > .mega-menu-subcontainer') ||
+          parent.querySelector(':scope > ul.sub-menu');
+
+        if (parentPanel) {
+          parentPanel.style.maxHeight = parentPanel.scrollHeight + 'px';
+        }
+
+        parent = parent.parentElement.closest('.is-open');
+      }
     });
+  });
+}
+
+function closeAccordionItem(li) {
+  li.classList.remove('is-open');
+
+  const button = li.querySelector(':scope > .submenu-toggle');
+
+  const panel =
+    li.querySelector(':scope > .mega-menu-subcontainer') ||
+    li.querySelector(':scope > ul.sub-menu');
+
+  button?.setAttribute('aria-expanded', 'false');
+
+  if (panel) {
+    panel.style.maxHeight = '';
   }
+
+  // Cerrar también los submenús internos
+  li.querySelectorAll('.menu-item-has-children.is-open').forEach(child => {
+    closeAccordionItem(child);
+  });
+}
 
   // Hidratamos acordeón al abrir menú
   btnMenu?.addEventListener('click', hydrateAccordion);

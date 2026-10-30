@@ -116,7 +116,7 @@
 </div>
 
         <!-- Menú Mega Principal -->
-        <nav class="mega-menu-container">
+        <nav class="mega-menu-container" id="mega-menu">
             <?php
             wp_nav_menu(array(
                 'theme_location' => 'menu-principal',
