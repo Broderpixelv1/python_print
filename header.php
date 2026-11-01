@@ -21,122 +21,165 @@
 <body <?php body_class(); ?>>
 <?php wp_body_open(); ?>
 
+
 <header class="site-header">
     <div class="grid-container">
-        <!-- Botones (móvil/tablet) -->
-        <div class="mobile-actions">
-            <button class="icon-btn" id="btn-open-menu" aria-expanded="false" aria-controls="mega-menu" aria-label="<?php esc_attr_e('Abrir menú', 'mi-tema-personalizable'); ?>">
-                <i class="fa-solid fa-bars"></i>
-            </button>
-            <button class="icon-btn" id="btn-open-search" aria-expanded="false" aria-controls="search-overlay" aria-label="<?php esc_attr_e('Buscar', 'mi-tema-personalizable'); ?>">
+
+        <!-- Acciones móviles: izquierda -->
+        <div class="mobile-header-left">
+            <a class="mobile-help" href="<?php echo esc_url(home_url('/help')); ?>">
+                <i class="fa-solid fa-comments"></i>
+                <span><?php esc_html_e('Ayuda', 'mi-tema-personalizable'); ?></span>
+            </a>
+
+            <button
+                class="icon-btn"
+                id="btn-open-search"
+                type="button"
+                aria-expanded="false"
+                aria-controls="search-overlay"
+                aria-label="<?php esc_attr_e('Buscar', 'mi-tema-personalizable'); ?>"
+            >
                 <i class="fa-solid fa-magnifying-glass"></i>
             </button>
         </div>
 
         <!-- Logo -->
         <div class="logo">
-            <?php 
+            <?php
             if (has_custom_logo()) {
                 the_custom_logo();
             } else {
-                echo '<span><strong>'.get_bloginfo('name').'</strong></span>';
+                echo '<span><strong>' . esc_html(get_bloginfo('name')) . '</strong></span>';
             }
             ?>
         </div>
 
-        <!-- Buscador -->
+        <!-- Buscador de escritorio -->
         <div class="search-bar">
             <?php get_search_form(); ?>
         </div>
 
-        <!-- Menú de usuario -->
+        <!-- Acciones móviles: derecha -->
+        <div class="mobile-header-right">
+
+            <a href="<?php echo esc_url(home_url('/favorites')); ?>"
+               aria-label="<?php esc_attr_e('Favoritos', 'mi-tema-personalizable'); ?>">
+                <i class="fa-solid fa-heart"></i>
+            </a>
+
+            <?php if (class_exists('WooCommerce')): ?>
+                <a href="<?php echo esc_url(wc_get_cart_url()); ?>"
+                   aria-label="<?php esc_attr_e('Carrito', 'mi-tema-personalizable'); ?>">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                </a>
+            <?php else: ?>
+                <a href="<?php echo esc_url(home_url('/cart')); ?>"
+                   aria-label="<?php esc_attr_e('Carrito', 'mi-tema-personalizable'); ?>">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                </a>
+            <?php endif; ?>
+
+            <?php if (is_user_logged_in()): ?>
+                <a href="<?php echo esc_url(home_url('/my-account')); ?>"
+                   aria-label="<?php esc_attr_e('Mi cuenta', 'mi-tema-personalizable'); ?>">
+                    <i class="fa-solid fa-user"></i>
+                </a>
+            <?php else: ?>
+                <a href="<?php echo esc_url(wp_login_url()); ?>"
+                   aria-label="<?php esc_attr_e('Iniciar sesión', 'mi-tema-personalizable'); ?>">
+                    <i class="fa-solid fa-circle-user"></i>
+                </a>
+            <?php endif; ?>
+
+        </div>
+
+        <!-- Menú de usuario de escritorio -->
         <div class="user-menu">
-    <!-- Siempre visible -->
-    <div class="help">
-        <a href="<?php echo esc_url(home_url('/help')); ?>">
-            <span class="muser-icon"><i class="fa-solid fa-comments"></i></span>
-            <?php esc_html_e('Ayuda', 'mi-tema-personalizable'); ?>
-        </a>
-        <small>0995932259</small>
-    </div>
 
-    <?php if (is_user_logged_in()): ?>
-        <!-- Usuario logueado -->
-        <a href="<?php echo esc_url(home_url('/my-projects')); ?>">
-            <span class="muser-icon"><i class="fa-solid fa-folder-open"></i></span>
-            <?php esc_html_e('My Projects', 'mi-tema-personalizable'); ?>
-        </a>
+            <div class="help">
+                <a href="<?php echo esc_url(home_url('/help')); ?>">
+                    <span class="muser-icon"><i class="fa-solid fa-comments"></i></span>
+                    <?php esc_html_e('Ayuda', 'mi-tema-personalizable'); ?>
+                </a>
+                <small>0995932259</small>
+            </div>
 
-        <?php if (class_exists('WooCommerce')): ?>
-            <a href="<?php echo esc_url(wc_get_cart_url()); ?>">
-                <span class="muser-icon"><i class="fa-solid fa-cart-shopping"></i></span>
-                <?php esc_html_e('Cart', 'mi-tema-personalizable'); ?>
-            </a>
-        <?php else: ?>
-            <a href="<?php echo esc_url(home_url('/cart')); ?>">
-                <span class="muser-icon"><i class="fa-solid fa-cart-shopping"></i></span>
-                <?php esc_html_e('Cart', 'mi-tema-personalizable'); ?>
-            </a>
-        <?php endif; ?>
+            <?php if (is_user_logged_in()): ?>
 
-        <a href="<?php echo esc_url(home_url('/my-account')); ?>">
-            <span class="muser-icon"><i class="fa-solid fa-user"></i></span>
-            <?php esc_html_e('Mi Cuenta', 'mi-tema-personalizable'); ?>
-        </a>
+                <a href="<?php echo esc_url(home_url('/my-projects')); ?>">
+                    <span class="muser-icon"><i class="fa-solid fa-folder-open"></i></span>
+                    <?php esc_html_e('My Projects', 'mi-tema-personalizable'); ?>
+                </a>
 
-        <a href="<?php echo wp_logout_url(); ?>">
-            <span class="muser-icon"><i class="fa-solid fa-right-from-bracket"></i></span>
-            <?php esc_html_e('Logout', 'mi-tema-personalizable'); ?>
-        </a>
+                <?php if (class_exists('WooCommerce')): ?>
+                    <a href="<?php echo esc_url(wc_get_cart_url()); ?>">
+                <?php else: ?>
+                    <a href="<?php echo esc_url(home_url('/cart')); ?>">
+                <?php endif; ?>
+                    <span class="muser-icon"><i class="fa-solid fa-cart-shopping"></i></span>
+                    <?php esc_html_e('Cart', 'mi-tema-personalizable'); ?>
+                </a>
 
-    <?php else: ?>
-        <!-- Usuario no logueado -->
-        <a href="<?php echo esc_url(home_url('/favorites')); ?>">
-            <span class="muser-icon"><i class="fa-solid fa-heart"></i></span>
-            <?php esc_html_e('My Favorites', 'mi-tema-personalizable'); ?>
-        </a>
+                <a href="<?php echo esc_url(home_url('/my-account')); ?>">
+                    <span class="muser-icon"><i class="fa-solid fa-user"></i></span>
+                    <?php esc_html_e('Mi Cuenta', 'mi-tema-personalizable'); ?>
+                </a>
 
-        <?php if (class_exists('WooCommerce')): ?>
-            <a href="<?php echo esc_url(wc_get_cart_url()); ?>">
-                <span class="muser-icon"><i class="fa-solid fa-cart-shopping"></i></span>
-                <?php esc_html_e('Cart', 'mi-tema-personalizable'); ?>
-            </a>
-        <?php else: ?>
-            <a href="<?php echo esc_url(home_url('/cart')); ?>">
-                <span class="muser-icon"><i class="fa-solid fa-cart-shopping"></i></span>
-                <?php esc_html_e('Cart', 'mi-tema-personalizable'); ?>
-            </a>
-        <?php endif; ?>
+                <a href="<?php echo esc_url(wp_logout_url()); ?>">
+                    <span class="muser-icon"><i class="fa-solid fa-right-from-bracket"></i></span>
+                    <?php esc_html_e('Logout', 'mi-tema-personalizable'); ?>
+                </a>
 
-        <a href="<?php echo wp_login_url(); ?>">
-            <span class="muser-icon"><i class="fa-solid fa-circle-user"></i></span>
-            <?php esc_html_e('Sign in', 'mi-tema-personalizable'); ?>
-        </a>
-    <?php endif; ?>
-</div>
+            <?php else: ?>
 
-        <!-- Menú Mega Principal -->
-       
-        <nav class="mega-menu-container" id="mega-menu">
+                <a href="<?php echo esc_url(home_url('/favorites')); ?>">
+                    <span class="muser-icon"><i class="fa-solid fa-heart"></i></span>
+                    <?php esc_html_e('My Favorites', 'mi-tema-personalizable'); ?>
+                </a>
 
-            <button type="button" class="btn-close-menu" aria-label="Cerrar menú">
-                X
-            </button>
+                <?php if (class_exists('WooCommerce')): ?>
+                    <a href="<?php echo esc_url(wc_get_cart_url()); ?>">
+                <?php else: ?>
+                    <a href="<?php echo esc_url(home_url('/cart')); ?>">
+                <?php endif; ?>
+                    <span class="muser-icon"><i class="fa-solid fa-cart-shopping"></i></span>
+                    <?php esc_html_e('Cart', 'mi-tema-personalizable'); ?>
+                </a>
 
-            <?php
-            wp_nav_menu(array(
-                'theme_location' => 'menu-principal',
-                'container'      => false,
-                'menu_class'     => '',
-                'walker'         => new Mega_Menu_Walker(),
-                'fallback_cb'    => false
-            ));
-            ?>
+                <a href="<?php echo esc_url(wp_login_url()); ?>">
+                    <span class="muser-icon"><i class="fa-solid fa-circle-user"></i></span>
+                    <?php esc_html_e('Sign in', 'mi-tema-personalizable'); ?>
+                </a>
 
-        </nav>
+            <?php endif; ?>
+
+        </div>
 
     </div>
+
+    <!-- El JavaScript construirá aquí la barra horizontal móvil -->
+
+    <!-- Menú original de WordPress: se conserva para escritorio y se reutiliza en móvil -->
+    <nav class="mega-menu-container" id="mega-menu" aria-label="<?php esc_attr_e('Menú principal', 'mi-tema-personalizable'); ?>">
+
+        <button type="button" class="btn-close-menu" aria-label="<?php esc_attr_e('Cerrar menú', 'mi-tema-personalizable'); ?>">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+
+        <?php
+        wp_nav_menu(array(
+            'theme_location' => 'menu-principal',
+            'container'      => false,
+            'menu_class'     => '',
+            'walker'         => new Mega_Menu_Walker(),
+            'fallback_cb'    => false
+        ));
+        ?>
+
+    </nav>
 </header>
+
 <!-- Overlay de Búsqueda (móvil/tablet) -->
 <div class="search-overlay" id="search-overlay" aria-hidden="true">
   <div class="search-box" role="dialog" aria-modal="true" aria-label="<?php esc_attr_e('Buscar', 'mi-tema-personalizable'); ?>">
