@@ -116,7 +116,13 @@
 </div>
 
         <!-- Menú Mega Principal -->
+       
         <nav class="mega-menu-container" id="mega-menu">
+
+            <button type="button" class="btn-close-menu" aria-label="Cerrar menú">
+                X
+            </button>
+
             <?php
             wp_nav_menu(array(
                 'theme_location' => 'menu-principal',
@@ -126,7 +132,9 @@
                 'fallback_cb'    => false
             ));
             ?>
+
         </nav>
+
     </div>
 </header>
 <!-- Overlay de Búsqueda (móvil/tablet) -->

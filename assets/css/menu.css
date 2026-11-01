@@ -184,7 +184,7 @@ body:has(.mega-menu-container ul li:hover) .cortina {
   }
 
   .mega-menu-subcontainer .col-submenu{
-   background-color: #ff4e4e;
+   background-color: #fff;
   }
 
   .mega-menu-subcontainer .col-submenu > ul > li{
@@ -193,3 +193,68 @@ body:has(.mega-menu-container ul li:hover) .cortina {
 }
 
 
+
+/* =========================================
+   ACABADO VISUAL DEL MENU MOVIL
+   ========================================= */
+
+@media (max-width: 991px) {
+
+    /* Lista principal */
+    #mega-menu > ul,
+    #mega-menu > .menu {
+        margin-top: 70px !important;
+        padding: 0 !important;
+    }
+
+    /* Filas principales */
+    #mega-menu > ul > li,
+    #mega-menu > .menu > li {
+        display: block !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border-bottom: 1px solid #eeeeee;
+    }
+
+    #mega-menu > ul > li > a,
+    #mega-menu > .menu > li > a {
+        display: flex !important;
+        align-items: center !important;
+        min-height: 50px !important;
+        padding: 12px 16px !important;
+        margin: 0 !important;
+        font-size: 16px !important;
+        line-height: 1.4 !important;
+    }
+
+    /* Categorías internas */
+    #mega-menu .col-submenu > ul > li {
+        min-height: 48px !important;
+        border-bottom: 1px solid #eeeeee;
+    }
+
+    #mega-menu .col-submenu > ul > li > a {
+        display: flex !important;
+        align-items: center !important;
+        min-height: 48px !important;
+        padding: 10px 16px !important;
+        margin: 0 !important;
+        font-size: 15px !important;
+        line-height: 1.4 !important;
+    }
+
+    /* Subcategorías más discretas */
+    #mega-menu ul.sub-menu > li > a {
+        display: block !important;
+        padding: 10px 24px !important;
+        font-size: 14px !important;
+    }
+
+    /* Evitar márgenes heredados */
+    #mega-menu li {
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+    }
+
+}

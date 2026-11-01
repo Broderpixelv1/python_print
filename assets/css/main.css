@@ -295,184 +295,361 @@ width: 100%;
   color: #fff;       /* color por defecto */
 }
 
-/* ==== Basicos -  Menu responsivo  ==== */
 
-/* ======= Overrides móvil/tablet para header ======= */
+/* =====================================================
+   MENU RESPONSIVO - PYTHON PRINT
+   ===================================================== */
+
+/* ===== Overrides móvil/tablet para header ===== */
+
 @media (max-width: 991px) {
-  /* Grid compacto: menu | buscar | logo | user-icons */
-  .grid-container {
-    grid-template-columns: auto auto 1fr auto;
-    gap: 12px;
-    padding: 10px 16px 0; /* menos padding lateral */
-  }
 
-  /* Ocultar buscador fijo; en móvil usaremos overlay */
-  .search-bar { display: none; }
+    /* Grid compacto: menu | buscar | logo | iconos */
+    .grid-container {
+        grid-template-columns: auto auto 1fr auto;
+        gap: 12px;
+        padding: 10px 16px 0;
+    }
 
-  /* Logo centrado */
-  .logo { justify-self: center; }
-  .logo img { height: 36px; }
+    /* Ocultar buscador fijo */
+    .search-bar {
+        display: none;
+    }
 
-  /* User menu solo iconos y a la derecha */
-  .user-menu {
-    justify-content: flex-end;
-    gap: 10px;
-    font-size: 0; /* oculta texto, dejamos solo iconos */
-  }
-  .user-menu a { padding: 6px; }
-  .muser-icon .fa-comments,
-  .muser-icon .fa-folder-open,
-  .muser-icon .fa-heart,
-  .muser-icon .fa-circle-user,
-  .muser-icon .fa-right-from-bracket,
-  .muser-icon .fa-cart-shopping {
-    font-size: 1.35rem;
-  }
+    /* Logo centrado */
+    .logo {
+        justify-self: center;
+    }
 
-  /* Mega menú como overlay */
-  .mega-menu-container {
-    position: fixed !important;
-    inset: 0 !important;
-    background: rgba(0,0,0,0.75);
-    display: none;               /* se abre con body.menu-open */
-    z-index: 10001;              /* por encima del header (9999) */
-    margin-top: 0;               /* neutraliza margen del desktop */
-    border-bottom: 0;
-  }
-  body.menu-open .mega-menu-container { display: block; }
+    .logo img {
+        height: 36px;
+    }
 
-  /* Panel interno (el nav real que ya tienes dentro) */
-  .mega-menu-container > * {
+    /* Iconos de usuario */
+    .user-menu {
+        justify-content: flex-end;
+        gap: 10px;
+        font-size: 0;
+    }
+
+    .user-menu a {
+        padding: 6px;
+    }
+
+    .muser-icon .fa-comments,
+    .muser-icon .fa-folder-open,
+    .muser-icon .fa-heart,
+    .muser-icon .fa-circle-user,
+    .muser-icon .fa-right-from-bracket,
+    .muser-icon .fa-cart-shopping {
+        font-size: 1.35rem;
+    }
+
+    /* ===== Mega menú como overlay ===== */
+
+    .mega-menu-container {
+        position: fixed !important;
+        inset: 0 !important;
+        background: rgba(0, 0, 0, 0.75);
+        display: none;
+        z-index: 10001;
+        margin: 0 !important;
+        border-bottom: 0;
+        overflow: auto;
+    }
+
+    body.menu-open .mega-menu-container {
+        display: block;
+    }
+
+    /* Lista principal de WordPress */
+    .mega-menu-container > ul,
+    .mega-menu-container .menu {
+        display: block !important;
+        list-style: none;
+        padding: 0;
+        margin: 70px auto 0;
+        width: min(900px, 92vw);
+        max-height: 85vh;
+        overflow: auto;
+        background: #fff;
+        border-radius: 12px;
+    }
+
+    .mega-menu-container .menu > li {
+        display: block;
+        width: 100%;
+        border-bottom: 1px solid #eee;
+    }
+
+    .mega-menu-container .menu > li > a {
+        display: block;
+        padding: 12px 16px;
+        font-size: 1rem;
+    }
+
+    /* ===== Primer nivel: mega-subcontainer ===== */
+
+    .mega-menu-subcontainer {
+        display: block !important;
+        position: static !important;
+        top: auto !important;
+        left: auto !important;
+        width: 100% !important;
+        height: auto;
+        max-height: 0;
+        overflow: hidden;
+        flex-direction: column !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: none !important;
+        pointer-events: auto !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        padding: 0 !important;
+        transition: max-height 0.25s ease;
+    }
+
+    /* Abrir categoría principal */
+    .menu-item-has-children.is-open > .mega-menu-subcontainer {
+        max-height: 3000px !important;
+    }
+
+    /* ===== Columnas del mega menú en vertical ===== */
+
+    .mega-menu-subcontainer .col-submenu {
+        display: block !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border-radius: 0 !important;
+    }
+
+    /* Ocultar minibanners en móvil */
+    .mega-menu-subcontainer .col-minibanner {
+        display: none !important;
+    }
+
+    /* Lista de categorías */
+    .mega-menu-subcontainer .col-submenu > ul {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    .mega-menu-subcontainer .col-submenu > ul > li {
+        display: block !important;
+        width: 100% !important;
+        flex: none !important;
+        margin: 0 !important;
+        font-size: 1rem;
+        border-bottom: 1px solid #eee;
+    }
+
+    .mega-menu-subcontainer .col-submenu > ul > li > a {
+        display: block;
+        font-weight: 600;
+        padding: 12px 16px;
+    }
+
+    /* ===== Submenús internos: acordeón ===== */
+
+    .menu-item-has-children {
+        position: relative;
+    }
+
+    .menu-item-has-children > a {
+        padding-right: 50px !important;
+    }
+
+    /* Submenús cerrados por defecto */
+    .menu-item-has-children > ul.sub-menu {
+        display: block !important;
+        width: 100% !important;
+        max-height: 0;
+        overflow: hidden;
+        padding: 0 !important;
+        margin: 0 !important;
+        background: #fafafa;
+        transition: max-height 0.25s ease;
+    }
+
+    /* El JS controla la altura de los submenús abiertos */
+
+    /* ===== Botones de acordeón ===== */
+
+    .submenu-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        right: 8px;
+        top: 5px;
+        width: 36px;
+        height: 36px;
+        border: 0;
+        background: #f7f7f7;
+        border-radius: 8px;
+        color: #222;
+        cursor: pointer;
+        z-index: 5;
+    }
+
+    .submenu-toggle i {
+        transition: transform 0.25s ease;
+    }
+
+    .menu-item-has-children.is-open > .submenu-toggle i {
+        transform: rotate(180deg);
+    }
+
+    /* Desactivar subrayado rojo de desktop */
+    .mega-menu-container > ul > li > a::after {
+        display: none !important;
+    }
+
+    /* ===== Cortina y desenfoque ===== */
+
+    .cortina.is-active {
+        display: block;
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        inset: 0;
+        z-index: 10000;
+        backdrop-filter: blur(0.5rem);
+        -webkit-backdrop-filter: blur(0.5rem);
+        background-color: rgba(255, 255, 255, 0.192);
+        opacity: 1;
+        animation: fadeIn 0.2s ease-in-out;
+    }
+
+}
+
+
+/* =====================================================
+   CAPAS DEL HEADER Y BOTON X
+   ===================================================== */
+
+@media (max-width: 991px) {
+
+    /* Header por encima de la cortina */
+    header.site-header {
+        z-index: 10002 !important;
+    }
+
+    /* Botón X para cerrar el menú */
+    #mega-menu .btn-close-menu {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+
+        position: fixed !important;
+        top: 20px !important;
+        right: 20px !important;
+
+        width: 45px !important;
+        height: 45px !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        border: none !important;
+        border-radius: 50% !important;
+
+        background: #222 !important;
+        color: #fff !important;
+
+        font-size: 24px !important;
+        cursor: pointer !important;
+
+        z-index: 10010 !important;
+    }
+
+    #mega-menu .btn-close-menu i {
+        pointer-events: none;
+    }
+
+}
+
+
+/* =====================================================
+   OVERLAY DE BÚSQUEDA
+   ===================================================== */
+
+.search-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    display: none;
+    z-index: 11002;
+}
+
+body.search-open .search-overlay {
+    display: block;
+}
+
+.search-overlay .search-box {
     position: relative;
     width: min(900px, 92vw);
-    max-height: 90vh;
-    margin: 5vh auto 0;
+    margin: 10vh auto 0;
     background: #fff;
     border-radius: 12px;
-    padding: 8px 0;
+    padding: 16px;
+    max-height: 80vh;
     overflow: auto;
-  }
+}
 
-  /* Lista raíz del menú (tu walker suele imprimir .menu) */
-  .mega-menu-container > ul,
-  .mega-menu-container .menu {
-    display: block !important;   /* deshacer el flex de desktop */
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  .mega-menu-container .menu > li {
-    border-bottom: 1px solid #eee;
-  }
-  .mega-menu-container .menu > li > a {
-    display: block;
-    padding: 12px 16px;
-    font-size: 1rem;
-  }
-
-  /* Acordeón: cerramos el mega-subcontainer “hover” en móvil */
-  .mega-menu-subcontainer {
-    position: static;
-    top: auto; left: auto;
-    width: 100%;
-    opacity: 1 !important;
-    transform: none !important;
-    pointer-events: auto !important;
-    box-shadow: none;
-    border-radius: 0;
-    padding: 0;
-    display: block;
-  }
-
-  /* Columnas internas del mega en móvil: apilar */
-  .mega-menu-subcontainer .col-submenu,
-  .mega-menu-subcontainer .col-minibanner {
-    flex: 1 1 100%;
-    margin-right: 0;
-    border-radius: 0;
-  }
-  .mega-menu-subcontainer .col-submenu > ul {
-    padding: 0;                  /* quitamos paddings grandes */
-  }
-  .mega-menu-subcontainer .col-submenu > ul > li {
-    margin-left: 0;
-    font-size: 1rem;
-  }
-  .mega-menu-subcontainer .col-submenu > ul > li > a {
-    font-weight: 600;
-  }
-
-  /* Submenús colapsables (acordeón) */
-  .menu-item-has-children { position: relative; }
-  .menu-item-has-children > a { padding-right: 44px; }
-  .menu-item-has-children > ul {
-    overflow: hidden;
-    max-height: 0;               /* JS ajusta scrollHeight al abrir */
-    transition: max-height .25s ease;
-    background: #fafafa;
-  }
-  .menu-item-has-children .is-open > ul {
-    /* max-height la maneja JS */
-  }
-  /* Botón toggle que inyecta JS */
-  .submenu-toggle {
+.search-overlay .close-search {
     position: absolute;
-    right: 8px; top: 8px;
-    width: 32px; height: 32px;
-    border: 0; background: #f7f7f7;
-    border-radius: 8px; cursor: pointer;
-  }
-
-  /* El subrayado rojo de desktop bajo los items (pseudo after) no lo usamos en móvil */
-  .mega-menu-container > ul > li > a::after { display: none; }
-
-  /* Cortina general cuando hay overlays activos */
-  .cortina.is-active {
-    display: block;
-    width: 100%; height: 100%;
-    position: fixed; inset: 0;
-    z-index: 10000;
-    backdrop-filter: blur(0.5rem);
-    -webkit-backdrop-filter: blur(0.5rem);
-    background-color: rgba(255, 255, 255, 0.192);
-    opacity: 1;
-    animation: fadeIn 0.2s ease-in-out;
-  }
+    right: 8px;
+    top: 8px;
 }
 
-/* Corregir capas del menú móvil */
-@media (max-width: 991px) {
-    header.site-header {
-        z-index: 10002;
-    }
+.search-overlay .search-form-wrap {
+    padding: 24px 12px;
 }
 
-/* ====== Overlay de búsqueda (si lo usas) ====== */
-.search-overlay { position: fixed; inset:0; background: rgba(0,0,0,0.75); display:none; z-index:11002; }
-body.search-open .search-overlay { display:block; }
-.search-overlay .search-box {
-  position: relative; width: min(900px,92vw); margin: 10vh auto 0; background:#fff;
-  border-radius:12px; padding:16px; max-height:80vh; overflow:auto;
-}
-.search-overlay .close-search { position: absolute; right:8px; top:8px; }
-.search-overlay .search-form-wrap { padding:24px 12px; }
-.search-overlay .search-form-wrap form { display:flex; gap:8px; align-items:center; }
-.search-overlay .search-form-wrap input[type="search"] {
-  flex:1; font-size:1.1rem; padding:12px 14px; border:1px solid #ddd; border-radius:8px;
-}
-
-/* Desktop: oculto SIEMPRE */
-@media (min-width: 992px) {
-  .site-header .grid-container .mobile-actions {
-    display: none !important;
-  }
-}
-
-/* Móvil/Tablet: mostrar */
-@media (max-width: 991px) {
-  .site-header .grid-container .mobile-actions {
-    display: inline-flex !important; /* o flex */
+.search-overlay .search-form-wrap form {
+    display: flex;
     gap: 8px;
     align-items: center;
-  }
+}
+
+.search-overlay .search-form-wrap input[type="search"] {
+    flex: 1;
+    font-size: 1.1rem;
+    padding: 12px 14px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+
+/* =====================================================
+   ACCIONES MOVILES DEL HEADER
+   ===================================================== */
+
+/* Desktop: ocultar acciones móviles */
+@media (min-width: 992px) {
+
+    .site-header .grid-container .mobile-actions {
+        display: none !important;
+    }
+
+}
+
+/* Móvil/tablet: mostrar acciones */
+@media (max-width: 991px) {
+
+    .site-header .grid-container .mobile-actions {
+        display: inline-flex !important;
+        gap: 8px;
+        align-items: center;
+    }
+
 }

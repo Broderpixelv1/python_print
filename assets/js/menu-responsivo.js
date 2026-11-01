@@ -1,6 +1,7 @@
-document.addEventListener('DOMContentLoaded', function(){
-  const $  = (s, c=document) => c.querySelector(s);
-  const $$ = (s, c=document) => Array.from(c.querySelectorAll(s));
+
+document.addEventListener('DOMContentLoaded', function() {
+  const $ = (s, c = document) => c.querySelector(s);
+  const $$ = (s, c = document) => Array.from(c.querySelectorAll(s));
 
   const body = document.body;
   const cortina = document.querySelector('.cortina');
@@ -13,91 +14,133 @@ document.addEventListener('DOMContentLoaded', function(){
   const mega = document.querySelector('.mega-menu-container');
   const searchOverlay = $('#search-overlay');
 
-  function openMenu(){
-    body.classList.add('menu-open','no-scroll');
-    btnMenu?.setAttribute('aria-expanded','true');
+  function openMenu() {
+    body.classList.add('menu-open', 'no-scroll');
+    btnMenu?.setAttribute('aria-expanded', 'true');
     cortina?.classList.add('is-active');
+    hydrateAccordion();
   }
-  function closeMenu(){
+
+  function closeMenu() {
     body.classList.remove('menu-open');
-    btnMenu?.setAttribute('aria-expanded','false');
+    btnMenu?.setAttribute('aria-expanded', 'false');
+
     if (!body.classList.contains('search-open')) {
       body.classList.remove('no-scroll');
       cortina?.classList.remove('is-active');
     }
   }
-  function openSearch(){
-    body.classList.add('search-open','no-scroll');
-    btnSearch?.setAttribute('aria-expanded','true');
+
+  function openSearch() {
+    body.classList.add('search-open', 'no-scroll');
+    btnSearch?.setAttribute('aria-expanded', 'true');
     cortina?.classList.add('is-active');
   }
-  function closeSearch(){
+
+  function closeSearch() {
     body.classList.remove('search-open');
-    btnSearch?.setAttribute('aria-expanded','false');
+    btnSearch?.setAttribute('aria-expanded', 'false');
+
     if (!body.classList.contains('menu-open')) {
       body.classList.remove('no-scroll');
       cortina?.classList.remove('is-active');
     }
   }
 
-  btnMenu?.addEventListener('click', openMenu);
+  // Botones principales
+  btnMenu?.addEventListener('click', () => {
+    if (body.classList.contains('menu-open')) {
+      closeMenu();
+    } else {
+      openMenu();
+    }
+  });
+  
+  $('#mega-menu .btn-close-menu')?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    closeMenu();
+});
+
+  //boton de cierre menu principal
+  $('.btn-close-menu')?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    closeMenu();
+});
+
   btnSearch?.addEventListener('click', openSearch);
 
-  // Cerrar con la X del panel de búsqueda
   $('.search-overlay .close-search')?.addEventListener('click', closeSearch);
 
-  // Cerrar con ESC o clic en cortina
-  document.addEventListener('keydown', (e)=>{ if(e.key==='Escape'){ closeMenu(); closeSearch(); }});
-  cortina?.addEventListener('click', ()=>{ closeMenu(); closeSearch(); });
+  // Cerrar con Escape o cortina
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeMenu();
+      closeSearch();
+    }
+  });
 
-  // Cerrar el menú si tocan la "X" pseudo-elemento del panel
-  // (capturamos cualquier click en el contenedor en la zona superior derecha)
-  if (mega){
-    mega.addEventListener('click', (e)=>{
-      const rect = mega.getBoundingClientRect();
-      // Si se hace click en el área de la "X" (16px de margen) usamos una heurística simple:
-      const withinX = e.clientX > (rect.right - 56) && e.clientY < (rect.top + 80);
-      if (withinX) closeMenu();
-    });
-  }
+  cortina?.addEventListener('click', () => {
+    closeMenu();
+    closeSearch();
+  });
 
-  // --- Acordeón dentro del mega menú SOLO en móvil/tablet ---
+  // Función para cerrar un elemento del acordeón
+  function closeAccordionItem(li) {
+    li.classList.remove('is-open');
 
-function hydrateAccordion() {
-  if (!mega || !window.matchMedia('(max-width: 991px)').matches) return;
+    const button = li.querySelector(':scope > .submenu-toggle');
 
-  const menuItems = $$('.menu-item-has-children', mega);
-
-  menuItems.forEach(li => {
-    // Evitar crear botones duplicados
-    if (li.querySelector(':scope > .submenu-toggle')) return;
-
-    const link = li.querySelector(':scope > a');
-
-    // Primer nivel: mega-menu-subcontainer
-    // Niveles internos: ul.sub-menu
     const panel =
       li.querySelector(':scope > .mega-menu-subcontainer') ||
       li.querySelector(':scope > ul.sub-menu');
 
-    if (!link || !panel) return;
+    button?.setAttribute('aria-expanded', 'false');
 
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'submenu-toggle';
-    btn.setAttribute('aria-expanded', 'false');
-    btn.setAttribute('aria-label', 'Desplegar submenú');
-    btn.innerHTML = '<i class="fa-solid fa-chevron-down"></i>';
+    if (panel) {
+      panel.style.maxHeight = '0px';
+    }
 
-    link.after(btn);
+    li.querySelectorAll('.menu-item-has-children.is-open').forEach(child => {
+      closeAccordionItem(child);
+    });
+  }
 
-    btn.addEventListener('click', () => {
-      const isOpen = li.classList.toggle('is-open');
+  // Crear acordeón móvil
+  function hydrateAccordion() {
+    if (!mega || !window.matchMedia('(max-width: 991px)').matches) return;
 
-      btn.setAttribute('aria-expanded', String(isOpen));
+    const menuItems = $$('.menu-item-has-children', mega);
 
-      if (isOpen) {
-        // Cerrar otros elementos abiertos del mismo nivel
+    menuItems.forEach(li => {
+      if (li.querySelector(':scope > .submenu-toggle')) return;
+
+      const link = li.querySelector(':scope > a');
+
+      const panel =
+        li.querySelector(':scope > .mega-menu-subcontainer') ||
+        li.querySelector(':scope > ul.sub-menu');
+
+      if (!link || !panel) return;
+
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'submenu-toggle';
+      btn.setAttribute('aria-expanded', 'false');
+      btn.setAttribute('aria-label', 'Desplegar submenú');
+      btn.innerHTML = '<i class="fa-solid fa-chevron-down"></i>';
+
+      link.after(btn);
+
+      // Estado inicial cerrado
+      panel.style.maxHeight = '0px';
+
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const isOpen = !li.classList.contains('is-open');
+
+        // Cerrar hermanos del mismo nivel
         Array.from(li.parentElement.children).forEach(sibling => {
           if (
             sibling !== li &&
@@ -107,56 +150,52 @@ function hydrateAccordion() {
           }
         });
 
-        panel.style.maxHeight = panel.scrollHeight + 'px';
-      } else {
-        closeAccordionItem(li);
-      }
-
-      // Actualizar la altura de los paneles superiores abiertos
-      let parent = li.parentElement.closest('.is-open');
-
-      while (parent) {
-        const parentPanel =
-          parent.querySelector(':scope > .mega-menu-subcontainer') ||
-          parent.querySelector(':scope > ul.sub-menu');
-
-        if (parentPanel) {
-          parentPanel.style.maxHeight = parentPanel.scrollHeight + 'px';
+        if (isOpen) {
+          li.classList.add('is-open');
+          btn.setAttribute('aria-expanded', 'true');
+          panel.style.maxHeight = panel.scrollHeight + 'px';
+        } else {
+          closeAccordionItem(li);
         }
 
-        parent = parent.parentElement.closest('.is-open');
-      }
+        // Actualizar la altura de los paneles superiores
+        let parent = li.parentElement.closest('.is-open');
+
+        while (parent) {
+          const parentPanel =
+            parent.querySelector(':scope > .mega-menu-subcontainer') ||
+            parent.querySelector(':scope > ul.sub-menu');
+
+          if (parentPanel) {
+            parentPanel.style.maxHeight = parentPanel.scrollHeight + 'px';
+          }
+
+          parent = parent.parentElement.closest('.is-open');
+        }
+      });
     });
-  });
-}
-
-function closeAccordionItem(li) {
-  li.classList.remove('is-open');
-
-  const button = li.querySelector(':scope > .submenu-toggle');
-
-  const panel =
-    li.querySelector(':scope > .mega-menu-subcontainer') ||
-    li.querySelector(':scope > ul.sub-menu');
-
-  button?.setAttribute('aria-expanded', 'false');
-
-  if (panel) {
-    panel.style.maxHeight = '';
   }
 
-  // Cerrar también los submenús internos
-  li.querySelectorAll('.menu-item-has-children.is-open').forEach(child => {
-    closeAccordionItem(child);
-  });
-}
-
-  // Hidratamos acordeón al abrir menú
-  btnMenu?.addEventListener('click', hydrateAccordion);
-
-  // Si el usuario redimensiona a desktop, asegúrate de limpiar estados
+  // Limpiar estados al cambiar a escritorio
   const mqDesktop = window.matchMedia('(min-width: 992px)');
-  mqDesktop.addEventListener('change', (e)=>{
-    if (e.matches){ closeMenu(); closeSearch(); }
+
+  mqDesktop.addEventListener('change', (e) => {
+    if (e.matches) {
+      closeMenu();
+      closeSearch();
+
+      if (mega) {
+        mega.querySelectorAll('.submenu-toggle').forEach(btn => btn.remove());
+
+        mega.querySelectorAll('.is-open').forEach(item => {
+          item.classList.remove('is-open');
+        });
+
+        mega.querySelectorAll('.mega-menu-subcontainer, ul.sub-menu').forEach(panel => {
+          panel.style.maxHeight = '';
+        });
+      }
+    }
   });
+
 });
