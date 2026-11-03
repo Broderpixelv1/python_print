@@ -373,3 +373,61 @@ function python_print_cargar_configurador() {
     }
 }
 add_action('wp_enqueue_scripts', 'python_print_cargar_configurador');
+
+//creamos la seccion de configuracion del producto
+
+
+/**
+ * PYTHON PRINT
+ * Opciones del configurador en WooCommerce
+ */
+
+// Mostrar opciones en la edición del producto
+add_action('woocommerce_product_options_general_product_data', 'python_print_opciones_producto');
+
+function python_print_opciones_producto() {
+
+    echo '<div class="options_group">';
+
+    echo '<p class="form-field"><strong>Configurador Python Print</strong></p>';
+
+    woocommerce_wp_checkbox(array(
+        'id'          => '_python_tipo_marca',
+        'label'       => 'Solo marca',
+        'description' => 'Permitir etiquetas únicamente con marca.',
+    ));
+
+    woocommerce_wp_checkbox(array(
+        'id'          => '_python_tipo_marca_talla',
+        'label'       => 'Marca + talla',
+        'description' => 'Permitir etiquetas con marca y talla.',
+    ));
+
+    woocommerce_wp_checkbox(array(
+        'id'          => '_python_tipo_talla',
+        'label'       => 'Solo talla',
+        'description' => 'Permitir etiquetas únicamente de talla.',
+    ));
+
+    echo '</div>';
+}
+
+// Guardar las opciones del producto
+add_action('woocommerce_admin_process_product_object', 'python_print_guardar_opciones_producto');
+
+function python_print_guardar_opciones_producto($product) {
+
+    $campos = array(
+        '_python_tipo_marca',
+        '_python_tipo_marca_talla',
+        '_python_tipo_talla',
+    );
+
+    foreach ($campos as $campo) {
+
+        $valor = isset($_POST[$campo]) ? 'yes' : 'no';
+
+        $product->update_meta_data($campo, $valor);
+    }
+}
+

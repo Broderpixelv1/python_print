@@ -214,3 +214,7 @@
     border-color: #222;
     background: #f7f7f7;
 }
+
+.python-configurator__section[hidden] {
+    display: none !important;
+}

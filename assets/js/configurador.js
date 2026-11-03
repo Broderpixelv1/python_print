@@ -48,6 +48,80 @@ document.addEventListener('DOMContentLoaded', function () {
             productTitle.textContent = title.textContent.trim();
         }
 
+        // Leer opciones habilitadas en WooCommerce
+        const availableTypes = {
+            marca: product.dataset.tipoMarca === 'yes',
+            marca_talla: product.dataset.tipoMarcaTalla === 'yes',
+            talla: product.dataset.tipoTalla === 'yes'
+        };
+
+        
+        // Obtener materiales desde WooCommerce
+        const materialSection = configurator.querySelector('.python-material-section');
+        const materialOptions = configurator.querySelector('.python-material-options');
+
+        let materiales = [];
+
+        try {
+            materiales = JSON.parse(product.dataset.materiales || '[]');
+        } catch (error) {
+            materiales = [];
+        }
+
+        // Limpiar materiales del producto anterior
+        materialOptions.replaceChildren();
+
+        materiales.forEach(function (material) {
+
+            const label = document.createElement('label');
+            label.className = 'python-configurator__choice';
+
+            const input = document.createElement('input');
+            input.type = 'radio';
+            input.name = 'python_material';
+            input.value = material;
+
+            const content = document.createElement('span');
+            content.className = 'python-configurator__choice-content';
+
+            const title = document.createElement('strong');
+            title.textContent = material;
+
+            content.appendChild(title);
+            label.appendChild(input);
+            label.appendChild(content);
+
+            input.addEventListener('change', function () {
+
+                materialOptions.querySelectorAll('.python-configurator__choice')
+                    .forEach(function (choice) {
+                        choice.classList.remove('is-selected');
+                    });
+
+                label.classList.add('is-selected');
+            });
+
+            materialOptions.appendChild(label);
+        });
+
+        // Mostrar sección únicamente si hay materiales
+        materialSection.hidden = materiales.length === 0;
+
+
+        // Mostrar únicamente las opciones permitidas
+        typeOptions.forEach(function (option) {
+
+            const choice = option.closest('.python-configurator__choice');
+            const enabled = availableTypes[option.value] === true;
+
+            choice.style.display = enabled ? 'flex' : 'none';
+
+            // Reiniciar selección al abrir otro producto
+            option.checked = false;
+            choice.classList.remove('is-selected');
+
+        });
+
         configurator.classList.add('is-open');
         configurator.setAttribute('aria-hidden', 'false');
 

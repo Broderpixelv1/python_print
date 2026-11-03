@@ -81,6 +81,23 @@ defined('ABSPATH') || exit;
 
                         </div>
 
+                        
+                        <section class="python-configurator__section python-material-section" hidden>
+
+                            <h3 class="python-configurator__heading">
+                                ¿Qué material prefieres?
+                            </h3>
+
+                            <p class="python-configurator__description">
+                                Selecciona el material de tus etiquetas.
+                            </p>
+
+                            <div class="python-configurator__choices python-material-options">
+                            </div>
+
+                        </section>
+
+
                     </section>
 
                 </div>
