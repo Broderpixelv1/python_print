@@ -218,3 +218,25 @@
 .python-configurator__section[hidden] {
     display: none !important;
 }
+
+.python-width-section[hidden] {
+    display: none !important;
+}
+
+/* estilos a la lista de medidas*/
+.python-configurator__select {
+    width: 100%;
+    padding: 15px 16px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background: #fff;
+    color: #222;
+    font-size: 15px;
+    cursor: pointer;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.python-configurator__select:focus {
+    border-color: #222;
+}

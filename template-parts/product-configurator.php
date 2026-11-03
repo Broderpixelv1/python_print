@@ -97,6 +97,29 @@ defined('ABSPATH') || exit;
 
                         </section>
 
+                        
+                        <section class="python-configurator__section python-width-section" hidden>
+
+                            <h3 class="python-configurator__heading">
+                                ¿Qué ancho necesitas?
+                            </h3>
+
+                            <p class="python-configurator__description">
+                                Selecciona el ancho de tu etiqueta en milimetros.
+                            </p>
+
+                            <div class="python-width-options">
+                                <select
+                                    id="python-ancho"
+                                    name="python_ancho"
+                                    class="python-configurator__select"
+                                >
+                                    <option value="">Selecciona un ancho</option>
+                                </select>
+                            </div>
+
+                        </section>
+
 
                     </section>
 

@@ -431,3 +431,86 @@ function python_print_guardar_opciones_producto($product) {
     }
 }
 
+
+/**
+ * PYTHON PRINT
+ * Anchos disponibles por material
+ */
+
+// Campo al crear un material
+add_action('pa_material_add_form_fields', function () {
+    ?>
+    <div class="form-field">
+        <label for="python_anchos">
+            Anchos disponibles (cm)
+        </label>
+
+        <input type="text"
+               name="python_anchos"
+               id="python_anchos"
+               placeholder="1.5, 2, 2.5, 3">
+
+        <p>
+            Separa los anchos con comas.
+            Ejemplo: 1.5, 2, 2.5, 3
+        </p>
+    </div>
+    <?php
+});
+
+// Campo al editar un material
+add_action('pa_material_edit_form_fields', function ($term) {
+
+    $anchos = get_term_meta(
+        $term->term_id,
+        'python_anchos',
+        true
+    );
+    ?>
+    <tr class="form-field">
+        <th scope="row">
+            <label for="python_anchos">
+                Anchos disponibles (cm)
+            </label>
+        </th>
+
+        <td>
+            <input type="text"
+                   name="python_anchos"
+                   id="python_anchos"
+                   value="<?php echo esc_attr($anchos); ?>"
+                   placeholder="1.5, 2, 2.5, 3">
+
+            <p class="description">
+                Separa los anchos con comas.
+            </p>
+        </td>
+    </tr>
+    <?php
+});
+
+// Guardar anchos
+function python_guardar_anchos_material($term_id) {
+
+    if (!isset($_POST['python_anchos'])) {
+        return;
+    }
+
+    if (!current_user_can('manage_woocommerce')) {
+        return;
+    }
+
+    $anchos = sanitize_text_field(
+        wp_unslash($_POST['python_anchos'])
+    );
+
+    update_term_meta(
+        $term_id,
+        'python_anchos',
+        $anchos
+    );
+}
+
+add_action('created_pa_material', 'python_guardar_anchos_material');
+add_action('edited_pa_material', 'python_guardar_anchos_material');
+

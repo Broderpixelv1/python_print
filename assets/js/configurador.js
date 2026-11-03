@@ -71,6 +71,53 @@ document.addEventListener('DOMContentLoaded', function () {
         // Limpiar materiales del producto anterior
         materialOptions.replaceChildren();
 
+        
+        // Leer anchos disponibles por material
+        let anchosPorMaterial = {};
+
+        try {
+            anchosPorMaterial = JSON.parse(product.dataset.anchos || '{}');
+        } catch (error) {
+            anchosPorMaterial = {};
+        }
+
+        const widthSection = configurator.querySelector('.python-width-section');
+        const widthOptions = configurator.querySelector('#python-ancho');
+
+        // Reiniciar anchos al abrir otro producto
+        widthOptions.replaceChildren();
+        widthSection.hidden = true;
+
+        // Generar anchos según el material seleccionado
+        function mostrarAnchos(material) {
+
+            const selectAncho = configurator.querySelector('#python-ancho');
+
+            // Limpiar opciones anteriores
+            selectAncho.replaceChildren();
+
+            const placeholder = document.createElement('option');
+            placeholder.value = '';
+            placeholder.textContent = 'Selecciona un ancho';
+            selectAncho.appendChild(placeholder);
+
+            const anchos = anchosPorMaterial[material] || [];
+
+            anchos.forEach(function (ancho) {
+
+                const option = document.createElement('option');
+
+                option.value = ancho;
+                option.textContent = ancho + ' mm';
+
+                selectAncho.appendChild(option);
+            });
+
+            // Mostrar sección si existen anchos
+            widthSection.hidden = anchos.length === 0;
+        }
+
+
         materiales.forEach(function (material) {
 
             const label = document.createElement('label');
@@ -99,8 +146,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     });
 
                 label.classList.add('is-selected');
-            });
 
+                // Actualizar anchos al seleccionar material
+                mostrarAnchos(material);
+
+            });
             materialOptions.appendChild(label);
         });
 
