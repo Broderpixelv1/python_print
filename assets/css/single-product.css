@@ -1,0 +1,86 @@
+
+/* =========================================
+   PYTHON PRINT — FICHA DE PRODUCTO
+   ========================================= */
+
+.python-product-page {
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+    box-sizing: border-box;
+}
+
+/* Layout principal: galería + información */
+
+.python-product-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    gap: 48px;
+    align-items: start;
+}
+
+/* Galería */
+
+.python-product-gallery {
+    min-width: 0;
+}
+
+.python-product-gallery img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Información del producto */
+
+.python-product-summary {
+    min-width: 0;
+}
+
+.python-product-summary .product_title {
+    font-size: clamp(28px, 3vw, 42px);
+    line-height: 1.15;
+    font-weight: 700;
+    margin: 0 0 20px;
+}
+
+.python-product-summary .woocommerce-product-details__short-description {
+    font-size: 16px;
+    line-height: 1.7;
+    color: #555;
+    margin-bottom: 28px;
+}
+
+/* Ocultar precio mientras trabajamos con cotizaciones */
+
+.python-product-summary .price {
+    display: none;
+}
+
+/* Sección inferior */
+
+.python-product-details {
+    margin-top: 70px;
+}
+
+/* Responsive: tablet y móvil */
+
+@media (max-width: 768px) {
+
+    .python-product-page {
+        padding: 24px 16px 50px;
+    }
+
+    .python-product-layout {
+        grid-template-columns: 1fr;
+        gap: 28px;
+    }
+
+    .python-product-summary .product_title {
+        font-size: 30px;
+    }
+
+    .python-product-details {
+        margin-top: 45px;
+    }
+}

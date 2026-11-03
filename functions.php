@@ -45,6 +45,30 @@ function mi_tema_scripts() {
     wp_enqueue_style('mi-tema-main-css', get_template_directory_uri() . '/assets/css/main.css',array(),'7.1.5');
     wp_enqueue_style('mi-tema-menu', get_template_directory_uri() . '/assets/css/menu.css');
     wp_enqueue_style('mi-tema-header', get_template_directory_uri() . '/assets/css/header.css');
+
+    
+// CSS del catálogo de productos
+if (function_exists('is_product_category') && (is_product_category() || is_shop())) {
+
+    wp_enqueue_style(
+        'python-print-catalogo',
+        get_template_directory_uri() . '/assets/css/catalogo.css',
+        array(),
+        filemtime(get_template_directory() . '/assets/css/catalogo.css')
+    );
+
+}
+    
+    // CSS exclusivo para las fichas de producto WooCommerce
+    if (is_product()) {
+        wp_enqueue_style(
+            'python-single-product',
+            get_template_directory_uri() . '/assets/css/single-product.css',
+            array('mi-tema-main-css'),
+            '1.0.0'
+        );
+    }
+
     // Scripts
     wp_enqueue_script('mi-tema-main-js', get_template_directory_uri() . '/assets/js/main.js', array('jquery'), '1.0', true);
     wp_enqueue_script('mi-tema-menu-js', get_template_directory_uri() . '/assets/js/menu-responsivo.js', array('jquery'), '1.1', true);
