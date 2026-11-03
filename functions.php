@@ -337,3 +337,39 @@ function carrusel_subcategorias_shortcode($atts) {
     return '<p>No subcategories found.</p>';
 }
 add_shortcode('carrusel_subcategorias', 'carrusel_subcategorias_shortcode');
+
+
+// =========================================
+// PYTHON PRINT — INTEGRAR CONFIGURADOR
+// =========================================
+
+function python_print_cargar_configurador() {
+
+    // Solo cargar en categorías y tienda WooCommerce
+    if (function_exists('is_product_category') &&
+        (is_product_category() || is_shop())) {
+
+        // Insertar estructura del popup en el footer
+        add_action('wp_footer', function() {
+            get_template_part('template-parts/product-configurator');
+        });
+
+        // Cargar estilos
+        wp_enqueue_style(
+            'python-configurador',
+            get_template_directory_uri() . '/assets/css/configurador.css',
+            array(),
+            '1.0.0'
+        );
+
+        // Cargar JavaScript
+        wp_enqueue_script(
+            'python-configurador',
+            get_template_directory_uri() . '/assets/js/configurador.js',
+            array(),
+            '1.0.0',
+            true
+        );
+    }
+}
+add_action('wp_enqueue_scripts', 'python_print_cargar_configurador');
