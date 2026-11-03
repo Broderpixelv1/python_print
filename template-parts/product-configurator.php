@@ -40,11 +40,51 @@ defined('ABSPATH') || exit;
                     class="python-configurator__title">
                     Configurar producto
                 </h2>
-
+            <!--configuracion del producto-->
                 <div class="python-configurator__options">
-                    <!-- Aquí incorporaremos las opciones -->
-                </div>
 
+                    <section class="python-configurator__section">
+
+                        <h3 class="python-configurator__heading">
+                            ¿Qué tipo de etiqueta necesitas?
+                        </h3>
+
+                        <p class="python-configurator__description">
+                            Selecciona la información que llevará tu etiqueta.
+                        </p>
+
+                        <div class="python-configurator__choices">
+
+                            <label class="python-configurator__choice">
+                                <input type="radio" name="tipo_etiqueta" value="marca">
+                                <span class="python-configurator__choice-content">
+                                    <strong>Solo marca</strong>
+                                    <small>Tu logotipo o nombre de marca.</small>
+                                </span>
+                            </label>
+
+                            <label class="python-configurator__choice">
+                                <input type="radio" name="tipo_etiqueta" value="marca_talla">
+                                <span class="python-configurator__choice-content">
+                                    <strong>Marca + talla</strong>
+                                    <small>Marca y talla en una misma etiqueta.</small>
+                                </span>
+                            </label>
+
+                            <label class="python-configurator__choice">
+                                <input type="radio" name="tipo_etiqueta" value="talla">
+                                <span class="python-configurator__choice-content">
+                                    <strong>Solo talla</strong>
+                                    <small>Etiquetas independientes de tallas.</small>
+                                </span>
+                            </label>
+
+                        </div>
+
+                    </section>
+
+                </div>
+            <!--fin configuracion del producto-->
             </div>
 
         </div>

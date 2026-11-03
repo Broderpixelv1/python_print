@@ -10,6 +10,29 @@ document.addEventListener('DOMContentLoaded', function () {
     const productImage = configurator.querySelector('.python-configurator__image');
     const productTitle = configurator.querySelector('.python-configurator__title');
 
+
+    // Selección del tipo de etiqueta
+    const typeOptions = configurator.querySelectorAll(
+        'input[name="tipo_etiqueta"]'
+    );
+
+    typeOptions.forEach(function (option) {
+
+        option.addEventListener('change', function () {
+
+            configurator.querySelectorAll(
+                '.python-configurator__choice'
+            ).forEach(function (choice) {
+                choice.classList.remove('is-selected');
+            });
+
+            option.closest('.python-configurator__choice')
+                .classList.add('is-selected');
+
+        });
+
+    });
+
     // Abrir configurador
     function openConfigurator(product) {
 
