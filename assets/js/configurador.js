@@ -380,6 +380,91 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    
+    // =========================================
+    // LIMPIAR ERRORES AL CORREGIR CAMPOS
+    // =========================================
+
+    function quitarError(elemento) {
+
+        if (!elemento) return;
+
+        elemento.classList.remove('python-field-error');
+
+        elemento.querySelectorAll('.python-error-message').forEach(function (mensaje) {
+            mensaje.remove();
+        });
+    }
+
+    configurator.addEventListener('change', function (event) {
+
+        const campo = event.target;
+
+        // Tipo de etiqueta
+        if (campo.matches('input[name="tipo_etiqueta"]')) {
+            quitarError(campo.closest('.python-configurator__section'));
+        }
+
+        // Material
+        if (campo.matches('input[name="python_material"]')) {
+            quitarError(configurator.querySelector('.python-material-section'));
+        }
+
+        // Ancho
+        if (campo.matches('#python-ancho') && campo.value) {
+            quitarError(configurator.querySelector('.python-width-section'));
+        }
+
+        // Longitud
+        if (campo.matches('#python-longitud') && campo.value) {
+            quitarError(configurator.querySelector('.python-length-section'));
+        }
+
+        // Cantidad de etiquetas
+        if (campo.matches('#python-cantidad')) {
+
+            const cantidad = Number(campo.value);
+
+            if (Number.isInteger(cantidad) && cantidad >= 100 && cantidad % 100 === 0) {
+                quitarError(configurator.querySelector('.python-quantity-section'));
+            }
+        }
+
+        // Tallas dinámicas
+        if (campo.matches('.python-size-select, .python-size-custom, .python-size-quantity')) {
+
+            const fila = campo.closest('.python-size-row');
+
+            if (fila) {
+                const talla = fila.querySelector('.python-size-select');
+                const personalizada = fila.querySelector('.python-size-custom');
+                const cantidad = Number(fila.querySelector('.python-size-quantity')?.value);
+
+                const nombreValido =
+                    talla?.value !== 'Personalizada' ||
+                    Boolean(personalizada?.value.trim());
+
+                const cantidadValida =
+                    Number.isInteger(cantidad) &&
+                    cantidad >= 100 &&
+                    cantidad % 100 === 0;
+
+                if (nombreValido && cantidadValida) {
+                    quitarError(fila);
+                }
+            }
+
+            if (configurator.querySelectorAll('.python-size-row').length > 0) {
+                quitarError(configurator.querySelector('.python-sizes-section'));
+            }
+        }
+    });
+
+    configurator.addEventListener('input', function (event) {
+        if (event.target.matches('.python-size-custom')) {
+            event.target.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+    });
 
     // Resaltar un campo que necesita atención
     function marcarError(elemento, mensaje) {
