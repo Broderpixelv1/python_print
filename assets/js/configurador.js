@@ -824,6 +824,8 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         const combinacion = obtenerDatosCombinacion();
+        console.log('PRODUCTO ENVIADO:', combinacion.product_id);
+        console.log('COMBINACIÓN ENVIADA:', combinacion);
 
         const textoOriginal = addToOrderButton.innerHTML;
 
@@ -883,6 +885,8 @@ document.addEventListener('DOMContentLoaded', function () {
             closeConfigurator();
 
             console.log('Combinación guardada:', resultado.data);
+            console.log('CLAVE DEL CARRITO:', resultado.data.cart_item_key);
+            console.log('URL DEL CARRITO:', resultado.data.cart_url);
 
         } catch (error) {
 

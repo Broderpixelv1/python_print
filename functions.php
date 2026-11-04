@@ -542,7 +542,15 @@ function python_agregar_combinacion() {
             'message' => 'El carrito no está disponible.'
         ), 500);
     }
-
+    
+    /*
+    * Asegurar que el carrito AJAX utiliza
+    * una sesión persistente de WooCommerce.
+    */
+    if (WC()->session) {
+        WC()->session->set_customer_session_cookie(true);
+    }
+                
     $datos = isset($_POST['combinacion'])
         ? wp_unslash($_POST['combinacion'])
         : array();
@@ -574,21 +582,21 @@ function python_agregar_combinacion() {
     }
 
     
-if (!$producto->is_purchasable()) {
+    if (!$producto->is_purchasable()) {
 
-    wp_send_json_error(array(
-        'message' => sprintf(
-            'Diagnóstico: ID=%d | Tipo=%s | Estado=%s | Precio=%s | Marca=%s | Marca+talla=%s | Talla=%s',
-            $product_id,
-            $producto->get_type(),
-            $producto->get_status(),
-            $producto->get_price() === '' ? 'VACÍO' : $producto->get_price(),
-            $producto->get_meta('_python_tipo_marca') ?: 'VACÍO',
-            $producto->get_meta('_python_tipo_marca_talla') ?: 'VACÍO',
-            $producto->get_meta('_python_tipo_talla') ?: 'VACÍO'
-        )
-    ), 400);
-}
+        wp_send_json_error(array(
+            'message' => sprintf(
+                'Diagnóstico: ID=%d | Tipo=%s | Estado=%s | Precio=%s | Marca=%s | Marca+talla=%s | Talla=%s',
+                $product_id,
+                $producto->get_type(),
+                $producto->get_status(),
+                $producto->get_price() === '' ? 'VACÍO' : $producto->get_price(),
+                $producto->get_meta('_python_tipo_marca') ?: 'VACÍO',
+                $producto->get_meta('_python_tipo_marca_talla') ?: 'VACÍO',
+                $producto->get_meta('_python_tipo_talla') ?: 'VACÍO'
+            )
+        ), 400);
+    }
 
 
     if (!$producto->is_in_stock()) {
@@ -800,6 +808,32 @@ if (!$producto->is_purchasable()) {
         ), 400);
     }
 
+    // Guardar explícitamente la sesión del carrito.
+    WC()->cart->set_session();
+
+    
+    $carrito_sesion = WC()->session
+        ? WC()->session->get('cart', array())
+        : array();
+
+    error_log(
+        'PYTHON PRINT - SESIÓN AJAX: ' .
+        wp_json_encode(array_map(
+            function ($item) {
+                return array(
+                    'product_id' => $item['product_id'] ?? 0,
+                    'configuracion' => isset($item['python_configuracion']),
+                );
+            },
+            $carrito_sesion
+        ))
+    );
+
+
+    if (WC()->session) {
+        WC()->session->set_customer_session_cookie(true);
+        WC()->session->save_data();
+    }
 
     wp_send_json_success(array(
         'message' => 'Combinación agregada a Mi pedido.',
@@ -819,31 +853,31 @@ if (!$producto->is_purchasable()) {
 add_filter('woocommerce_is_purchasable', 'python_producto_cotizable', 10, 2);
 
 
+
+
+/**
+ * PYTHON PRINT
+ * Permitir recuperar combinaciones guardadas
+ * en la sesión de WooCommerce.
+ */
+add_filter(
+    'woocommerce_is_purchasable',
+    'python_producto_cotizable',
+    10,
+    2
+);
+
 function python_producto_cotizable($purchasable, $product) {
 
     if ($purchasable || !$product) {
         return $purchasable;
     }
 
-    // Solo habilitar esta excepción durante nuestro AJAX.
     if (
-        !wp_doing_ajax() ||
-        !isset($_REQUEST['action']) ||
-        $_REQUEST['action'] !== 'python_agregar_combinacion'
-    ) {
-        return $purchasable;
-    }
-
-    // El producto debe estar publicado y disponible.
-    if (
+        !$product->is_type('simple') ||
         $product->get_status() !== 'publish' ||
         !$product->is_in_stock()
     ) {
-        return false;
-    }
-
-    // Debe ser un producto simple configurable.
-    if (!$product->is_type('simple')) {
         return false;
     }
 
@@ -852,5 +886,288 @@ function python_producto_cotizable($purchasable, $product) {
         $product->get_meta('_python_tipo_marca_talla') === 'yes' ||
         $product->get_meta('_python_tipo_talla') === 'yes';
 
-    return $es_configurable;
+    if (!$es_configurable) {
+        return false;
+    }
+
+    // Autorizar nuestro AJAX de configuración.
+    if (
+        wp_doing_ajax() &&
+        isset($_REQUEST['action']) &&
+        $_REQUEST['action'] === 'python_agregar_combinacion'
+    ) {
+        return true;
+    }
+
+    // Comprobar la sesión original, antes de que
+    // WooCommerce reconstruya el carrito.
+    if (function_exists('WC') && WC()->session) {
+
+        $carrito_guardado = WC()->session->get('cart', array());
+
+        if (is_array($carrito_guardado)) {
+
+            foreach ($carrito_guardado as $item) {
+
+                if (
+                    isset(
+                        $item['product_id'],
+                        $item['python_configuracion']
+                    ) &&
+                    (int) $item['product_id'] === (int) $product->get_id()
+                ) {
+                    return true;
+                }
+            }
+        }
+    }
+
+    return false;
 }
+
+
+
+/**
+ * PYTHON PRINT
+ * Mostrar detalles de cada combinación en el carrito.
+ */
+add_filter(
+    'woocommerce_get_item_data',
+    'python_mostrar_datos_combinacion',
+    10,
+    2
+);
+
+function python_mostrar_datos_combinacion($item_data, $cart_item) {
+
+    if (empty($cart_item['python_configuracion'])) {
+        return $item_data;
+    }
+
+    $config = $cart_item['python_configuracion'];
+
+    $tipos = array(
+        'marca'      => 'Solo marca',
+        'marca_talla' => 'Marca + talla',
+        'talla'      => 'Solo talla',
+    );
+
+    $item_data[] = array(
+        'key'   => 'Tipo de etiqueta',
+        'value' => $tipos[$config['tipo']] ?? $config['tipo'],
+    );
+
+    $item_data[] = array(
+        'key'   => 'Material',
+        'value' => $config['material'],
+    );
+
+    $item_data[] = array(
+        'key'   => 'Ancho',
+        'value' => $config['ancho'] . ' mm',
+    );
+
+    $item_data[] = array(
+        'key'   => 'Longitud',
+        'value' => $config['longitud'] . ' mm',
+    );
+
+    if (!empty($config['tallas'])) {
+
+        foreach ($config['tallas'] as $fila) {
+
+            $item_data[] = array(
+                'key'   => 'Talla ' . $fila['talla'],
+                'value' => $fila['cantidad'] . ' unidades',
+            );
+        }
+    }
+
+    $item_data[] = array(
+        'key'   => 'Total de etiquetas',
+        'value' => $config['cantidad'] . ' unidades',
+    );
+
+    return $item_data;
+}
+
+
+//temporal
+
+
+/**
+ * PYTHON PRINT — DIAGNÓSTICO TEMPORAL
+ * Mostrar el contenido real del carrito.
+ */
+add_action('wp_footer', function () {
+
+    if (!function_exists('is_cart') || !is_cart()) {
+        return;
+    }
+
+    if (!function_exists('WC') || !WC()->cart) {
+        echo '<pre>PYTHON PRINT: carrito no disponible</pre>';
+        return;
+    }
+
+    $carrito = WC()->cart->get_cart();
+
+    echo '<pre style="
+        padding:20px;
+        margin:20px;
+        background:#f5f5f5;
+        color:#222;
+        border:1px solid #ccc;
+        white-space:pre-wrap;
+        overflow-wrap:anywhere;
+    ">';
+
+    echo 'PYTHON PRINT - DIAGNÓSTICO DEL CARRITO' . "\n\n";
+    echo 'Productos encontrados: ' . count($carrito) . "\n\n";
+
+    foreach ($carrito as $item) {
+
+        echo 'Producto ID: ' . ($item['product_id'] ?? '') . "\n";
+        echo 'Cantidad WooCommerce: ' . ($item['quantity'] ?? '') . "\n";
+
+        if (isset($item['python_configuracion'])) {
+            echo 'Configuración: ' .
+                esc_html(wp_json_encode($item['python_configuracion'])) .
+                "\n";
+        } else {
+            echo 'Sin configuración personalizada' . "\n";
+        }
+
+        echo "\n";
+    }
+
+    echo '</pre>';
+});
+
+
+
+add_action('woocommerce_cart_loaded_from_session', function ($cart) {
+
+    if (!defined('WP_DEBUG') || !WP_DEBUG) {
+        return;
+    }
+
+    $productos = array();
+
+    foreach ($cart->get_cart() as $item) {
+        $productos[] = array(
+            'product_id' => $item['product_id'] ?? 0,
+            'configuracion' => isset($item['python_configuracion']),
+        );
+    }
+
+    error_log(
+        'PYTHON PRINT - CARRITO RECUPERADO: ' .
+        wp_json_encode($productos)
+    );
+
+}, 100);
+
+
+/**
+ * PYTHON PRINT
+ * Impedir el pago de combinaciones pendientes
+ * de cotización.
+ */
+add_filter('woocommerce_cart_needs_payment', function ($needs_payment, $cart) {
+
+    if (!$cart) {
+        return $needs_payment;
+    }
+
+    foreach ($cart->get_cart() as $item) {
+
+        if (!empty($item['python_configuracion'])) {
+            return false;
+        }
+    }
+
+    return $needs_payment;
+
+}, 10, 2);
+
+
+/**
+ * Bloquear el checkout convencional cuando
+ * existan combinaciones pendientes de cotización.
+ */
+add_action('woocommerce_check_cart_items', function () {
+
+    if (!WC()->cart || !is_checkout()) {
+        return;
+    }
+
+    foreach (WC()->cart->get_cart() as $item) {
+
+        if (!empty($item['python_configuracion'])) {
+
+            wc_add_notice(
+                'Tu pedido contiene productos personalizados pendientes de cotización. Solicita tu cotización antes de finalizar la compra.',
+                'error'
+            );
+
+            return;
+        }
+    }
+});
+
+
+/**
+ * PYTHON PRINT
+ * Detectar combinaciones pendientes de cotización.
+ */
+function python_carrito_requiere_cotizacion() {
+
+    if (!function_exists('WC') || !WC()->cart) {
+        return false;
+    }
+
+    foreach (WC()->cart->get_cart() as $item) {
+        if (!empty($item['python_configuracion'])) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+
+/**
+ * Bloquear checkout clásico.
+ */
+add_action('woocommerce_checkout_process', function () {
+
+    if (python_carrito_requiere_cotizacion()) {
+        wc_add_notice(
+            'Este pedido contiene productos personalizados pendientes de cotización. No puedes finalizar una compra hasta recibir una cotización.',
+            'error'
+        );
+    }
+
+});
+
+
+/**
+ * Bloquear checkout mediante bloques de WooCommerce.
+ */
+add_action(
+    'woocommerce_store_api_checkout_update_order_from_request',
+    function ($order, $request) {
+
+        if (python_carrito_requiere_cotizacion()) {
+            throw new \Automattic\WooCommerce\StoreApi\Exceptions\RouteException(
+                'python_cotizacion_pendiente',
+                'Este pedido contiene productos personalizados pendientes de cotización.',
+                400
+            );
+        }
+
+    },
+    10,
+    2
+);
