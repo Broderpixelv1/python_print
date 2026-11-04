@@ -40,7 +40,7 @@ defined('ABSPATH') || exit;
                     class="python-configurator__title">
                     Configurar producto
                 </h2>
-            <!--configuracion del producto-->
+                <!--configuracion del producto-->
                 <div class="python-configurator__options">
 
                     <section class="python-configurator__section">
@@ -201,7 +201,27 @@ defined('ABSPATH') || exit;
                     </section>
 
                 </div>
-            <!--fin configuracion del producto-->
+                <!--fin configuracion del producto-->
+                
+                <!-- ACCIONES DEL CONFIGURADOR -->
+                <div class="python-configurator__actions">
+
+                    <button
+                        type="button"
+                        id="python-add-to-order"
+                        class="python-configurator__add-to-order"
+                    >
+                        <span>Agregar a mi pedido</span>
+                        <span class="python-configurator__button-icon">→</span>
+                    </button>
+
+                    <p class="python-configurator__actions-note">
+                        Podrás agregar otras combinaciones y revisar
+                        tu pedido antes de enviarlo.
+                    </p>
+
+                </div>
+
             </div>
 
         </div>

@@ -351,3 +351,81 @@
         width: 34px;
     }
 }
+
+
+/* =========================================
+   BOTÓN AGREGAR A MI PEDIDO
+   ========================================= */
+
+.python-configurator__actions {
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid #eee;
+}
+
+.python-configurator__add-to-order {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 17px 22px;
+    border: none;
+    border-radius: 12px;
+    background: #ff6b5e;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .2s ease, transform .2s ease;
+}
+
+.python-configurator__add-to-order:hover {
+    background: #f05247;
+    transform: translateY(-2px);
+}
+
+.python-configurator__button-icon {
+    font-size: 23px;
+    line-height: 1;
+}
+
+.python-configurator__actions-note {
+    margin: 12px 0 0;
+    color: #777;
+    font-size: 12px;
+    line-height: 1.6;
+    text-align: center;
+}
+
+
+/* =========================================
+   VALIDACIÓN VISUAL DEL CONFIGURADOR
+   ========================================= */
+
+.python-field-error {
+    border: 2px solid #ff6b5e !important;
+    border-radius: 12px;
+    background-color: #fff4f2;
+    padding: 12px;
+}
+
+.python-field-error .python-configurator__select {
+    border-color: #ff6b5e !important;
+}
+
+.python-error-message {
+    display: block;
+    margin-top: 8px;
+    color: #d94335;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.python-field-error .python-configurator__heading {
+    color: #d94335;
+}
+
+.python-configurator__select:focus-visible {
+    outline: 2px solid #ff6b5e;
+    outline-offset: 2px;
+}

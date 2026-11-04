@@ -359,6 +359,211 @@ document.addEventListener('DOMContentLoaded', function () {
         document.body.classList.add('no-scroll');
     }
 
+        
+    // =========================================
+    // VALIDAR CONFIGURACIÓN DEL PRODUCTO
+    // =========================================
+
+    const addToOrderButton = configurator.querySelector('#python-add-to-order');
+
+    
+    // Limpiar los errores anteriores
+    
+    function limpiarErrores() {
+
+        configurator.querySelectorAll('.python-error-message').forEach(function (mensaje) {
+            mensaje.remove();
+        });
+
+        configurator.querySelectorAll('.python-field-error').forEach(function (elemento) {
+            elemento.classList.remove('python-field-error');
+        });
+    }
+
+
+    // Resaltar un campo que necesita atención
+    function marcarError(elemento, mensaje) {
+
+        if (!elemento) return;
+
+        elemento.classList.add('python-field-error');
+
+        const aviso = document.createElement('small');
+        aviso.className = 'python-error-message';
+        aviso.textContent = mensaje;
+
+        elemento.appendChild(aviso);
+
+        elemento.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center'
+        });
+    }
+
+    //validar campos del formulario incompletos
+    
+    function validarConfiguracion() {
+
+        limpiarErrores();
+
+        let esValido = true;
+        let primerError = null;
+
+        function registrarError(elemento, mensaje) {
+
+            if (!elemento) return;
+
+            elemento.classList.add('python-field-error');
+
+            const aviso = document.createElement('small');
+            aviso.className = 'python-error-message';
+            aviso.textContent = mensaje;
+            elemento.appendChild(aviso);
+
+            if (!primerError) {
+                primerError = elemento;
+            }
+
+            esValido = false;
+        }
+
+        // 1. TIPO DE ETIQUETA
+        const tipo = configurator.querySelector(
+            'input[name="tipo_etiqueta"]:checked'
+        );
+
+        if (!tipo) {
+            const primeraOpcion = configurator.querySelector(
+                'input[name="tipo_etiqueta"]'
+            );
+
+            registrarError(
+                primeraOpcion?.closest('.python-configurator__section'),
+                'Selecciona el tipo de etiqueta.'
+            );
+        }
+
+        // 2. MATERIAL
+        const materialSection = configurator.querySelector('.python-material-section');
+        const material = configurator.querySelector(
+            'input[name="python_material"]:checked'
+        );
+
+        if (materialSection && !materialSection.hidden && !material) {
+            registrarError(materialSection, 'Selecciona un material.');
+        }
+
+        // 3. ANCHO
+        const widthSection = configurator.querySelector('.python-width-section');
+        const ancho = configurator.querySelector('#python-ancho');
+
+        if (
+            widthSection &&
+            !widthSection.hidden &&
+            (!ancho || !ancho.value)
+        ) {
+            registrarError(widthSection, 'Selecciona el ancho de la etiqueta.');
+        }
+
+        // 4. LONGITUD
+        const lengthSection = configurator.querySelector('.python-length-section');
+        const longitud = configurator.querySelector('#python-longitud');
+
+        if (
+            lengthSection &&
+            !lengthSection.hidden &&
+            (!longitud || !longitud.value)
+        ) {
+            registrarError(lengthSection, 'Selecciona la longitud de la etiqueta.');
+        }
+
+        // 5. CANTIDAD O TALLAS
+        if (tipo?.value === 'marca') {
+
+            const quantitySection = configurator.querySelector('.python-quantity-section');
+            const cantidad = Number(
+                configurator.querySelector('#python-cantidad')?.value
+            );
+
+            if (
+                !Number.isInteger(cantidad) ||
+                cantidad < 100 ||
+                cantidad % 100 !== 0
+            ) {
+                registrarError(
+                    quantitySection,
+                    'Ingresa una cantidad válida, en múltiplos de 100.'
+                );
+            }
+
+        } else if (tipo?.value === 'marca_talla' || tipo?.value === 'talla') {
+
+            const sizesSection = configurator.querySelector('.python-sizes-section');
+            const filas = sizesList.querySelectorAll('.python-size-row');
+
+            if (!filas.length) {
+
+                registrarError(
+                    sizesSection,
+                    'Agrega al menos una talla.'
+                );
+
+            } else {
+
+                filas.forEach(function (fila) {
+
+                    const select = fila.querySelector('.python-size-select');
+                    const personalizada = fila.querySelector('.python-size-custom');
+                    const cantidadInput = fila.querySelector('.python-size-quantity');
+                    const cantidad = Number(cantidadInput?.value);
+
+                    if (
+                        select?.value === 'Personalizada' &&
+                        !personalizada?.value.trim()
+                    ) {
+                        registrarError(
+                            fila,
+                            'Escribe el nombre de la talla personalizada.'
+                        );
+                    }
+
+                    if (
+                        !Number.isInteger(cantidad) ||
+                        cantidad < 100 ||
+                        cantidad % 100 !== 0
+                    ) {
+                        registrarError(
+                            fila,
+                            'La cantidad debe ser múltiplo de 100.'
+                        );
+                    }
+
+                });
+            }
+        }
+
+        // 6. DESPLAZAR AL PRIMER ERROR
+        if (primerError) {
+            primerError.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
+            });
+        }
+
+        return esValido;
+    }
+
+
+    addToOrderButton.addEventListener('click', function () {
+
+        if (!validarConfiguracion()) {
+            return;
+        }
+
+        alert('Configuración válida. Lista para agregar a Mi pedido.');
+
+    });
+
     //configuracion cantidad de longitud etiqueta
     const cantidadInput = configurator.querySelector('#python-cantidad');
     cantidadInput.addEventListener('change', function () {
