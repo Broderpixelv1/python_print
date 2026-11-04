@@ -1171,3 +1171,61 @@ add_action(
     10,
     2
 );
+
+
+/**
+ * PYTHON PRINT
+ * Estilos de la página Mi pedido.
+ */
+add_action('wp_enqueue_scripts', function () {
+
+    if (is_page('mi-pedido')) {
+
+        $archivo = get_template_directory() . '/assets/css/mi-pedido.css';
+
+        wp_enqueue_style(
+            'python-mi-pedido',
+            get_template_directory_uri() . '/assets/css/mi-pedido.css',
+            array(),
+            file_exists($archivo) ? filemtime($archivo) : '1.0.0'
+        );
+    }
+
+});
+
+
+/**
+ * PYTHON PRINT
+ * Eliminar una combinación de Mi pedido.
+ */
+add_action('template_redirect', function () {
+
+    if (!is_page('mi-pedido')) {
+        return;
+    }
+
+    if (!isset($_GET['python_remove_item'])) {
+        return;
+    }
+
+    $cart_item_key = sanitize_text_field(
+        wp_unslash($_GET['python_remove_item'])
+    );
+
+    $nonce = isset($_GET['_wpnonce'])
+        ? sanitize_text_field(wp_unslash($_GET['_wpnonce']))
+        : '';
+
+    if (!wp_verify_nonce($nonce, 'python_remove_' . $cart_item_key)) {
+        wp_die('Solicitud no autorizada.');
+    }
+
+    if (!function_exists('WC') || !WC()->cart) {
+        wp_die('El carrito no está disponible.');
+    }
+
+    WC()->cart->remove_cart_item($cart_item_key);
+
+    wp_safe_redirect(get_permalink());
+    exit;
+});
