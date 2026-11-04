@@ -177,6 +177,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Abrir configurador
     function openConfigurator(product) {
 
+        productoActualId = Number(product.dataset.productId);
         const image = product.querySelector('img');
         const title = product.querySelector('.python-product-card__title');
 
@@ -638,16 +639,87 @@ document.addEventListener('DOMContentLoaded', function () {
         return esValido;
     }
 
+    
+    // =========================================
+    // DATOS DE LA COMBINACIÓN
+    // =========================================
 
+    // Producto que está abierto actualmente
+    let productoActualId = null;
+
+    function obtenerDatosCombinacion() {
+
+        const tipo = configurator.querySelector(
+            'input[name="tipo_etiqueta"]:checked'
+        )?.value || '';
+
+        const material = configurator.querySelector(
+            'input[name="python_material"]:checked'
+        )?.value || '';
+
+        const ancho = configurator.querySelector('#python-ancho')?.value || '';
+        const longitud = configurator.querySelector('#python-longitud')?.value || '';
+
+        const datos = {
+            product_id: productoActualId,
+            tipo: tipo,
+            material: material,
+            ancho: ancho,
+            longitud: longitud,
+            cantidad: 0,
+            tallas: []
+        };
+
+        if (tipo === 'marca') {
+
+            datos.cantidad = Number(
+                configurator.querySelector('#python-cantidad').value
+            );
+
+        } else {
+
+            sizesList.querySelectorAll('.python-size-row').forEach(function (fila) {
+
+                const select = fila.querySelector('.python-size-select');
+                const personalizada = fila.querySelector('.python-size-custom');
+
+                const talla = select.value === 'Personalizada'
+                    ? personalizada.value.trim()
+                    : select.value;
+
+                const cantidad = Number(
+                    fila.querySelector('.python-size-quantity').value
+                );
+
+                datos.tallas.push({
+                    talla: talla,
+                    cantidad: cantidad
+                });
+
+                datos.cantidad += cantidad;
+            });
+        }
+
+        return datos;
+    }
+
+
+    //evento del crear pedido
+    
     addToOrderButton.addEventListener('click', function () {
 
         if (!validarConfiguracion()) {
             return;
         }
 
-        alert('Configuración válida. Lista para agregar a Mi pedido.');
+        const combinacion = obtenerDatosCombinacion();
+
+        console.log('PYTHON PRINT - COMBINACIÓN:', combinacion);
+
+        alert('Combinación preparada correctamente. Revisa la consola.');
 
     });
+
 
     //configuracion cantidad de longitud etiqueta
     const cantidadInput = configurator.querySelector('#python-cantidad');

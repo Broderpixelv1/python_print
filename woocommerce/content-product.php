@@ -53,6 +53,7 @@ if (!$product || !$product->is_visible()) {
 
         <a class="python-product-card__link"
             href="<?php echo esc_url(get_permalink()); ?>"
+            data-product-id="<?php echo esc_attr($product->get_id()); ?>"
             data-tipo-marca="<?php echo esc_attr($product->get_meta('_python_tipo_marca')); ?>"
             data-tipo-marca-talla="<?php echo esc_attr($product->get_meta('_python_tipo_marca_talla')); ?>"
             data-tipo-talla="<?php echo esc_attr($product->get_meta('_python_tipo_talla')); ?>"
