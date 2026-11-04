@@ -120,6 +120,83 @@ defined('ABSPATH') || exit;
 
                         </section>
 
+                        
+                        <section class="python-configurator__section python-length-section" hidden>
+
+                            <h3 class="python-configurator__heading">
+                                ¿Qué longitud necesitas?
+                            </h3>
+
+                            <p class="python-configurator__description">
+                                Selecciona la longitud de tu etiqueta en milímetros.
+                            </p>
+
+                            <select
+                                id="python-longitud"
+                                name="python_longitud"
+                                class="python-configurator__select"
+                            >
+                                <option value="">Selecciona una longitud</option>
+                            </select>
+
+                        </section>
+
+                        
+                        
+                        <!-- CANTIDAD: SOLO MARCA -->
+                        <section
+                            class="python-configurator__section python-quantity-section"
+                            hidden
+                        >
+                            <h3 class="python-configurator__heading">
+                                ¿Cuántas etiquetas necesitas?
+                            </h3>
+
+                            <p class="python-configurator__description">
+                                Pedido mínimo de 100 unidades, en múltiplos de 100.
+                            </p>
+
+                            <input
+                                type="number"
+                                id="python-cantidad"
+                                name="python_cantidad"
+                                class="python-configurator__select"
+                                min="100"
+                                step="100"
+                                value="100"
+                            >
+                        </section>
+
+                        <!-- TALLAS: MARCA + TALLA / SOLO TALLA -->
+                        <section
+                            class="python-configurator__section python-sizes-section"
+                            hidden
+                        >
+                            <h3 class="python-configurator__heading">
+                                ¿Qué tallas necesitas?
+                            </h3>
+
+                            <p class="python-configurator__description">
+                                Agrega cada talla y su cantidad.
+                                Mínimo 100 unidades por talla.
+                            </p>
+
+                            <div class="python-sizes-list"></div>
+
+                            <button
+                                type="button"
+                                class="python-add-size"
+                            >
+                                + Agregar otra talla
+                            </button>
+
+                            <div class="python-sizes-summary">
+                                <span>Total de etiquetas:</span>
+                                <strong id="python-sizes-total">0</strong>
+                            </div>
+                        </section>
+
+
 
                     </section>
 

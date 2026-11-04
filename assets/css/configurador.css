@@ -240,3 +240,78 @@
 .python-configurator__select:focus {
     border-color: #222;
 }
+
+.python-length-section[hidden] {
+    display: none !important;
+}
+
+
+/* =========================================
+   CANTIDADES Y TALLAS
+   ========================================= */
+
+.python-quantity-section[hidden],
+.python-sizes-section[hidden] {
+    display: none !important;
+}
+
+.python-sizes-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.python-size-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 10px;
+    align-items: end;
+}
+
+.python-size-field {
+    min-width: 0;
+}
+
+.python-size-field label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 13px;
+    color: #555;
+}
+
+.python-size-row select,
+.python-size-row input {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.python-add-size {
+    width: 100%;
+    margin-top: 15px;
+    padding: 14px;
+    border: 1px dashed #aaa;
+    border-radius: 10px;
+    background: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.python-add-size:hover {
+    border-color: #222;
+    background: #f8f8f8;
+}
+
+.python-sizes-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 22px;
+    padding-top: 18px;
+    border-top: 1px solid #eee;
+    font-size: 15px;
+}
+
+.python-sizes-summary strong {
+    font-size: 20px;
+}

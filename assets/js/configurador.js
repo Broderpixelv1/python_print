@@ -16,6 +16,26 @@ document.addEventListener('DOMContentLoaded', function () {
         'input[name="tipo_etiqueta"]'
     );
 
+
+    const quantitySection = configurator.querySelector('.python-quantity-section');
+    const sizesSection = configurator.querySelector('.python-sizes-section');
+
+    function actualizarTipoEtiqueta(tipo) {
+
+        // Ocultar ambas secciones
+        quantitySection.hidden = true;
+        sizesSection.hidden = true;
+
+        if (tipo === 'marca') {
+            quantitySection.hidden = false;
+        }
+
+        if (tipo === 'marca_talla' || tipo === 'talla') {
+            sizesSection.hidden = false;
+        }
+    }
+
+
     typeOptions.forEach(function (option) {
 
         option.addEventListener('change', function () {
@@ -28,6 +48,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             option.closest('.python-configurator__choice')
                 .classList.add('is-selected');
+            actualizarTipoEtiqueta(option.value);
 
         });
 
@@ -116,6 +137,33 @@ document.addEventListener('DOMContentLoaded', function () {
             // Mostrar sección si existen anchos
             widthSection.hidden = anchos.length === 0;
         }
+                    
+            // Selector de longitud
+            const lengthSection = configurator.querySelector('.python-length-section');
+            const selectLongitud = configurator.querySelector('#python-longitud');
+
+            // Reiniciar longitud al abrir otro producto
+            selectLongitud.replaceChildren();
+
+            const placeholderLongitud = document.createElement('option');
+            placeholderLongitud.value = '';
+            placeholderLongitud.textContent = 'Selecciona una longitud';
+
+            selectLongitud.appendChild(placeholderLongitud);
+
+            // Generar longitudes de 35 a 120 mm, cada 5 mm
+            for (let longitud = 35; longitud <= 120; longitud += 5) {
+
+                const option = document.createElement('option');
+
+                option.value = longitud;
+                option.textContent = longitud + ' mm';
+
+                selectLongitud.appendChild(option);
+            }
+
+            // Mostrar longitud únicamente cuando el producto tenga materiales
+            lengthSection.hidden = materiales.length === 0;
 
 
         materiales.forEach(function (material) {
@@ -172,12 +220,40 @@ document.addEventListener('DOMContentLoaded', function () {
 
         });
 
+        // Ocultar cantidad y tallas al abrir otro producto
+        actualizarTipoEtiqueta('');
+
+        const cantidadInput = configurator.querySelector('#python-cantidad');
+
+        if (cantidadInput) {
+            cantidadInput.value = 100;
+        }
+
         configurator.classList.add('is-open');
         configurator.setAttribute('aria-hidden', 'false');
 
         document.body.classList.add('no-scroll');
     }
 
+    //configuracion cantidad de longitud etiqueta
+    const cantidadInput = configurator.querySelector('#python-cantidad');
+    cantidadInput.addEventListener('change', function () {
+
+        const cantidad = Number(cantidadInput.value);
+
+        // Mínimo 100 y únicamente múltiplos de 100
+        if (!Number.isFinite(cantidad) || cantidad < 100) {
+            cantidadInput.value = 100;
+            return;
+        }
+
+        // Redondear hacia arriba al siguiente múltiplo de 100
+        cantidadInput.value = Math.ceil(cantidad / 100) * 100;
+
+    });
+
+
+    
     // Cerrar configurador
     function closeConfigurator() {
 
