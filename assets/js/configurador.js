@@ -486,6 +486,58 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+
+    function obtenerNombreTalla(fila) {
+
+        const select = fila.querySelector('.python-size-select');
+        const personalizada = fila.querySelector('.python-size-custom');
+
+        if (!select) return '';
+
+        return (
+            select.value === 'Personalizada'
+                ? personalizada?.value.trim() || ''
+                : select.value.trim()
+        );
+    }
+
+    function validarTallasDuplicadas() {
+
+        const filas = sizesList.querySelectorAll('.python-size-row');
+        const tallasRegistradas = new Map();
+
+        let hayDuplicados = false;
+
+        filas.forEach(function (fila) {
+
+            const talla = obtenerNombreTalla(fila);
+            if (!talla) return;
+
+            // Evitar diferencias entre mayúsculas, minúsculas y espacios.
+            const clave = talla
+                .normalize('NFKC')
+                .toLocaleUpperCase('es-EC')
+                .replace(/\s+/g, ' ')
+                .trim();
+
+            if (tallasRegistradas.has(clave)) {
+
+                marcarError(
+                    fila,
+                    'Esta talla ya fue agregada. Selecciona otra o modifica la cantidad existente.'
+                );
+
+                hayDuplicados = true;
+
+            } else {
+                tallasRegistradas.set(clave, fila);
+            }
+        });
+
+        return !hayDuplicados;
+    }
+
+
     //validar campos del formulario incompletos
     
     function validarConfiguracion() {
@@ -625,6 +677,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
 
                 });
+                if (!validarTallasDuplicadas()) {
+                    esValido = false;
+                }
             }
         }
 
@@ -639,7 +694,53 @@ document.addEventListener('DOMContentLoaded', function () {
         return esValido;
     }
 
-    
+    //COMPROBAR DUPLICADOS DE TALLAS 
+
+    function comprobarDuplicadoEnFila(fila) {
+
+        const talla = obtenerNombreTalla(fila);
+
+        if (!talla) return;
+
+        const normalizar = valor => valor
+            .normalize('NFKC')
+            .toLocaleUpperCase('es-EC')
+            .replace(/\s+/g, ' ')
+            .trim();
+
+        const duplicada = Array.from(
+            sizesList.querySelectorAll('.python-size-row')
+        ).some(function (otraFila) {
+            return otraFila !== fila &&
+                normalizar(obtenerNombreTalla(otraFila)) === normalizar(talla);
+        });
+
+        if (duplicada) {
+            alert('La talla "' + talla + '" ya está agregada. Escoge otra talla o modifica su cantidad.');
+
+            marcarError(
+                fila,
+                'Talla duplicada.'
+            );
+        }
+    }
+
+    sizesList.addEventListener('change', function (event) {
+
+        if (event.target.matches('.python-size-select, .python-size-custom')) {
+            comprobarDuplicadoEnFila(event.target.closest('.python-size-row'));
+        }
+
+    });
+
+    sizesList.addEventListener('blur', function (event) {
+
+        if (event.target.matches('.python-size-custom')) {
+            comprobarDuplicadoEnFila(event.target.closest('.python-size-row'));
+        }
+
+    }, true);
+
     // =========================================
     // DATOS DE LA COMBINACIÓN
     // =========================================
@@ -706,19 +807,98 @@ document.addEventListener('DOMContentLoaded', function () {
 
     //evento del crear pedido
     
-    addToOrderButton.addEventListener('click', function () {
+    
+    addToOrderButton.addEventListener('click', async function () {
 
         if (!validarConfiguracion()) {
             return;
         }
 
+        if (
+            typeof pythonPedido === 'undefined' ||
+            !pythonPedido.ajaxUrl ||
+            !pythonPedido.nonce
+        ) {
+            alert('No se pudo conectar con el carrito. Recarga la página.');
+            return;
+        }
+
         const combinacion = obtenerDatosCombinacion();
 
-        console.log('PYTHON PRINT - COMBINACIÓN:', combinacion);
+        const textoOriginal = addToOrderButton.innerHTML;
 
-        alert('Combinación preparada correctamente. Revisa la consola.');
+        addToOrderButton.disabled = true;
+        addToOrderButton.textContent = 'Agregando a mi pedido...';
+
+        try {
+
+            const formData = new FormData();
+
+            formData.append('action', 'python_agregar_combinacion');
+            formData.append('nonce', pythonPedido.nonce);
+
+            // Enviar el objeto con la estructura que espera PHP.
+            formData.append('combinacion[product_id]', combinacion.product_id);
+            formData.append('combinacion[tipo]', combinacion.tipo);
+            formData.append('combinacion[material]', combinacion.material);
+            formData.append('combinacion[ancho]', combinacion.ancho);
+            formData.append('combinacion[longitud]', combinacion.longitud);
+            formData.append('combinacion[cantidad]', combinacion.cantidad);
+
+            combinacion.tallas.forEach(function (fila, index) {
+                formData.append(
+                    `combinacion[tallas][${index}][talla]`,
+                    fila.talla
+                );
+
+                formData.append(
+                    `combinacion[tallas][${index}][cantidad]`,
+                    fila.cantidad
+                );
+            });
+
+            const respuesta = await fetch(pythonPedido.ajaxUrl, {
+                method: 'POST',
+                body: formData,
+                credentials: 'same-origin'
+            });
+
+            const resultado = await respuesta.json();
+
+            if (!respuesta.ok || !resultado.success) {
+                throw new Error(
+                    resultado.data?.message ||
+                    'No se pudo agregar la combinación.'
+                );
+            }
+
+            // Actualizar fragmentos del carrito si están disponibles.
+            if (window.jQuery) {
+                window.jQuery(document.body).trigger('wc_fragment_refresh');
+            }
+
+            alert(resultado.data.message);
+
+            // Cerrar el configurador después de guardar.
+            closeConfigurator();
+
+            console.log('Combinación guardada:', resultado.data);
+
+        } catch (error) {
+
+            console.error('Error al agregar combinación:', error);
+
+            alert(error.message || 'Ocurrió un error al guardar el pedido.');
+
+        } finally {
+
+            addToOrderButton.disabled = false;
+            addToOrderButton.innerHTML = textoOriginal;
+
+        }
 
     });
+
 
 
     //configuracion cantidad de longitud etiqueta

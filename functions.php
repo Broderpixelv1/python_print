@@ -370,6 +370,17 @@ function python_print_cargar_configurador() {
             '1.0.0',
             true
         );
+
+        
+        wp_localize_script(
+            'python-configurador',
+            'pythonPedido',
+            array(
+                'ajaxUrl' => admin_url('admin-ajax.php'),
+                'nonce'   => wp_create_nonce('python_configurador'),
+            )
+        );
+
     }
 }
 add_action('wp_enqueue_scripts', 'python_print_cargar_configurador');
@@ -514,3 +525,332 @@ function python_guardar_anchos_material($term_id) {
 add_action('created_pa_material', 'python_guardar_anchos_material');
 add_action('edited_pa_material', 'python_guardar_anchos_material');
 
+
+/**
+ * PYTHON PRINT
+ * Guardar una combinación personalizada en el carrito.
+ */
+add_action('wp_ajax_python_agregar_combinacion', 'python_agregar_combinacion');
+add_action('wp_ajax_nopriv_python_agregar_combinacion', 'python_agregar_combinacion');
+
+function python_agregar_combinacion() {
+
+    check_ajax_referer('python_configurador', 'nonce');
+
+    if (!function_exists('WC') || !WC()->cart) {
+        wp_send_json_error(array(
+            'message' => 'El carrito no está disponible.'
+        ), 500);
+    }
+
+    $datos = isset($_POST['combinacion'])
+        ? wp_unslash($_POST['combinacion'])
+        : array();
+
+    if (!is_array($datos)) {
+        wp_send_json_error(array(
+            'message' => 'Datos de configuración inválidos.'
+        ), 400);
+    }
+
+    $product_id = isset($datos['product_id'])
+        ? absint($datos['product_id'])
+        : 0;
+
+    $producto = wc_get_product($product_id);
+
+    /*
+    if (!$producto || !$producto->is_purchasable() || !$producto->is_in_stock()) {
+        wp_send_json_error(array(
+            'message' => 'Este producto no está disponible.'
+        ), 400);
+    }*/
+    
+    
+    if (!$producto) {
+        wp_send_json_error(array(
+            'message' => 'El producto no existe. ID recibido: ' . $product_id
+        ), 400);
+    }
+
+    
+if (!$producto->is_purchasable()) {
+
+    wp_send_json_error(array(
+        'message' => sprintf(
+            'Diagnóstico: ID=%d | Tipo=%s | Estado=%s | Precio=%s | Marca=%s | Marca+talla=%s | Talla=%s',
+            $product_id,
+            $producto->get_type(),
+            $producto->get_status(),
+            $producto->get_price() === '' ? 'VACÍO' : $producto->get_price(),
+            $producto->get_meta('_python_tipo_marca') ?: 'VACÍO',
+            $producto->get_meta('_python_tipo_marca_talla') ?: 'VACÍO',
+            $producto->get_meta('_python_tipo_talla') ?: 'VACÍO'
+        )
+    ), 400);
+}
+
+
+    if (!$producto->is_in_stock()) {
+        wp_send_json_error(array(
+            'message' => 'El producto está marcado como agotado.'
+        ), 400);
+    }
+
+
+    // Validar tipo de etiqueta.
+    $tipo = isset($datos['tipo'])
+        ? sanitize_key($datos['tipo'])
+        : '';
+
+    $tipos_permitidos = array(
+        'marca'      => '_python_tipo_marca',
+        'marca_talla' => '_python_tipo_marca_talla',
+        'talla'      => '_python_tipo_talla',
+    );
+
+    if (
+        !isset($tipos_permitidos[$tipo]) ||
+        $producto->get_meta($tipos_permitidos[$tipo]) !== 'yes'
+    ) {
+        wp_send_json_error(array(
+            'message' => 'El tipo de etiqueta no está permitido.'
+        ), 400);
+    }
+
+    // Material y medidas.
+    $material = isset($datos['material'])
+        ? sanitize_text_field($datos['material'])
+        : '';
+
+    $ancho = isset($datos['ancho'])
+        ? sanitize_text_field($datos['ancho'])
+        : '';
+
+    $longitud = isset($datos['longitud'])
+        ? absint($datos['longitud'])
+        : 0;
+
+    // Validar longitud: de 35 a 120 mm, cada 5 mm.
+    if ($longitud < 35 || $longitud > 120 || $longitud % 5 !== 0) {
+        wp_send_json_error(array(
+            'message' => 'Selecciona una longitud válida.'
+        ), 400);
+    }
+
+    // Comprobar que el material pertenezca al producto.
+    $materiales = wc_get_product_terms(
+        $product_id,
+        'pa_material',
+        array('fields' => 'all')
+    );
+
+    $material_valido = false;
+    $ancho_valido = false;
+
+    if (!is_wp_error($materiales)) {
+        foreach ($materiales as $termino) {
+
+            if ($termino->name !== $material) {
+                continue;
+            }
+
+            $material_valido = true;
+
+            $anchos = array_map(
+                'trim',
+                explode(',', (string) get_term_meta(
+                    $termino->term_id,
+                    'python_anchos',
+                    true
+                ))
+            );
+
+            $ancho_valido = in_array($ancho, $anchos, true);
+            break;
+        }
+    }
+
+    if (!$material_valido || !$ancho_valido) {
+        wp_send_json_error(array(
+            'message' => 'El material o ancho seleccionado no es válido.'
+        ), 400);
+    }
+
+    // Cantidades y tallas.
+    $cantidad = 0;
+    $tallas = array();
+
+    if ($tipo === 'marca') {
+
+        $cantidad = isset($datos['cantidad'])
+            ? absint($datos['cantidad'])
+            : 0;
+
+        if ($cantidad < 100 || $cantidad % 100 !== 0) {
+            wp_send_json_error(array(
+                'message' => 'La cantidad debe ser múltiplo de 100.'
+            ), 400);
+        }
+
+    } else {
+
+        if (
+            empty($datos['tallas']) ||
+            !is_array($datos['tallas'])
+        ) {
+            wp_send_json_error(array(
+                'message' => 'Agrega al menos una talla.'
+            ), 400);
+        }
+
+        $tallas_registradas = array();
+
+        foreach ($datos['tallas'] as $fila) {
+
+            if (!is_array($fila)) {
+                wp_send_json_error(array(
+                    'message' => 'Datos de talla inválidos.'
+                ), 400);
+            }
+
+            $talla = isset($fila['talla'])
+                ? sanitize_text_field($fila['talla'])
+                : '';
+
+            $unidades = isset($fila['cantidad'])
+                ? absint($fila['cantidad'])
+                : 0;
+
+            if (
+                $talla === '' ||
+                $unidades < 100 ||
+                $unidades % 100 !== 0
+            ) {
+                wp_send_json_error(array(
+                    'message' => 'Revisa las tallas y sus cantidades.'
+                ), 400);
+            }
+
+            $clave_talla = function_exists('mb_strtoupper')
+                ? mb_strtoupper($talla, 'UTF-8')
+                : strtoupper($talla);
+
+            $clave_talla = preg_replace('/\s+/u', ' ', trim($clave_talla));
+
+            if (isset($tallas_registradas[$clave_talla])) {
+                wp_send_json_error(array(
+                    'message' => 'Hay tallas duplicadas.'
+                ), 400);
+            }
+
+            $tallas_registradas[$clave_talla] = true;
+
+            $tallas[] = array(
+                'talla' => $talla,
+                'cantidad' => $unidades,
+            );
+
+            $cantidad += $unidades;
+        }
+    }
+
+    // Cada combinación tendrá su propia línea en el carrito.
+    $cart_item_data = array(
+        'python_configuracion' => array(
+            'tipo' => $tipo,
+            'material' => $material,
+            'ancho' => $ancho,
+            'longitud' => $longitud,
+            'cantidad' => $cantidad,
+            'tallas' => $tallas,
+        ),
+        'python_combinacion_id' => wp_generate_uuid4(),
+    );
+
+    wc_clear_notices();
+
+    $cart_item_key = WC()->cart->add_to_cart(
+        $product_id,
+        1,
+        0,
+        array(),
+        $cart_item_data
+    );
+
+    
+    if (!$cart_item_key) {
+
+        $errores = wc_get_notices('error');
+
+        $mensajes = array();
+
+        foreach ($errores as $error) {
+            if (!empty($error['notice'])) {
+                $mensajes[] = wp_strip_all_tags($error['notice']);
+            }
+        }
+
+        wc_clear_notices();
+
+        wp_send_json_error(array(
+            'message' => !empty($mensajes)
+                ? implode(' ', $mensajes)
+                : 'WooCommerce rechazó la combinación. Revisa el tipo y estado del producto.'
+        ), 400);
+    }
+
+
+    wp_send_json_success(array(
+        'message' => 'Combinación agregada a Mi pedido.',
+        'cart_item_key' => $cart_item_key,
+        'cart_url' => wc_get_cart_url(),
+        'cantidad' => $cantidad,
+    ));
+}
+
+
+
+/**
+ * PYTHON PRINT
+ * Permitir agregar productos configurables sin precio
+ * únicamente cuando se utilizan para cotización.
+ */
+add_filter('woocommerce_is_purchasable', 'python_producto_cotizable', 10, 2);
+
+
+function python_producto_cotizable($purchasable, $product) {
+
+    if ($purchasable || !$product) {
+        return $purchasable;
+    }
+
+    // Solo habilitar esta excepción durante nuestro AJAX.
+    if (
+        !wp_doing_ajax() ||
+        !isset($_REQUEST['action']) ||
+        $_REQUEST['action'] !== 'python_agregar_combinacion'
+    ) {
+        return $purchasable;
+    }
+
+    // El producto debe estar publicado y disponible.
+    if (
+        $product->get_status() !== 'publish' ||
+        !$product->is_in_stock()
+    ) {
+        return false;
+    }
+
+    // Debe ser un producto simple configurable.
+    if (!$product->is_type('simple')) {
+        return false;
+    }
+
+    $es_configurable =
+        $product->get_meta('_python_tipo_marca') === 'yes' ||
+        $product->get_meta('_python_tipo_marca_talla') === 'yes' ||
+        $product->get_meta('_python_tipo_talla') === 'yes';
+
+    return $es_configurable;
+}
