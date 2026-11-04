@@ -315,3 +315,39 @@
 .python-sizes-summary strong {
     font-size: 20px;
 }
+
+
+.python-size-custom {
+    margin-top: 8px;
+}
+
+.python-size-custom[hidden] {
+    display: none !important;
+}
+
+.python-remove-size {
+    width: 42px;
+    height: 48px;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    background: #fff;
+    color: #777;
+    font-size: 25px;
+    cursor: pointer;
+}
+
+.python-remove-size:hover {
+    color: #e5484d;
+    border-color: #e5484d;
+}
+
+@media (max-width: 480px) {
+    .python-size-row {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+        gap: 6px;
+    }
+
+    .python-remove-size {
+        width: 34px;
+    }
+}

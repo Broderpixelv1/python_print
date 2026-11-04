@@ -36,6 +36,126 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
 
+    // =========================================
+    // PYTHON PRINT — TALLAS DINÁMICAS
+    // =========================================
+
+    const sizesList = configurator.querySelector('.python-sizes-list');
+    const addSizeButton = configurator.querySelector('.python-add-size');
+    const sizesTotal = configurator.querySelector('#python-sizes-total');
+
+    const tallasDisponibles = [
+        'XS', 'S', 'M', 'L', 'XL', 'XXL', '3XL',
+        'Personalizada'
+    ];
+
+    // Actualizar total de etiquetas
+    function actualizarTotalTallas() {
+
+        let total = 0;
+
+        sizesList.querySelectorAll('.python-size-quantity').forEach(function (input) {
+            total += Number(input.value) || 0;
+        });
+
+        sizesTotal.textContent = total.toLocaleString('es-EC') + ' unidades';
+    }
+
+    // Agregar una fila de talla
+    function agregarTalla() {
+
+        const row = document.createElement('div');
+        row.className = 'python-size-row';
+
+        // Campo talla
+        const sizeField = document.createElement('div');
+        sizeField.className = 'python-size-field';
+
+        const sizeLabel = document.createElement('label');
+        sizeLabel.textContent = 'Talla';
+
+        const sizeSelect = document.createElement('select');
+        sizeSelect.className = 'python-configurator__select python-size-select';
+
+        tallasDisponibles.forEach(function (talla) {
+
+            const option = document.createElement('option');
+            option.value = talla;
+            option.textContent = talla;
+            sizeSelect.appendChild(option);
+
+        });
+
+        const customSize = document.createElement('input');
+        customSize.type = 'text';
+        customSize.className = 'python-configurator__select python-size-custom';
+        customSize.placeholder = 'Escribe la talla';
+        customSize.hidden = true;
+
+        sizeSelect.addEventListener('change', function () {
+            customSize.hidden = sizeSelect.value !== 'Personalizada';
+        });
+
+        sizeField.appendChild(sizeLabel);
+        sizeField.appendChild(sizeSelect);
+        sizeField.appendChild(customSize);
+
+        // Campo cantidad
+        const quantityField = document.createElement('div');
+        quantityField.className = 'python-size-field';
+
+        const quantityLabel = document.createElement('label');
+        quantityLabel.textContent = 'Cantidad';
+
+        const quantityInput = document.createElement('input');
+        quantityInput.type = 'number';
+        quantityInput.className = 'python-configurator__select python-size-quantity';
+        quantityInput.min = 100;
+        quantityInput.step = 100;
+        quantityInput.value = 100;
+
+        quantityInput.addEventListener('change', function () {
+
+            const cantidad = Number(quantityInput.value);
+
+            if (!Number.isFinite(cantidad) || cantidad < 100) {
+                quantityInput.value = 100;
+            } else {
+                quantityInput.value = Math.ceil(cantidad / 100) * 100;
+            }
+
+            actualizarTotalTallas();
+        });
+
+        quantityField.appendChild(quantityLabel);
+        quantityField.appendChild(quantityInput);
+
+        // Botón eliminar
+        const removeButton = document.createElement('button');
+        removeButton.type = 'button';
+        removeButton.className = 'python-remove-size';
+        removeButton.textContent = '×';
+        removeButton.setAttribute('aria-label', 'Eliminar talla');
+
+        removeButton.addEventListener('click', function () {
+            row.remove();
+            actualizarTotalTallas();
+        });
+
+        row.appendChild(sizeField);
+        row.appendChild(quantityField);
+        row.appendChild(removeButton);
+
+        sizesList.appendChild(row);
+
+        actualizarTotalTallas();
+    }
+
+    // Botón agregar talla
+    addSizeButton.addEventListener('click', agregarTalla);
+
+
+
     typeOptions.forEach(function (option) {
 
         option.addEventListener('change', function () {
@@ -222,6 +342,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Ocultar cantidad y tallas al abrir otro producto
         actualizarTipoEtiqueta('');
+
+        sizesList.replaceChildren();
+        actualizarTotalTallas();
+
 
         const cantidadInput = configurator.querySelector('#python-cantidad');
 
