@@ -218,3 +218,26 @@
     background: #fff4f2;
     color: #c32f23;
 }
+
+
+
+/* Botón editar combinación */
+
+.python-order-item__edit {
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 15px;
+    border: 1px solid #dedede;
+    border-radius: 9px;
+    background: #fff;
+    color: #222;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .2s ease;
+}
+
+.python-order-item__edit:hover {
+    border-color: #ff6b57;
+    color: #ff6b57;
+}

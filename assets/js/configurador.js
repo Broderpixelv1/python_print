@@ -177,6 +177,16 @@ document.addEventListener('DOMContentLoaded', function () {
     // Abrir configurador
     function openConfigurator(product) {
 
+        // Reiniciar el modo edición al abrir un producto del catálogo.
+        combinacionEnEdicion = null;
+
+        const botonPedido = configurator.querySelector('#python-add-to-order');
+
+        botonPedido.innerHTML = `
+            <span>Agregar a mi pedido</span>
+            <span class="python-configurator__button-icon">→</span>
+        `;
+
         productoActualId = Number(product.dataset.productId);
         const image = product.querySelector('img');
         const title = product.querySelector('.python-product-card__title');
@@ -359,8 +369,101 @@ document.addEventListener('DOMContentLoaded', function () {
 
         document.body.classList.add('no-scroll');
     }
+    //
+
+    
+    // =========================================
+    // RECUPERAR CONFIGURACIÓN GUARDADA
+    // =========================================
+
+    function cargarConfiguracionGuardada(datos) {
+
+        if (!datos) return;
+
+        // 1. Tipo de etiqueta
+        const tipo = configurator.querySelector(
+            `input[name="tipo_etiqueta"][value="${datos.tipo}"]`
+        );
+
+        if (tipo && tipo.closest('.python-configurator__choice').style.display !== 'none') {
+            tipo.checked = true;
+            tipo.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+
+        // 2. Material
+        const materiales = configurator.querySelectorAll(
+            'input[name="python_material"]'
+        );
+
+        const material = Array.from(materiales).find(
+            input => input.value === datos.material
+        );
+
+        if (material) {
+            material.checked = true;
+            material.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+
+        // 3. Ancho y longitud
+        const ancho = configurator.querySelector('#python-ancho');
+        const longitud = configurator.querySelector('#python-longitud');
+
+        if (ancho) {
+            ancho.value = String(datos.ancho);
+        }
+
+        if (longitud) {
+            longitud.value = String(datos.longitud);
+        }
+
+        // 4. Cantidad para etiquetas solo marca
+        if (datos.tipo === 'marca') {
+
+            const cantidad = configurator.querySelector('#python-cantidad');
+
+            if (cantidad) {
+                cantidad.value = datos.cantidad;
+            }
+
+        } else if (Array.isArray(datos.tallas)) {
+
+            // 5. Recuperar tallas y cantidades
+            sizesList.replaceChildren();
+
+            datos.tallas.forEach(function (filaGuardada) {
+
+                agregarTalla();
+
+                const filas = sizesList.querySelectorAll('.python-size-row');
+                const fila = filas[filas.length - 1];
+
+                const selector = fila.querySelector('.python-size-select');
+                const personalizada = fila.querySelector('.python-size-custom');
+                const cantidad = fila.querySelector('.python-size-quantity');
+
+                const tallaGuardada = String(filaGuardada.talla || '');
+
+                const existe = tallasDisponibles.includes(tallaGuardada)
+                    && tallaGuardada !== 'Personalizada';
+
+                if (existe) {
+                    selector.value = tallaGuardada;
+                } else {
+                    selector.value = 'Personalizada';
+                    personalizada.hidden = false;
+                    personalizada.value = tallaGuardada;
+                }
+
+                cantidad.value = filaGuardada.cantidad;
+
+            });
+
+            actualizarTotalTallas();
+        }
+    }
 
         
+    
     // =========================================
     // VALIDAR CONFIGURACIÓN DEL PRODUCTO
     // =========================================
@@ -747,6 +850,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Producto que está abierto actualmente
     let productoActualId = null;
+    let combinacionEnEdicion = null;
 
     function obtenerDatosCombinacion() {
 
@@ -836,8 +940,22 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const formData = new FormData();
 
-            formData.append('action', 'python_agregar_combinacion');
+            
+            if (combinacionEnEdicion) {
+
+                // Actualizar una combinación existente.
+                formData.append('action', 'python_actualizar_combinacion');
+                formData.append('cart_item_key', combinacionEnEdicion);
+
+            } else {
+
+                // Agregar una combinación nueva.
+                formData.append('action', 'python_agregar_combinacion');
+
+            }
+
             formData.append('nonce', pythonPedido.nonce);
+
 
             // Enviar el objeto con la estructura que espera PHP.
             formData.append('combinacion[product_id]', combinacion.product_id);
@@ -932,6 +1050,85 @@ document.addEventListener('DOMContentLoaded', function () {
 
         document.body.classList.remove('no-scroll');
     }
+
+    
+    // =========================================
+    // EDITAR COMBINACIÓN DESDE MI PEDIDO
+    // =========================================
+
+    document.addEventListener('click', function (event) {
+
+        const botonEditar = event.target.closest(
+            '.python-order-item__edit'
+        );
+
+        if (!botonEditar) return;
+
+        const tarjeta = botonEditar.closest('.python-order-item');
+
+        if (!tarjeta) return;
+
+        const imagen = tarjeta.querySelector(
+            '.python-order-item__image img'
+        );
+
+        const titulo = tarjeta.querySelector(
+            '.python-order-item__details h2'
+        );
+
+        if (imagen && productImage) {
+            productImage.src = imagen.src;
+            productImage.alt = imagen.alt || '';
+        }
+
+        if (titulo && productTitle) {
+            productTitle.textContent = titulo.textContent.trim();
+        }
+
+       
+        const datosProducto = tarjeta.cloneNode(false);
+
+        datosProducto.dataset.productId = botonEditar.dataset.productId;
+
+        const imagenProducto = document.createElement('img');
+        imagenProducto.src = imagen?.src || '';
+        imagenProducto.alt = imagen?.alt || '';
+
+        const tituloProducto = document.createElement('div');
+        tituloProducto.className = 'python-product-card__title';
+        tituloProducto.textContent = titulo?.textContent.trim() || '';
+
+        datosProducto.appendChild(imagenProducto);
+        datosProducto.appendChild(tituloProducto);
+
+        // Abrir con los materiales, anchos y longitudes reales.
+        openConfigurator(datosProducto);
+        
+        // Activar modo edición.
+        combinacionEnEdicion = botonEditar.dataset.cartKey;
+
+        const botonGuardar = configurator.querySelector('#python-add-to-order');
+
+        botonGuardar.innerHTML = `
+            <span>Guardar cambios</span>
+            <span class="python-configurator__button-icon">✓</span>
+        `;
+        
+        // Recuperar los valores de esta combinación.
+        try {
+            const configuracionGuardada = JSON.parse(
+                botonEditar.dataset.config || '{}'
+            );
+
+            cargarConfiguracionGuardada(configuracionGuardada);
+
+        } catch (error) {
+            console.error('Error al recuperar la combinación:', error);
+        }
+
+        
+    });
+
 
     // Detectar clic en tarjetas del catálogo
     document.addEventListener('click', function (event) {

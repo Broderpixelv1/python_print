@@ -40,7 +40,44 @@ $cart = function_exists('WC') ? WC()->cart : null;
                         $config = $cart_item['python_configuracion'] ?? null;
                     ?>
 
-                        <article class="python-order-item">
+                        
+                        <?php
+                        $materiales = array();
+                        $anchos_por_material = array();
+
+                        $terminos = wc_get_product_terms(
+                            $product->get_id(),
+                            'pa_material',
+                            array('fields' => 'all')
+                        );
+
+                        foreach ($terminos as $termino) {
+                            $materiales[] = $termino->name;
+
+                            $anchos = get_term_meta(
+                                $termino->term_id,
+                                'python_anchos',
+                                true
+                            );
+
+                            $anchos_por_material[$termino->name] = array_values(
+                                array_filter(
+                                    array_map('trim', explode(',', (string) $anchos)),
+                                    'strlen'
+                                )
+                            );
+                        }
+                        ?>
+
+                        <article
+                            class="python-order-item"
+                            data-tipo-marca="<?php echo esc_attr(get_post_meta($product->get_id(), '_python_tipo_marca', true)); ?>"
+                            data-tipo-marca-talla="<?php echo esc_attr(get_post_meta($product->get_id(), '_python_tipo_marca_talla', true)); ?>"
+                            data-tipo-talla="<?php echo esc_attr(get_post_meta($product->get_id(), '_python_tipo_talla', true)); ?>"
+                            data-materiales="<?php echo esc_attr(wp_json_encode($materiales)); ?>"
+                            data-anchos="<?php echo esc_attr(wp_json_encode($anchos_por_material)); ?>"
+                        >
+
 
                             <div class="python-order-item__image">
                                 <?php echo $product->get_image('woocommerce_thumbnail'); ?>
@@ -91,6 +128,23 @@ $cart = function_exists('WC') ? WC()->cart : null;
                                  
                                 
                                 <div class="python-order-item__actions">
+
+                                    
+                                    <?php if ($config) : ?>
+
+                                        <button
+                                            type="button"
+                                            class="python-order-item__edit"
+                                            data-cart-key="<?php echo esc_attr($cart_item_key); ?>"
+                                            data-product-id="<?php echo esc_attr($product->get_id()); ?>"
+                                            data-config="<?php echo esc_attr(wp_json_encode($config)); ?>"
+
+                                        >
+                                            Editar combinación
+                                        </button>
+
+                                    <?php endif; ?>
+
 
                                     <a
                                         href="<?php echo esc_url(
@@ -151,5 +205,12 @@ $cart = function_exists('WC') ? WC()->cart : null;
     </div>
 
 </main>
+
+
+<?php
+// Reutilizar el configurador de productos en Mi pedido.
+get_template_part('template-parts/product-configurator');
+?>
+
 
 <?php get_footer(); ?>

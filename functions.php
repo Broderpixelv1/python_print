@@ -345,9 +345,9 @@ add_shortcode('carrusel_subcategorias', 'carrusel_subcategorias_shortcode');
 
 function python_print_cargar_configurador() {
 
-    // Solo cargar en categorías y tienda WooCommerce
+    // Solo cargar en categorías y tienda WooCommerce, ahora en pagina mi pedido
     if (function_exists('is_product_category') &&
-        (is_product_category() || is_shop())) {
+    (is_product_category() || is_shop() || is_page('mi-pedido'))) {
 
         // Insertar estructura del popup en el footer
         add_action('wp_footer', function() {
@@ -533,7 +533,7 @@ add_action('edited_pa_material', 'python_guardar_anchos_material');
 add_action('wp_ajax_python_agregar_combinacion', 'python_agregar_combinacion');
 add_action('wp_ajax_nopriv_python_agregar_combinacion', 'python_agregar_combinacion');
 
-function python_agregar_combinacion() {
+function python_guardar_combinacion($modo = 'agregar') {
 
     check_ajax_referer('python_configurador', 'nonce');
 
@@ -843,6 +843,13 @@ function python_agregar_combinacion() {
     ));
 }
 
+
+/**
+ * Agregar una combinación nueva al carrito.
+ */
+function python_agregar_combinacion() {
+    python_guardar_combinacion('agregar');
+}
 
 
 /**
