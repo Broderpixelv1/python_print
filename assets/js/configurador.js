@@ -1001,6 +1001,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Cerrar el configurador después de guardar.
             closeConfigurator();
+            
+            if (combinacionEnEdicion) {
+            window.location.reload();
+            return;
+        }
 
             console.log('Combinación guardada:', resultado.data);
             console.log('CLAVE DEL CARRITO:', resultado.data.cart_item_key);

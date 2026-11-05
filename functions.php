@@ -549,6 +549,27 @@ function python_guardar_combinacion($modo = 'agregar') {
     */
     if (WC()->session) {
         WC()->session->set_customer_session_cookie(true);
+
+        
+        // Identificar la combinación que se está editando.
+        $cart_item_key_edicion = '';
+
+        if ($modo === 'editar') {
+
+            $cart_item_key_edicion = isset($_POST['cart_item_key'])
+                ? wc_clean(wp_unslash($_POST['cart_item_key']))
+                : '';
+
+            if (
+                !$cart_item_key_edicion ||
+                !WC()->cart->get_cart_item($cart_item_key_edicion)
+            ) {
+                wp_send_json_error(array(
+                    'message' => 'No encontramos la combinación que deseas editar.'
+                ), 404);
+            }
+        }
+
     }
                 
     $datos = isset($_POST['combinacion'])
@@ -777,16 +798,45 @@ function python_guardar_combinacion($modo = 'agregar') {
     );
 
     wc_clear_notices();
+//
+   
+    if ($modo === 'editar') {
 
-    $cart_item_key = WC()->cart->add_to_cart(
-        $product_id,
-        1,
-        0,
-        array(),
-        $cart_item_data
-    );
+        // Recuperar la combinación existente.
+        $item_actual = WC()->cart->get_cart_item($cart_item_key_edicion);
 
-    
+        // Impedir que se cambie el producto original.
+        if (
+            !$item_actual ||
+            (int) $item_actual['product_id'] !== $product_id ||
+            empty($item_actual['python_configuracion'])
+        ) {
+            wp_send_json_error(array(
+                'message' => 'La combinación original no es válida.'
+            ), 400);
+        }
+
+        // Actualizar solamente la configuración.
+        WC()->cart->cart_contents[$cart_item_key_edicion]['python_configuracion']
+            = $cart_item_data['python_configuracion'];
+
+        // Mantener la clave y el identificador originales.
+        $cart_item_key = $cart_item_key_edicion;
+
+        WC()->cart->calculate_totals();
+
+    } else {
+
+        // Crear una combinación nueva.
+        $cart_item_key = WC()->cart->add_to_cart(
+            $product_id,
+            1,
+            0,
+            array(),
+            $cart_item_data
+        );
+    }
+ //   
     if (!$cart_item_key) {
 
         $errores = wc_get_notices('error');
@@ -836,7 +886,9 @@ function python_guardar_combinacion($modo = 'agregar') {
     }
 
     wp_send_json_success(array(
-        'message' => 'Combinación agregada a Mi pedido.',
+        'message' => $modo === 'editar'
+        ? 'Combinación actualizada correctamente.'
+        : 'Combinación agregada a Mi pedido.',
         'cart_item_key' => $cart_item_key,
         'cart_url' => wc_get_cart_url(),
         'cantidad' => $cantidad,
@@ -851,6 +903,23 @@ function python_agregar_combinacion() {
     python_guardar_combinacion('agregar');
 }
 
+
+/**
+ * Actualizar una combinación existente.
+ */
+function python_actualizar_combinacion() {
+    python_guardar_combinacion('editar');
+}
+
+add_action(
+    'wp_ajax_python_actualizar_combinacion',
+    'python_actualizar_combinacion'
+);
+
+add_action(
+    'wp_ajax_nopriv_python_actualizar_combinacion',
+    'python_actualizar_combinacion'
+);
 
 /**
  * PYTHON PRINT

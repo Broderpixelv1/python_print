@@ -90,6 +90,21 @@ $cart = function_exists('WC') ? WC()->cart : null;
                                 </h2>
 
                                 <?php if ($config) : ?>
+                                        
+                                    <?php
+                                    $tipos_etiqueta = array(
+                                        'marca'      => 'Solo marca',
+                                        'marca_talla' => 'Marca + talla',
+                                        'talla'      => 'Solo talla',
+                                    );
+
+                                    $tipo_etiqueta = $tipos_etiqueta[$config['tipo'] ?? ''] ?? 'No especificado';
+                                    ?>
+
+                                    <p class="python-order-item__type">
+                                        <?php echo esc_html($tipo_etiqueta); ?>
+                                    </p>
+
 
                                     <p>
                                         <?php echo esc_html($config['material']); ?>
