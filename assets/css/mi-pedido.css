@@ -60,3 +60,137 @@
  .python-order-item__actions{right:3px}
  .python-order-item__edit,.python-order-item__remove{width:36px;height:36px}
 }
+
+/* Botón principal de cotización */
+
+.python-quote-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 52px;
+    margin-top: 24px;
+    padding: 14px 20px;
+    border: 0;
+    border-radius: 12px;
+    background: #ff6b57;
+    color: #fff;
+    font-family: 'Flexo', Arial, sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background .2s ease, transform .2s ease;
+}
+
+.python-quote-button:hover {
+    background: #ed5946;
+    transform: translateY(-2px);
+}
+
+/* Mantener ocultos los campos condicionales */
+
+.python-quote-form[hidden],
+.python-quote-company[hidden] {
+    display: none !important;
+}
+
+/* Python Print — Cotización en 3 pasos. Agregar al final de mi-pedido.css */
+.python-quote-form[hidden], .python-quote-form [hidden] { display:none !important; }
+.python-quote-form { margin:40px 0 0; padding:clamp(20px,4vw,44px); border-radius:22px; background:#fff; box-shadow:0 8px 35px rgba(24,35,65,.06); color:#263043; font-family:'Flexo',Arial,sans-serif; }
+.python-quote-form * { box-sizing:border-box; }
+.python-quote-form__eyebrow { color:#ff6b57!important; font-size:12px!important; font-weight:700; letter-spacing:.09em; }
+.python-quote-form__header h2 { font-size:clamp(26px,3vw,36px); margin:5px 0 8px; color:#182235; }
+.python-quote-form__header p, .python-quote-help { color:#778092; line-height:1.5; }
+.python-quote-steps { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin:30px 0 34px; padding:0; list-style:none; }
+.python-quote-steps li { display:flex; align-items:center; gap:9px; padding-bottom:13px; border-bottom:3px solid #e8ebf2; color:#8790a1; font-size:13px; font-weight:600; }
+.python-quote-steps li span { display:grid; place-items:center; flex:none; width:31px; height:31px; border:1px solid #dce1e9; border-radius:50%; }
+.python-quote-steps li.is-active, .python-quote-steps li.is-done { color:#ff6b57; border-bottom-color:#ff6b57; }
+.python-quote-steps li.is-active span, .python-quote-steps li.is-done span { background:#ff6b57; color:#fff; border-color:#ff6b57; }
+.python-quote-panel h3 { margin:0 0 8px; font-size:22px; color:#182235; }
+.python-quote-type { border:0; padding:0; margin:25px 0; display:flex; flex-wrap:wrap; gap:12px; }
+.python-quote-type legend { display:block; width:100%; margin-bottom:10px; font-size:14px; font-weight:700; }
+.python-quote-type label { display:flex; align-items:center; gap:9px; border:1px solid #e2e5ed; border-radius:12px; padding:12px 16px; cursor:pointer; }
+.python-quote-type input, .python-quote-consents input { accent-color:#ff6b57; }
+.python-quote-fields { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; margin:20px 0; }
+.python-quote-fields label, .python-quote-textarea { display:flex; flex-direction:column; gap:8px; font-size:13px; font-weight:650; color:#354055; }
+.python-quote-full { grid-column:1 / -1; }
+.python-quote-fields input, .python-quote-textarea textarea { width:100%; min-width:0; min-height:52px; padding:13px 15px; border:1px solid #dfe4ed; border-radius:12px; outline:0; background:#fff; color:#263043; font:inherit; font-size:15px; font-weight:400; }
+.python-quote-fields input:focus, .python-quote-textarea textarea:focus { border-color:#ff6b57; box-shadow:0 0 0 3px rgba(255,107,87,.12); }
+.python-quote-textarea textarea { resize:vertical; min-height:110px; }
+.python-quote-consents { display:grid; gap:14px; margin:26px 0; }
+.python-quote-consents label { display:flex; align-items:flex-start; gap:10px; font-size:13px; line-height:1.5; color:#586477; }
+.python-quote-consents input { margin-top:4px; flex:none; }
+.python-quote-consents a { color:#e85c49; text-decoration:underline; }
+.python-quote-navigation { display:flex; justify-content:flex-end; flex-wrap:wrap; gap:12px; margin-top:30px; }
+.python-quote-navigation button { min-height:50px; border-radius:12px; padding:12px 22px; font-family:inherit; font-size:14px; font-weight:700; cursor:pointer; }
+.python-quote-back { margin-right:auto; border:1px solid #dfe4ed; background:#fff; color:#39465a; }
+.python-quote-next, .python-quote-submit { border:0; background:#ff6b57; color:#fff; }
+.python-quote-submit:disabled { opacity:.55; cursor:not-allowed; }
+.python-quote-notice { padding:13px 15px; background:#f3f5fa; border-radius:10px; color:#647087; font-size:13px; line-height:1.5; }
+.python-quote-error { color:#b42318; font-size:13px; }
+.python-quote-review { border:1px solid #e6e9f0; border-radius:14px; overflow:hidden; margin:20px 0; }
+.python-quote-review > div { display:grid; grid-template-columns:150px minmax(0,1fr); gap:12px; padding:13px 16px; border-bottom:1px solid #edf0f5; font-size:14px; overflow-wrap:anywhere; }
+.python-quote-review > div:last-child { border:0; }
+.python-quote-review strong { color:#647087; }
+@media(max-width:650px) { .python-quote-form { padding:20px 16px; } .python-quote-steps { gap:6px; } .python-quote-steps li { flex-direction:column; text-align:center; font-size:11px; } .python-quote-fields { grid-template-columns:1fr; gap:14px; } .python-quote-full { grid-column:auto; } .python-quote-review > div { grid-template-columns:1fr; gap:4px; } .python-quote-navigation button { flex:1; } }
+
+
+/* ===== PYTHON PRINT · PANEL DE COTIZACIÓN ===== */
+.python-order-layout{grid-template-columns:minmax(0,1fr) 320px;gap:28px;align-items:start}
+.python-order-products{max-height:calc(100vh - 135px);overflow-y:auto;overscroll-behavior:contain;padding-right:8px;scrollbar-width:thin}
+.python-order-summary{position:sticky;top:24px;max-height:calc(100vh - 48px);overflow-y:auto;padding:28px 26px;border:0;border-radius:24px;box-shadow:0 6px 28px rgba(24,35,65,.035);scrollbar-width:thin}
+.python-quote-profile{display:flex;align-items:center;gap:12px;padding-bottom:24px}
+.python-quote-profile__photo{width:54px;height:54px;flex:0 0 54px;display:grid;place-items:center;border-radius:50%;background:#f0f3fa;overflow:hidden;font-size:26px}
+.python-quote-profile__avatar{width:100%;height:100%;object-fit:cover}
+.python-quote-profile__identity{flex:1;min-width:0;display:grid;gap:3px}
+.python-quote-profile__identity strong{font-size:14px;color:#263043;overflow-wrap:anywhere}
+.python-quote-profile__identity small{font-size:11px;color:#929bad;overflow-wrap:anywhere}
+.python-quote-section-edit{border:0;background:transparent;color:#f25462;font:inherit;font-size:12px;font-weight:700;cursor:pointer;padding:6px 0}
+.python-quote-section-edit:hover{text-decoration:underline}
+.python-quote-sidebar-section{padding:22px 0;border-top:1px solid #edf0f5}
+.python-quote-sidebar-section__heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.python-quote-sidebar-section__heading h3{margin:0;color:#263043;font-size:15px;font-weight:700}
+.python-order-summary .python-quote-sidebar-section p{margin:0;color:#8994a6;font-size:13px;line-height:1.55}
+.python-quote-sidebar-section small{display:block;margin-top:8px;color:#a0a9b9;font-size:11px;line-height:1.5}
+.python-order-summary .python-quote-sidebar-footnote{margin:12px 0 0;text-align:center;font-size:11px;color:#929bad}
+.python-order-summary .python-quote-button{margin-top:4px}
+.python-order-totals{background:#fff;border-radius:20px;padding:25px;margin-top:10px}
+.python-order-totals h2{margin:0 0 20px;font-size:23px;color:#263043}
+.python-order-totals>div{display:flex;justify-content:space-between;gap:20px;padding:13px 0;border-bottom:1px solid #edf0f5;color:#8791a1;font-size:15px}
+.python-order-totals strong{color:#263043;font-size:18px}
+.python-order-totals p{margin:18px 0 0;color:#929bad;font-size:13px}
+@media(max-width:1200px){.python-order-layout{grid-template-columns:minmax(0,1fr) 300px;gap:18px}.python-order-summary{padding:22px 18px}}
+@media(max-width:950px){.python-order-layout{grid-template-columns:1fr}.python-order-products{max-height:none;overflow:visible;padding-right:0}.python-order-summary{position:static;max-height:none;overflow:visible}}
+
+/* Python Print — Popup de edición del panel lateral */
+.python-quote-modal[hidden], .python-quote-modal [hidden]{display:none!important}
+.python-quote-modal{position:fixed;inset:0;z-index:99999;display:grid;place-items:center;padding:18px;font-family:'Flexo',Arial,sans-serif}
+.python-quote-modal__backdrop{position:absolute;inset:0;background:rgba(18,26,43,.55)}
+.python-quote-modal__dialog{position:relative;width:min(100%,600px);max-height:min(90vh,850px);display:flex;flex-direction:column;overflow:hidden;border-radius:22px;background:#fff;box-shadow:0 25px 80px rgba(0,0,0,.22);outline:none}
+.python-quote-modal__header{display:flex;justify-content:space-between;align-items:start;gap:16px;padding:25px 28px 18px;border-bottom:1px solid #edf0f5}
+.python-quote-modal__header small{color:#ff6b57;font-size:11px;font-weight:700;letter-spacing:.08em}
+.python-quote-modal__header h2{margin:5px 0 0;font-size:26px;line-height:1.2}
+.python-quote-modal__close{border:0;background:#f1f3f8;color:#657086;width:36px;height:36px;border-radius:50%;font-size:25px;cursor:pointer}
+#python-quote-request{display:flex;flex-direction:column;min-height:0}
+.python-quote-modal__body{overflow-y:auto;padding:24px 28px}
+.python-quote-modal__section h3{margin:0 0 8px;font-size:20px}
+.python-quote-modal__section>p{color:#758093;font-size:13px;line-height:1.5}
+.python-quote-modal .python-quote-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:20px 0}
+.python-quote-modal .python-quote-fields label{display:flex;flex-direction:column;gap:7px;font-size:13px;font-weight:600;color:#354055}
+.python-quote-modal .python-quote-full{grid-column:1/-1}
+.python-quote-modal .python-quote-fields input{width:100%;min-width:0;min-height:48px;padding:12px 14px;border:1px solid #dfe4ed;border-radius:12px;background:#fff;font:inherit;font-size:15px;font-weight:400;color:#263043}
+.python-quote-modal input:focus-visible,.python-quote-modal button:focus-visible{outline:2px solid #ff6b57;outline-offset:2px}
+.python-quote-options{display:flex;flex-wrap:wrap;gap:12px;margin:18px 0}
+.python-quote-options label{display:flex;align-items:center;gap:9px;padding:13px 16px;border:1px solid #dfe4ed;border-radius:12px;font-size:14px;cursor:pointer}
+.python-quote-modal input[type=radio],.python-quote-modal input[type=checkbox]{accent-color:#ff6b57}
+.python-quote-consents{display:grid;gap:15px;margin:22px 0}
+.python-quote-consents label{display:flex;align-items:start;gap:10px;color:#5b6578;font-size:13px;line-height:1.5}
+.python-quote-consents input{flex:none;margin-top:3px}
+.python-quote-consents a{color:#e85c49;text-decoration:underline}
+.python-quote-error{padding:12px 14px;border-radius:10px;background:#fff1ef;color:#a72c20;font-size:13px}
+.python-quote-modal__footer{display:flex;justify-content:flex-end;gap:12px;padding:18px 28px;border-top:1px solid #edf0f5}
+.python-quote-modal__footer button{min-height:46px;padding:11px 20px;border-radius:11px;font:inherit;font-weight:700;cursor:pointer}
+.python-quote-cancel{border:1px solid #dfe4ed;background:#fff;color:#596476}
+.python-quote-save{border:0;background:#ff6b57;color:#fff}
+.python-quote-modal-open{overflow:hidden}
+@media(max-width:600px){.python-quote-modal{padding:10px}.python-quote-modal__dialog{max-height:94dvh;border-radius:17px}.python-quote-modal__header,.python-quote-modal__body,.python-quote-modal__footer{padding-left:17px;padding-right:17px}.python-quote-modal .python-quote-fields{grid-template-columns:1fr}.python-quote-modal .python-quote-full{grid-column:auto}}

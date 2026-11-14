@@ -1305,3 +1305,32 @@ add_action('template_redirect', function () {
     wp_safe_redirect(get_permalink());
     exit;
 });
+
+
+/**
+ * Python Print — Sistema de cotizaciones.
+ */
+require_once get_template_directory()
+    . '/inc/cotizaciones/registro.php';
+
+/**
+ * Python Print — Formulario de cotizaciones.
+ */
+add_action('wp_enqueue_scripts', function () {
+
+    if (!is_page('mi-pedido')) {
+        return;
+    }
+
+    $archivo = get_template_directory()
+        . '/assets/js/solicitar-cotizacion.js';
+
+    wp_enqueue_script(
+        'python-solicitar-cotizacion',
+        get_template_directory_uri()
+            . '/assets/js/solicitar-cotizacion.js',
+        array(),
+        file_exists($archivo) ? filemtime($archivo) : '1.0.0',
+        true
+    );
+});

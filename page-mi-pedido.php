@@ -159,26 +159,76 @@ $cart = function_exists('WC') ? WC()->cart : null;
 
                     <?php endforeach; ?>
 
+                    <div class="python-order-totals">
+                        <h2>Resumen</h2>
+                        <div><span>Combinaciones</span><strong><?php echo esc_html(count($cart->get_cart())); ?></strong></div>
+                        <div><span>Unidades solicitadas</span><strong><?php
+                            $unidades = 0;
+                            foreach ($cart->get_cart() as $item) {
+                                $unidades += isset($item['python_configuracion']['cantidad'])
+                                    ? (int) $item['python_configuracion']['cantidad']
+                                    : (int) ($item['quantity'] ?? 0);
+                            }
+                            echo esc_html($unidades);
+                        ?></strong></div>
+                        <p>Los valores se asignarán cuando revisemos tu cotización.</p>
+                    </div>
                 </section>
 
-                <aside class="python-order-summary">
+                <aside class="python-order-summary" aria-label="Datos para cotización">
+                    <?php
+                    $usuario = wp_get_current_user();
+                    $con_sesion = is_user_logged_in();
+                    $nombre_cliente = $con_sesion ? $usuario->display_name : 'Invitado';
+                    $correo_cliente = $con_sesion ? $usuario->user_email : 'Completa tus datos de contacto';
+                    $avatar_cliente = $con_sesion ? get_avatar($usuario->ID, 58, '', '', array('class' => 'python-quote-profile__avatar')) : '';
+                    ?>
+                    <div class="python-quote-profile">
+                        <div class="python-quote-profile__photo">
+                            <?php if ($avatar_cliente) : echo $avatar_cliente; else : ?>
+                                <span aria-hidden="true">👤</span>
+                            <?php endif; ?>
+                        </div>
+                        <div class="python-quote-profile__identity">
+                            <strong><?php echo esc_html($nombre_cliente); ?></strong>
+                            <small><?php echo esc_html($correo_cliente); ?></small>
+                        </div>
+                        <button type="button" class="python-quote-section-edit" data-quote-section="perfil" aria-label="Editar perfil">Editar</button>
+                    </div>
 
-                    <h2>Resumen del pedido</h2>
+                    <div class="python-quote-sidebar-section">
+                        <div class="python-quote-sidebar-section__heading">
+                            <h3>Método de pago</h3>
+                            <button type="button" class="python-quote-section-edit" data-quote-section="pago">Editar</button>
+                        </div>
+                        <p id="python-quote-payment-summary">Por seleccionar: tarjeta o transferencia</p>
+                        <small>El pago se realizará después de aprobar la proforma.</small>
+                    </div>
 
-                    <p>
-                        <?php echo esc_html($cart->get_cart_contents_count()); ?>
-                        artículos en tu pedido
-                    </p>
+                    <div class="python-quote-sidebar-section">
+                        <div class="python-quote-sidebar-section__heading">
+                            <h3>Envío o entrega</h3>
+                            <button type="button" class="python-quote-section-edit" data-quote-section="entrega">Editar</button>
+                        </div>
+                        <p id="python-quote-shipping-summary">Selecciona retiro en local o envío a domicilio.</p>
+                    </div>
 
-                    <p>
-                        Los productos personalizados
-                        se cotizarán según sus características.
-                    </p>
+                    <div class="python-quote-sidebar-section">
+                        <div class="python-quote-sidebar-section__heading">
+                            <h3>Datos de facturación</h3>
+                            <button type="button" class="python-quote-section-edit" data-quote-section="facturacion">Editar</button>
+                        </div>
+                        <p id="python-quote-billing-summary">Completa tus datos de facturación.</p>
+                    </div>
 
+                    <button type="button" id="python-open-quote" class="python-quote-button" aria-controls="python-quote-form" aria-expanded="false">Solicitar cotización</button>
+                    <p class="python-quote-sidebar-footnote">Recibirás tu proforma para revisarla antes de pagar.</p>
                 </aside>
 
             </div>
-
+        <?php
+        get_template_part('template-parts/formulario-cotizacion');
+        ?>                            
         <?php else : ?>
 
             <div class="python-order-empty">
