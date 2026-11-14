@@ -1313,6 +1313,16 @@ add_action('template_redirect', function () {
 require_once get_template_directory()
     . '/inc/cotizaciones/registro.php';
 
+    /**
+ * Python Print — Procesamiento de solicitudes de cotización.
+ */
+require_once get_template_directory() . '/inc/cotizaciones/solicitudes.php';
+
+/**
+ * Python Print — Acceso de clientes sin contraseña.
+ */
+require_once get_template_directory() . '/inc/cotizaciones/acceso-clientes.php';
+
 /**
  * Python Print — Formulario de cotizaciones.
  */
@@ -1333,4 +1343,16 @@ add_action('wp_enqueue_scripts', function () {
         file_exists($archivo) ? filemtime($archivo) : '1.0.0',
         true
     );
+    
+    wp_localize_script(
+        'python-solicitar-cotizacion',
+        'pythonCotizaciones',
+        array(
+            'ajaxUrl' => admin_url('admin-ajax.php'),
+            'nonce'   => wp_create_nonce('python_cotizacion_nonce'),
+            'accesoAction' => 'python_solicitar_acceso',
+            'accesoNonce'  => wp_create_nonce('python_acceso_cliente'),
+        )
+    );
+
 });

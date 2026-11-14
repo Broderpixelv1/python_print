@@ -22,6 +22,28 @@ $pp_meta = static function($key) use ($pp_logged, $pp_user) {
       <div class="python-quote-modal__body">
         <section class="python-quote-modal__section" data-quote-panel="perfil" hidden>
           <h3>Mi perfil</h3><p>Estos datos se usarán para contactarte sobre la cotización.</p>
+            <div class="python-access-box">
+                <h4>Accede a tu cuenta</h4>
+                <p>
+                    Recibe un enlace seguro en tu correo para ingresar
+                    a Python Print sin contraseña.
+                </p>
+
+                <button
+                    type="button"
+                    id="python-request-access"
+                    class="python-access-button">
+                    Continuar con correo electrónico
+                </button>
+
+                <p
+                    id="python-access-message"
+                    class="python-access-message"
+                    role="status"
+                    aria-live="polite"
+                    hidden>
+                </p>
+            </div>
           <div class="python-quote-fields">
             <label>Nombres *<input name="nombres" autocomplete="given-name" maxlength="100" required value="<?php echo esc_attr($pp_logged ? $pp_user->first_name : ''); ?>"></label>
             <label>Apellidos *<input name="apellidos" autocomplete="family-name" maxlength="100" required value="<?php echo esc_attr($pp_logged ? $pp_user->last_name : ''); ?>"></label>

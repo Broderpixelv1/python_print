@@ -194,3 +194,57 @@
 .python-quote-save{border:0;background:#ff6b57;color:#fff}
 .python-quote-modal-open{overflow:hidden}
 @media(max-width:600px){.python-quote-modal{padding:10px}.python-quote-modal__dialog{max-height:94dvh;border-radius:17px}.python-quote-modal__header,.python-quote-modal__body,.python-quote-modal__footer{padding-left:17px;padding-right:17px}.python-quote-modal .python-quote-fields{grid-template-columns:1fr}.python-quote-modal .python-quote-full{grid-column:auto}}
+
+
+/* Python Print — Acceso por correo */
+
+.python-access-box {
+    margin: 0 0 25px;
+    padding: 20px;
+    border: 1px solid #e5e9f0;
+    border-radius: 16px;
+    background: #f7f9fc;
+}
+
+.python-access-box h4 {
+    margin: 0 0 8px;
+    font-size: 17px;
+    font-weight: 700;
+    color: #263043;
+}
+
+.python-access-box p {
+    margin: 0 0 15px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: #778092;
+}
+
+.python-access-button {
+    width: 100%;
+    min-height: 48px;
+    padding: 12px 16px;
+    border: 1px solid #ff6b57;
+    border-radius: 12px;
+    background: #fff;
+    color: #ff6b57;
+    font-family: 'Flexo', Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.python-access-button:hover {
+    background: #fff1ed;
+}
+
+.python-access-button:disabled {
+    opacity: .6;
+    cursor: wait;
+}
+
+.python-access-box .python-access-message {
+    margin: 12px 0 0;
+    color: #354055;
+    font-size: 13px;
+}

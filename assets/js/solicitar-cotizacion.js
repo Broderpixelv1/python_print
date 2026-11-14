@@ -137,4 +137,63 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   form.addEventListener('submit', event => event.preventDefault());
   conditions();
+
+
+  // Python Print — Solicitar acceso por correo.
+  const accessButton = document.getElementById('python-request-access');
+  const accessMessage = document.getElementById('python-access-message');
+
+  if (accessButton && accessMessage) {
+    accessButton.addEventListener('click', async () => {
+
+      const email = val('email');
+
+      if (!email || !field('email').checkValidity()) {
+        message('Primero ingresa un correo electrónico válido.');
+        field('email').focus();
+        return;
+      }
+
+      if (typeof pythonCotizaciones === 'undefined') {
+        accessMessage.textContent =
+          'No se pudo iniciar la solicitud. Actualiza la página.';
+        accessMessage.hidden = false;
+        return;
+      }
+
+      accessButton.disabled = true;
+      accessButton.textContent = 'Enviando enlace...';
+      accessMessage.hidden = true;
+
+      const body = new URLSearchParams();
+      body.append('action', pythonCotizaciones.accesoAction);
+      body.append('nonce', pythonCotizaciones.accesoNonce);
+      body.append('email', email);
+
+      try {
+        const response = await fetch(pythonCotizaciones.ajaxUrl, {
+          method: 'POST',
+          credentials: 'same-origin',
+          body
+        });
+
+        const result = await response.json();
+
+        accessMessage.textContent =
+          result.data?.mensaje ||
+          'No fue posible procesar la solicitud.';
+
+        accessMessage.hidden = false;
+
+      } catch (error) {
+        accessMessage.textContent =
+          'No se pudo conectar con el servidor. Inténtalo nuevamente.';
+        accessMessage.hidden = false;
+      } finally {
+        accessButton.disabled = false;
+        accessButton.textContent = 'Continuar con correo electrónico';
+      }
+    });
+  }
+
 });
