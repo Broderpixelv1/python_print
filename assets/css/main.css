@@ -17,7 +17,7 @@
 }
 
 body, html {
-  font-family: "Rubik",Arial, sans-serif;
+  font-family: 'Flexo', Arial, sans-serif;
   font-optical-sizing: auto;
   font-style: normal;
   font-weight: 300;
@@ -35,7 +35,7 @@ body,
 .elementor-icon i,
 .elementor-text-editor,
 .elementor-image-box-content {
-  font-family: "Rubik",Arial, sans-serif !important;
+  font-family: 'Flexo', Arial, sans-serif !important;
 }
 
 body a{
@@ -124,7 +124,7 @@ p, .elementor-widget-text-editor p {
 .category-card h4 {
   margin-top: 10px;
   font-size: 1rem;
-  font-family: 'Rubik', Arial, sans-serif;
+  font-family: 'Flexo', Arial, sans-serif;
 }
 
 /* Scrollbar personalizada */
@@ -162,7 +162,7 @@ p, .elementor-widget-text-editor p {
 .category-card h4 {
   margin-top: 10px;
   font-size: 1rem;
-  font-family: 'Rubik', Arial, sans-serif;
+  font-family: 'Flexo', Arial, sans-serif;
 }
 
 /* Scrollbar personalizada */
@@ -200,7 +200,7 @@ p, .elementor-widget-text-editor p {
 .subcategory-card h4 {
   margin-top: 10px;
   font-size: 1rem;
-  font-family: 'Rubik', Arial, sans-serif;
+  font-family: 'Flexo', Arial, sans-serif;
 }
 
 

@@ -1,257 +1,62 @@
-
-/* =========================================
-   PYTHON PRINT — MI PEDIDO
-   ========================================= */
-
-.python-order-page {
-    width: 100%;
-    min-height: 70vh;
-    padding: 55px 0 90px;
-    background: #fff;
+/* PYTHON PRINT — MI PEDIDO | Diseño responsive */
+.python-order-page{width:100%;min-height:70vh;padding:50px 0 85px;background:#f0f3fa}
+.python-order-container{width:calc(100% - 48px);max-width:1500px;margin:0 auto}
+.python-order-header{margin-bottom:30px}
+.python-order-header h1{margin:0 0 10px;font-size:clamp(30px,3vw,42px);font-weight:700;letter-spacing:-1px}
+.python-order-header p{margin:0;color:#788397;font-size:15px}
+.python-order-layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:28px;align-items:start}
+.python-order-products{display:flex;flex-direction:column;gap:16px;min-width:0}
+.python-order-columns{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1.1fr) 76px 56px;align-items:center;gap:16px;padding:0 17px 14px;border-bottom:1px solid #f25462;color:#f25462;font-weight:700;font-size:13px;letter-spacing:.03em;text-align:center}
+.python-order-columns span:first-child{text-align:center}
+.python-order-item{display:grid;grid-template-columns:116px minmax(125px,1.2fr) minmax(120px,1.1fr) 66px 45px;align-items:center;gap:16px;padding:12px 14px 12px 12px;background:#fff;border-radius:22px;min-width:0}
+.python-order-item__image{width:116px;height:116px;overflow:hidden;border-radius:15px;background:#f7f7f7}
+.python-order-item__image img{display:block;width:100%;height:100%;object-fit:cover}
+.python-order-item__details,.python-order-item__quantities{min-width:0}
+.python-order-item__details h2{margin:0 0 7px;color:#f25462;font-size:clamp(17px,1.5vw,22px);font-weight:700;line-height:1.2;overflow-wrap:anywhere}
+.python-order-item__type{display:inline-block;max-width:100%;margin:0 0 8px;padding:4px 11px;border-radius:20px;background:#e4e9f7;color:#929bad;font-size:10px;font-weight:800;letter-spacing:.07em;text-transform:uppercase}
+.python-order-item__material{margin:0;color:#929bad;font-size:13px;font-weight:600;line-height:1.4;overflow-wrap:anywhere}
+.python-order-item__quantities p{margin:0 0 3px;color:#929bad;font-size:13px;font-weight:650;line-height:1.4;overflow-wrap:anywhere}
+.python-order-item__total{color:#f25462;font-size:23px;font-weight:800;text-align:center;font-variant-numeric:tabular-nums}
+.python-order-item__actions{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}
+.python-order-item__edit,.python-order-item__remove{display:flex;align-items:center;justify-content:center;width:39px;height:39px;padding:0;border:0;border-radius:50%;background:transparent;color:#f25462;cursor:pointer;text-decoration:none;transition:background .2s,color .2s}
+.python-order-item__remove{color:#939cab}
+.python-order-item__edit:hover{background:#f25462;color:#fff}
+.python-order-item__remove:hover{background:#e0e5ee;color:#6f7887}
+.python-order-summary{position:sticky;top:25px;padding:26px;border:1px solid #e7eaf0;border-radius:20px;background:#fff}
+.python-order-summary h2{margin:0 0 20px;font-size:20px;font-weight:700}
+.python-order-summary p{margin:0 0 13px;color:#7c8595;font-size:14px;line-height:1.6}
+.python-order-empty{padding:70px 24px;border:1px dashed #d4dae6;border-radius:18px;text-align:center;background:#fff}
+.python-order-empty h2{margin:0 0 12px;font-size:25px}
+.python-order-empty p{color:#777}
+@media(max-width:1200px){
+ .python-order-layout{grid-template-columns:minmax(0,1fr)}
+ .python-order-summary{position:static}
 }
-
-.python-order-container {
-    width: calc(100% - 80px);
-    max-width: 1500px;
-    margin: 0 auto;
+@media(max-width:700px){
+ .python-order-page{padding:28px 0 60px}
+ .python-order-container{width:calc(100% - 24px)}
+ .python-order-columns{display:none}
+ .python-order-item{position:relative;grid-template-columns:90px minmax(0,1fr) minmax(85px,.8fr) 55px;gap:11px;padding:10px 58px 10px 10px;border-radius:19px;min-height:116px}
+ .python-order-item__image{width:90px;height:96px}
+ .python-order-item__details h2{font-size:16px}
+ .python-order-item__material{font-size:11px}
+ .python-order-item__quantities p{font-size:11px}
+ .python-order-item__total{font-size:19px}
+ .python-order-item__actions{position:absolute;right:7px;top:50%;transform:translateY(-50%);gap:9px}
+ .python-order-item__edit,.python-order-item__remove{width:39px;height:39px;background:#e5e9f1;color:#9ca4b2}
+ .python-order-item__edit{background:#f25462;color:#fff}
+ .python-order-summary{padding:20px}
 }
-
-/* Encabezado */
-
-.python-order-header {
-    margin-bottom: 38px;
-}
-
-.python-order-header h1 {
-    margin: 0 0 10px;
-    font-size: clamp(30px, 3vw, 42px);
-    font-weight: 700;
-    letter-spacing: -1px;
-}
-
-.python-order-header p {
-    margin: 0;
-    color: #777;
-    font-size: 15px;
-}
-
-/* Distribución principal */
-
-.python-order-layout {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 340px;
-    gap: 35px;
-    align-items: start;
-}
-
-/* Lista de productos */
-
-.python-order-products {
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-}
-
-.python-order-item {
-    display: grid;
-    grid-template-columns: 150px minmax(0, 1fr);
-    gap: 25px;
-    padding: 22px;
-    border: 1px solid #eaeaea;
-    border-radius: 18px;
-    background: #fff;
-}
-
-.python-order-item__image {
-    width: 150px;
-    height: 150px;
-    overflow: hidden;
-    border-radius: 12px;
-    background: #f7f7f7;
-}
-
-.python-order-item__image img {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.python-order-item__details {
-    min-width: 0;
-}
-
-.python-order-item__details h2 {
-    margin: 0 0 12px;
-    font-size: 19px;
-    font-weight: 650;
-    line-height: 1.35;
-}
-
-.python-order-item__details p {
-    margin: 0 0 8px;
-    color: #666;
-    font-size: 14px;
-    line-height: 1.5;
-}
-
-.python-order-item__details strong {
-    display: inline-block;
-    margin-top: 10px;
-    font-size: 15px;
-    color: #222;
-}
-
-/* Resumen */
-
-.python-order-summary {
-    position: sticky;
-    top: 25px;
-    padding: 28px;
-    border: 1px solid #eaeaea;
-    border-radius: 18px;
-    background: #fafafa;
-}
-
-.python-order-summary h2 {
-    margin: 0 0 22px;
-    font-size: 21px;
-    font-weight: 700;
-}
-
-.python-order-summary p {
-    margin: 0 0 14px;
-    color: #666;
-    font-size: 14px;
-    line-height: 1.6;
-}
-
-/* Pedido vacío */
-
-.python-order-empty {
-    padding: 80px 25px;
-    border: 1px dashed #ddd;
-    border-radius: 18px;
-    text-align: center;
-}
-
-.python-order-empty h2 {
-    margin: 0 0 12px;
-    font-size: 26px;
-}
-
-.python-order-empty p {
-    color: #777;
-}
-
-/* Responsive */
-
-@media (max-width: 1000px) {
-
-    .python-order-layout {
-        grid-template-columns: 1fr;
-    }
-
-    .python-order-summary {
-        position: static;
-    }
-}
-
-@media (max-width: 600px) {
-
-    .python-order-page {
-        padding: 30px 0 60px;
-    }
-
-    .python-order-container {
-        width: calc(100% - 32px);
-    }
-
-    .python-order-item {
-        grid-template-columns: 95px minmax(0, 1fr);
-        gap: 15px;
-        padding: 14px;
-    }
-
-    .python-order-item__image {
-        width: 95px;
-        height: 95px;
-    }
-
-    .python-order-item__details h2 {
-        font-size: 16px;
-    }
-
-    .python-order-item__details p {
-        font-size: 12px;
-    }
-
-    .python-order-summary {
-        padding: 20px;
-    }
-}
-
-
-/* Acciones de cada combinación */
-
-.python-order-item__actions {
-    display: flex;
-    gap: 12px;
-    margin-top: 20px;
-}
-
-.python-order-item__remove {
-    display: inline-flex;
-    align-items: center;
-    padding: 10px 15px;
-    border: 1px solid #f1d1ce;
-    border-radius: 9px;
-    background: #fff;
-    color: #d94335;
-    font-size: 13px;
-    font-weight: 600;
-    text-decoration: none;
-    transition: background .2s ease;
-}
-
-.python-order-item__remove:hover {
-    background: #fff4f2;
-    color: #c32f23;
-}
-
-
-
-/* Botón editar combinación */
-
-.python-order-item__edit {
-    display: inline-flex;
-    align-items: center;
-    padding: 10px 15px;
-    border: 1px solid #dedede;
-    border-radius: 9px;
-    background: #fff;
-    color: #222;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all .2s ease;
-}
-
-.python-order-item__edit:hover {
-    border-color: #ff6b57;
-    color: #ff6b57;
-}
-
-
-/* Tipo de etiqueta */
-
-.python-order-item__type {
-    display: inline-block;
-    width: fit-content;
-    padding: 5px 11px;
-    border-radius: 7px;
-    background: #f3f3f3;
-    color: #333;
-    font-size: 12px;
-    font-weight: 600;
+@media(max-width:480px){
+ .python-order-item{grid-template-columns:72px minmax(0,1fr) 48px;grid-template-areas:"image details total" "image quantities total";gap:5px 9px;padding:10px 47px 10px 9px;align-items:center}
+ .python-order-item__image{grid-area:image;width:72px;height:86px}
+ .python-order-item__details{grid-area:details;align-self:end}
+ .python-order-item__details h2{font-size:14px;margin-bottom:5px}
+ .python-order-item__type{font-size:9px;padding:3px 7px;margin-bottom:4px}
+ .python-order-item__material{font-size:10px}
+ .python-order-item__quantities{grid-area:quantities;align-self:start}
+ .python-order-item__quantities p{font-size:10px}
+ .python-order-item__total{grid-area:total;font-size:17px}
+ .python-order-item__actions{right:3px}
+ .python-order-item__edit,.python-order-item__remove{width:36px;height:36px}
 }

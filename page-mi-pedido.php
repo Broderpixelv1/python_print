@@ -28,6 +28,12 @@ $cart = function_exists('WC') ? WC()->cart : null;
             <div class="python-order-layout">
 
                 <section class="python-order-products">
+                    <div class="python-order-columns" aria-hidden="true">
+                        <span>PRODUCTO</span>
+                        <span>CANTIDADES</span>
+                        <span>TOTAL</span>
+                        <span></span>
+                    </div>
 
                     <?php foreach ($cart->get_cart() as $cart_item_key => $cart_item) :
 
@@ -50,6 +56,10 @@ $cart = function_exists('WC') ? WC()->cart : null;
                             'pa_material',
                             array('fields' => 'all')
                         );
+
+                        if (is_wp_error($terminos)) {
+                            $terminos = array();
+                        }
 
                         foreach ($terminos as $termino) {
                             $materiales[] = $termino->name;
@@ -84,104 +94,65 @@ $cart = function_exists('WC') ? WC()->cart : null;
                             </div>
 
                             <div class="python-order-item__details">
+                                <h2><?php echo esc_html($product->get_name()); ?></h2>
 
-                                <h2>
-                                    <?php echo esc_html($product->get_name()); ?>
-                                </h2>
-
-                                <?php if ($config) : ?>
-                                        
-                                    <?php
+                                <?php if ($config) :
                                     $tipos_etiqueta = array(
-                                        'marca'      => 'Solo marca',
+                                        'marca' => 'Solo marca',
                                         'marca_talla' => 'Marca + talla',
-                                        'talla'      => 'Solo talla',
+                                        'talla' => 'Solo talla',
                                     );
-
                                     $tipo_etiqueta = $tipos_etiqueta[$config['tipo'] ?? ''] ?? 'No especificado';
-                                    ?>
-
-                                    <p class="python-order-item__type">
-                                        <?php echo esc_html($tipo_etiqueta); ?>
+                                ?>
+                                    <span class="python-order-item__type"><?php echo esc_html($tipo_etiqueta); ?></span>
+                                    <p class="python-order-item__material">
+                                        <?php echo esc_html($config['material'] ?? ''); ?>
+                                        · <?php echo esc_html($config['ancho'] ?? ''); ?> × <?php echo esc_html($config['longitud'] ?? ''); ?> mm
                                     </p>
-
-
-                                    <p>
-                                        <?php echo esc_html($config['material']); ?>
-                                        ·
-                                        <?php echo esc_html($config['ancho']); ?> ×
-                                        <?php echo esc_html($config['longitud']); ?> mm
-                                    </p>
-
-                                    <?php if (!empty($config['tallas'])) : ?>
-
-                                        <?php foreach ($config['tallas'] as $fila) : ?>
-
-                                            <p>
-                                                Talla <?php echo esc_html($fila['talla']); ?>:
-                                                <?php echo esc_html($fila['cantidad']); ?> unidades
-                                            </p>
-
-                                        <?php endforeach; ?>
-
-                                    <?php endif; ?>
-
-                                    <strong>
-                                        Total:
-                                        <?php echo esc_html($config['cantidad']); ?>
-                                        etiquetas
-                                    </strong>
-
                                 <?php else : ?>
-
-                                    <p>
-                                        Cantidad:
-                                        <?php echo esc_html($cart_item['quantity']); ?>
-                                    </p>
-
+                                    <p class="python-order-item__material">Producto sin personalización</p>
                                 <?php endif; ?>
-                                 
-                                
-                                <div class="python-order-item__actions">
+                            </div>
 
-                                    
-                                    <?php if ($config) : ?>
+                            <div class="python-order-item__quantities">
+                                <?php if ($config && !empty($config['tallas'])) : ?>
+                                    <?php foreach ($config['tallas'] as $fila) : ?>
+                                        <p>Talla <?php echo esc_html($fila['talla']); ?>: <?php echo esc_html($fila['cantidad']); ?> unidades</p>
+                                    <?php endforeach; ?>
+                                <?php elseif ($config) : ?>
+                                    <p><?php echo esc_html($config['cantidad']); ?> unidades</p>
+                                <?php else : ?>
+                                    <p><?php echo esc_html($cart_item['quantity']); ?> unidades</p>
+                                <?php endif; ?>
+                            </div>
 
-                                        <button
-                                            type="button"
-                                            class="python-order-item__edit"
-                                            data-cart-key="<?php echo esc_attr($cart_item_key); ?>"
-                                            data-product-id="<?php echo esc_attr($product->get_id()); ?>"
-                                            data-config="<?php echo esc_attr(wp_json_encode($config)); ?>"
+                            <div class="python-order-item__total" aria-label="Total de unidades">
+                                <?php echo esc_html($config ? $config['cantidad'] : $cart_item['quantity']); ?>
+                            </div>
 
-                                        >
-                                            Editar combinación
-                                        </button>
-
-                                    <?php endif; ?>
-
-
-                                    <a
-                                        href="<?php echo esc_url(
-                                            wp_nonce_url(
-                                                add_query_arg(
-                                                    array(
-                                                        'python_remove_item' => $cart_item_key,
-                                                    ),
-                                                    get_permalink()
-                                                ),
-                                                'python_remove_' . $cart_item_key
-                                            )
-                                        ); ?>"
-                                        class="python-order-item__remove"
-                                        onclick="return confirm('¿Eliminar esta combinación de tu pedido?');"
+                            <div class="python-order-item__actions">
+                                <?php if ($config) : ?>
+                                    <button
+                                        type="button"
+                                        class="python-order-item__edit"
+                                        data-cart-key="<?php echo esc_attr($cart_item_key); ?>"
+                                        data-product-id="<?php echo esc_attr($product->get_id()); ?>"
+                                        data-config="<?php echo esc_attr(wp_json_encode($config)); ?>"
+                                        aria-label="Editar combinación"
+                                        title="Editar combinación"
                                     >
-                                        Eliminar combinación
-                                    </a>
-
-                                </div>
-
-                                
+                                        <svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L9 17l-4 1 1-4L16.5 3.5Z"/></svg>
+                                    </button>
+                                <?php endif; ?>
+                                <a
+                                    href="<?php echo esc_url(wp_nonce_url(add_query_arg(array('python_remove_item' => $cart_item_key), get_permalink()), 'python_remove_' . $cart_item_key)); ?>"
+                                    class="python-order-item__remove"
+                                    onclick="return confirm('¿Eliminar esta combinación de tu pedido?');"
+                                    aria-label="Eliminar combinación"
+                                    title="Eliminar combinación"
+                                >
+                                    <svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M5 5l14 14M19 5 5 19"/></svg>
+                                </a>
                             </div>
 
                         </article>
