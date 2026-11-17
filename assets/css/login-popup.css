@@ -1,0 +1,130 @@
+
+.python-login-modal[hidden] {
+    display: none !important;
+}
+
+.python-login-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.python-login-modal__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 20, 35, .55);
+    backdrop-filter: blur(4px);
+}
+
+.python-login-modal__dialog {
+    position: relative;
+    width: 100%;
+    max-width: 430px;
+    padding: 38px;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 24px 70px rgba(0, 0, 0, .18);
+    font-family: inherit;
+}
+
+.python-login-modal__close {
+    position: absolute;
+    top: 14px;
+    right: 18px;
+    border: 0;
+    background: transparent;
+    font-size: 28px;
+    color: #777;
+    cursor: pointer;
+}
+
+.python-login-modal__brand {
+    margin-bottom: 25px;
+    color: #FF6B57;
+    font-size: 23px;
+    font-weight: 800;
+}
+
+.python-login-modal__brand span {
+    color: #252525;
+}
+
+.python-login-modal__dialog h2 {
+    margin: 0 0 10px;
+    font-size: 28px;
+    color: #171717;
+}
+
+.python-login-modal__dialog > p {
+    margin-bottom: 28px;
+    color: #777;
+    line-height: 1.6;
+}
+
+#python-login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+#python-login-form label {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+#python-login-email {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    font: inherit;
+}
+
+#python-login-email:focus {
+    outline: none;
+    border-color: #FF6B57;
+}
+
+.python-login-modal__submit {
+    margin-top: 8px;
+    padding: 15px;
+    border: 0;
+    border-radius: 10px;
+    background: #FF6B57;
+    color: white;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.python-login-modal__submit:disabled {
+    opacity: .65;
+    cursor: wait;
+}
+
+.python-login-modal__message {
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.python-login-modal__message[hidden] {
+    display: none;
+}
+
+.python-login-modal__footer {
+    margin-top: 26px;
+    text-align: center;
+    color: #888;
+    font-size: 13px;
+}
+
+@media (max-width: 480px) {
+    .python-login-modal__dialog {
+        padding: 30px 22px;
+    }
+}

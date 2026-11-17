@@ -84,3 +84,20 @@
   font-size: 0.75rem;
   color: #555;
 }
+
+
+.python-login-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+    padding: 0;
+}
+
+.python-login-trigger:hover {
+    color: #FF6B57;
+}

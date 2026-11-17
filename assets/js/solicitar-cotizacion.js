@@ -14,7 +14,26 @@ document.addEventListener('DOMContentLoaded', () => {
   const val = name => String(field(name)?.value || '').trim();
   const choice = name => form.querySelector(`input[name="${name}"]:checked`)?.value || '';
   const sectionNames = { perfil: 'Mi perfil', pago: 'Método de pago', entrega: 'Envío o entrega', facturacion: 'Datos de facturación' };
-  const completed = { perfil: false, pago: false, entrega: false, facturacion: false };
+
+  const completed = {
+    perfil: false,
+    pago: false,
+    entrega: false,
+    facturacion: false
+  };
+
+  // Reconocer un perfil previamente guardado.
+  if (document.body.classList.contains('logged-in')) {
+      const nombres = form.elements.namedItem('nombres')?.value.trim();
+      const apellidos = form.elements.namedItem('apellidos')?.value.trim();
+      const email = form.elements.namedItem('email')?.value.trim();
+      const telefono = form.elements.namedItem('telefono')?.value.trim();
+
+      completed.perfil = Boolean(
+          nombres && apellidos && email && telefono
+      );
+  }
+
   let active = 'perfil';
   let previousFocus = null;
 

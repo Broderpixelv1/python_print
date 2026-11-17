@@ -86,10 +86,16 @@
                     <i class="fa-solid fa-user"></i>
                 </a>
             <?php else: ?>
-                <a href="<?php echo esc_url(wp_login_url()); ?>"
-                   aria-label="<?php esc_attr_e('Iniciar sesión', 'mi-tema-personalizable'); ?>">
+                <button
+                    type="button"
+                    class="python-login-trigger"
+                    data-python-login-open
+                    aria-haspopup="dialog"
+                    aria-controls="python-login-modal"
+                    aria-label="<?php esc_attr_e('Iniciar sesión', 'mi-tema-personalizable'); ?>"
+                >
                     <i class="fa-solid fa-circle-user"></i>
-                </a>
+                </button>
             <?php endif; ?>
 
         </div>
@@ -147,10 +153,18 @@
                     <?php esc_html_e('Cart', 'mi-tema-personalizable'); ?>
                 </a>
 
-                <a href="<?php echo esc_url(wp_login_url()); ?>">
-                    <span class="muser-icon"><i class="fa-solid fa-circle-user"></i></span>
+                <button
+                    type="button"
+                    class="python-login-trigger"
+                    data-python-login-open
+                    aria-haspopup="dialog"
+                    aria-controls="python-login-modal"
+                >
+                    <span class="muser-icon">
+                        <i class="fa-solid fa-circle-user"></i>
+                    </span>
                     <?php esc_html_e('Sign in', 'mi-tema-personalizable'); ?>
-                </a>
+                </button>
 
             <?php endif; ?>
 

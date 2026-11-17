@@ -1363,3 +1363,42 @@ add_action('wp_enqueue_scripts', function () {
     );
 
 });
+
+//logn in
+add_action('wp_footer', function () {
+    get_template_part('template-parts/login-popup');
+});
+
+add_action('wp_enqueue_scripts', function () {
+    wp_enqueue_style(
+        'python-login-popup',
+        get_template_directory_uri() . '/assets/css/login-popup.css',
+        array(),
+        filemtime(get_template_directory() . '/assets/css/login-popup.css')
+    );
+});
+
+add_action('wp_enqueue_scripts', function () {
+
+    if (is_user_logged_in()) {
+        return;
+    }
+
+    wp_enqueue_script(
+        'python-login-popup',
+        get_template_directory_uri() . '/assets/js/login-popup.js',
+        array(),
+        filemtime(get_template_directory() . '/assets/js/login-popup.js'),
+        true
+    );
+
+    wp_localize_script(
+        'python-login-popup',
+        'pythonLogin',
+        array(
+            'ajaxUrl' => admin_url('admin-ajax.php'),
+            'nonce'   => wp_create_nonce('python_acceso_cliente'),
+        )
+    );
+
+});
