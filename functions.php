@@ -1324,6 +1324,11 @@ require_once get_template_directory() . '/inc/cotizaciones/solicitudes.php';
 require_once get_template_directory() . '/inc/cotizaciones/acceso-clientes.php';
 
 /**
+ * Python Print — Perfil de clientes.
+ */
+require_once get_template_directory() . '/inc/cotizaciones/perfil-clientes.php';
+
+/**
  * Python Print — Formulario de cotizaciones.
  */
 add_action('wp_enqueue_scripts', function () {
@@ -1352,6 +1357,8 @@ add_action('wp_enqueue_scripts', function () {
             'nonce'   => wp_create_nonce('python_cotizacion_nonce'),
             'accesoAction' => 'python_solicitar_acceso',
             'accesoNonce'  => wp_create_nonce('python_acceso_cliente'),
+            'perfilAction' => 'python_guardar_perfil_cliente',
+            'perfilNonce'  => wp_create_nonce('python_perfil_cliente'),
         )
     );
 
