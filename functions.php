@@ -349,10 +349,13 @@ function python_print_cargar_configurador() {
     if (function_exists('is_product_category') &&
     (is_product_category() || is_shop() || is_page('mi-pedido'))) {
 
-        // Insertar estructura del popup en el footer
-        add_action('wp_footer', function() {
-            get_template_part('template-parts/product-configurator');
-        });
+        // Insertar el popup desde el footer,
+        // excepto en Mi pedido, donde ya lo carga su plantilla.
+        if (!is_page('mi-pedido')) {
+            add_action('wp_footer', function() {
+                get_template_part('template-parts/product-configurator');
+            });
+        }
 
         // Cargar estilos
         wp_enqueue_style(

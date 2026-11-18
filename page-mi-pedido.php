@@ -11,7 +11,7 @@ get_header();
 $cart = function_exists('WC') ? WC()->cart : null;
 ?>
 
-<main id="primary" class="python-order-page">
+<div class="python-order-page">
 
     <div class="python-order-container">
 
@@ -240,7 +240,7 @@ $cart = function_exists('WC') ? WC()->cart : null;
 
     </div>
 
-</main>
+</div>
 
 
 <?php
