@@ -858,6 +858,11 @@ function python_guardar_combinacion($modo = 'agregar') {
         ), 400);
     }
 
+    // Sincronizar el borrador del cliente después de agregar o editar.
+    if (function_exists('python_guardar_borrador_pedido')) {
+        python_guardar_borrador_pedido();
+    }
+
     // Guardar explícitamente la sesión del carrito.
     WC()->cart->set_session();
 
@@ -972,6 +977,11 @@ function python_producto_cotizable($purchasable, $product) {
         isset($_REQUEST['action']) &&
         $_REQUEST['action'] === 'python_agregar_combinacion'
     ) {
+        return true;
+    }
+
+    // Permitir reconstruir combinaciones guardadas.
+    if (doing_action('woocommerce_cart_loaded_from_session')) {
         return true;
     }
 
@@ -1301,6 +1311,10 @@ add_action('template_redirect', function () {
     }
 
     WC()->cart->remove_cart_item($cart_item_key);
+    // Actualizar el borrador después de eliminar una combinación.
+    if (function_exists('python_guardar_borrador_pedido')) {
+        python_guardar_borrador_pedido();
+    }
 
     wp_safe_redirect(get_permalink());
     exit;
@@ -1415,3 +1429,7 @@ add_action('wp_enqueue_scripts', function () {
         true
     );
 });
+
+//carrito temporal
+require_once get_template_directory() . '/inc/cotizaciones/borrador-pedido.php';
+
