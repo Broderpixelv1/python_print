@@ -141,11 +141,91 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!validate(active)) return;
 
-        // Las otras secciones mantienen su funcionamiento actual.
+        // Guardar método de pago, entrega y facturación en WordPress.
         if (active !== 'perfil') {
-            completed[active] = true;
-            updateSidebar();
-            closeModal();
+
+            if (!document.body.classList.contains('logged-in')) {
+                message('Debes iniciar sesión para guardar estos datos.');
+                return;
+            }
+
+            if (
+                typeof pythonCotizaciones === 'undefined' ||
+                !pythonCotizaciones.ajaxUrl ||
+                !pythonCotizaciones.perfilNonce
+            ) {
+                message('No se pudo conectar con WordPress. Actualiza la página.');
+                return;
+            }
+
+            const body = new URLSearchParams();
+
+            body.append('action', 'python_guardar_datos_cotizacion_cliente');
+            body.append('nonce', pythonCotizaciones.perfilNonce);
+            body.append('seccion', active);
+
+            if (active === 'pago') {
+                body.append('metodo_pago', choice('metodo_pago'));
+            }
+
+            if (active === 'entrega') {
+                body.append('metodo_entrega', choice('metodo_entrega'));
+
+                if (choice('metodo_entrega') === 'envio') {
+                    ['provincia', 'ciudad', 'direccion', 'referencia'].forEach(name => {
+                        body.append(name, val(name));
+                    });
+                }
+            }
+
+            if (active === 'facturacion') {
+                body.append('tipo_cliente', choice('tipo_cliente'));
+
+                if (choice('tipo_cliente') === 'natural') {
+                    body.append('cedula', val('cedula'));
+                } else {
+                    ['ruc', 'razon_social', 'nombre_comercial'].forEach(name => {
+                        body.append(name, val(name));
+                    });
+                }
+            }
+
+            save.disabled = true;
+
+            const textoOriginal = save.textContent;
+            save.textContent = 'Guardando...';
+
+            message('');
+
+            try {
+                const response = await fetch(pythonCotizaciones.ajaxUrl, {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    body
+                });
+
+                const result = await response.json();
+
+                if (!response.ok || !result.success) {
+                    message(
+                        result.data?.mensaje ||
+                        'No fue posible guardar los datos.'
+                    );
+                    return;
+                }
+
+                completed[active] = true;
+                updateSidebar();
+                closeModal();
+
+            } catch (error) {
+                message('Error de conexión. Inténtalo nuevamente.');
+
+            } finally {
+                save.disabled = false;
+                save.textContent = textoOriginal;
+            }
+
             return;
         }
 
@@ -237,7 +317,26 @@ document.addEventListener('DOMContentLoaded', () => {
     message('Tus datos están completos. El envío de cotizaciones se habilitará cuando conectemos WordPress.');
   });
   form.addEventListener('submit', event => event.preventDefault());
-  conditions();
+    // Recuperar los datos guardados del cliente.
+    if (choice('metodo_pago')) {
+        completed.pago = true;
+    }
+
+    if (choice('metodo_entrega') === 'retiro') {
+        completed.entrega = true;
+    }
+
+    if (
+        choice('metodo_entrega') === 'envio' &&
+        val('provincia') &&
+        val('ciudad') &&
+        val('direccion')
+    ) {
+        completed.entrega = true;
+    }
+
+    conditions();
+    updateSidebar();
 
 
   // Python Print — Solicitar acceso por correo.

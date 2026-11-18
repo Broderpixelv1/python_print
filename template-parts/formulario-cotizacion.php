@@ -7,6 +7,18 @@ $pp_logged = is_user_logged_in();
 $pp_privacy = get_privacy_policy_url();
 $pp_terms_id = function_exists('wc_get_page_id') ? wc_get_page_id('terms') : -1;
 $pp_terms = $pp_terms_id > 0 ? get_permalink($pp_terms_id) : '';
+$pp_metodo_pago = $pp_logged
+    ? get_user_meta($pp_user->ID, 'python_metodo_pago', true)
+    : '';
+
+$pp_metodo_entrega = $pp_logged
+    ? get_user_meta($pp_user->ID, 'python_metodo_entrega', true)
+    : 'retiro';
+
+$pp_referencia_entrega = $pp_logged
+    ? get_user_meta($pp_user->ID, 'python_referencia_entrega', true)
+    : '';
+
 $pp_meta = static function($key) use ($pp_logged, $pp_user) {
     return $pp_logged ? (string) get_user_meta($pp_user->ID, $key, true) : '';
 };
@@ -54,21 +66,56 @@ $pp_meta = static function($key) use ($pp_logged, $pp_user) {
         <section class="python-quote-modal__section" data-quote-panel="pago" hidden>
           <h3>Método de pago preferido</h3><p>Solo es una preferencia; no se realizará ningún cobro ahora.</p>
           <div class="python-quote-options">
-            <label><input type="radio" name="metodo_pago" value="tarjeta"> Tarjeta de crédito o débito</label>
-            <label><input type="radio" name="metodo_pago" value="transferencia"> Transferencia bancaria</label>
+            <label>
+                <input
+                    type="radio"
+                    name="metodo_pago"
+                    value="tarjeta"
+                    <?php checked($pp_metodo_pago, 'tarjeta'); ?>
+                >
+                Tarjeta de crédito o débito
+            </label>
+
+            <label>
+                <input
+                    type="radio"
+                    name="metodo_pago"
+                    value="transferencia"
+                    <?php checked($pp_metodo_pago, 'transferencia'); ?>
+                >
+                Transferencia bancaria
+            </label>
           </div>
         </section>
         <section class="python-quote-modal__section" data-quote-panel="entrega" hidden>
           <h3>Envío o entrega</h3>
           <div class="python-quote-options">
-            <label><input type="radio" name="metodo_entrega" value="retiro" checked> Retiro en Python Print</label>
-            <label><input type="radio" name="metodo_entrega" value="envio"> Envío a domicilio</label>
+            
+            <label>
+                <input
+                    type="radio"
+                    name="metodo_entrega"
+                    value="retiro"
+                    <?php checked($pp_metodo_entrega, 'retiro'); ?>
+                >
+                Retiro en Python Print
+            </label>
+
+            <label>
+                <input
+                    type="radio"
+                    name="metodo_entrega"
+                    value="envio"
+                    <?php checked($pp_metodo_entrega, 'envio'); ?>
+                >
+                Envío a domicilio
+            </label>
           </div>
           <div class="python-quote-fields python-quote-shipping" hidden>
             <label>Provincia *<input name="provincia" maxlength="100" value="<?php echo esc_attr($pp_meta('shipping_state')); ?>"></label>
             <label>Ciudad *<input name="ciudad" maxlength="100" value="<?php echo esc_attr($pp_meta('shipping_city')); ?>"></label>
             <label class="python-quote-full">Dirección de entrega *<input name="direccion" autocomplete="street-address" maxlength="250" value="<?php echo esc_attr($pp_meta('shipping_address_1')); ?>"></label>
-            <label class="python-quote-full">Referencia<input name="referencia" maxlength="250"></label>
+            <label class="python-quote-full">Referencia<input name="referencia" maxlength="250" value="<?php echo esc_attr($pp_referencia_entrega); ?>"></label>
           </div>
           <p class="python-quote-help">El costo y plazo de envío se confirmarán en la proforma.</p>
         </section>
