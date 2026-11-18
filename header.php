@@ -113,29 +113,85 @@
 
             <?php if (is_user_logged_in()): ?>
 
-                <a href="<?php echo esc_url(home_url('/my-projects')); ?>">
-                    <span class="muser-icon"><i class="fa-solid fa-folder-open"></i></span>
-                    <?php esc_html_e('My Projects', 'mi-tema-personalizable'); ?>
+
+                <!-- Favoritos -->
+                <a href="<?php echo esc_url(home_url('/favorites')); ?>">
+                    <span class="muser-icon">
+                        <i class="fa-solid fa-heart"></i>
+                    </span>
+                    Favoritos
                 </a>
 
-                <?php if (class_exists('WooCommerce')): ?>
-                    <a href="<?php echo esc_url(wc_get_cart_url()); ?>">
-                <?php else: ?>
-                    <a href="<?php echo esc_url(home_url('/cart')); ?>">
-                <?php endif; ?>
-                    <span class="muser-icon"><i class="fa-solid fa-cart-shopping"></i></span>
-                    <?php esc_html_e('Cart', 'mi-tema-personalizable'); ?>
+                <!-- Mi pedido -->
+                <a href="<?php echo esc_url(home_url('/mi-pedido/')); ?>">
+                    <span class="muser-icon">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                    </span>
+                    Mi pedido
                 </a>
 
-                <a href="<?php echo esc_url(home_url('/my-account')); ?>">
-                    <span class="muser-icon"><i class="fa-solid fa-user"></i></span>
-                    <?php esc_html_e('Mi Cuenta', 'mi-tema-personalizable'); ?>
-                </a>
+                <!-- Menú desplegable del cliente -->
+                <div class="python-account-menu">
 
-                <a href="<?php echo esc_url(wp_logout_url()); ?>">
-                    <span class="muser-icon"><i class="fa-solid fa-right-from-bracket"></i></span>
-                    <?php esc_html_e('Logout', 'mi-tema-personalizable'); ?>
-                </a>
+                    <button
+                        type="button"
+                        class="python-account-trigger"
+                        aria-expanded="false"
+                        aria-haspopup="true"
+                        aria-controls="python-account-dropdown"
+                    >
+                        <span class="muser-icon">
+                            <i class="fa-solid fa-circle-user"></i>
+                        </span>
+
+                        <span>Mi cuenta</span>
+
+                        <i class="fa-solid fa-chevron-down python-account-chevron"></i>
+                    </button>
+
+                    <div
+                        id="python-account-dropdown"
+                        class="python-account-dropdown"
+                        hidden
+                    >
+                        <div class="python-account-dropdown__header">
+                            <strong>
+                                <?php echo esc_html(wp_get_current_user()->display_name); ?>
+                            </strong>
+
+                            <small>
+                                <?php echo esc_html(wp_get_current_user()->user_email); ?>
+                            </small>
+                        </div>
+
+                        <a href="<?php echo esc_url(wc_get_page_permalink('myaccount')); ?>">
+                            <i class="fa-regular fa-user"></i>
+                            Mi perfil
+                        </a>
+
+                        <a href="<?php echo esc_url(home_url('/mis-cotizaciones/')); ?>">
+                            <i class="fa-regular fa-file-lines"></i>
+                            Mis cotizaciones
+                        </a>
+
+                        <a href="<?php echo esc_url(wc_get_account_endpoint_url('orders')); ?>">
+                            <i class="fa-solid fa-box"></i>
+                            Mis pedidos
+                        </a>
+
+                        <div class="python-account-dropdown__divider"></div>
+
+                        <a
+                            class="python-account-logout"
+                            href="<?php echo esc_url(wp_logout_url(home_url('/'))); ?>"
+                        >
+                            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                            Cerrar sesión
+                        </a>
+                    </div>
+
+                </div>
+
 
             <?php else: ?>
 

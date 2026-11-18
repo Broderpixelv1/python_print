@@ -101,3 +101,135 @@
 .python-login-trigger:hover {
     color: #FF6B57;
 }
+
+
+/* Python Print — Menú de cuenta */
+
+.python-account-menu {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+.python-account-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    border: 0;
+    padding: 8px 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+}
+
+.python-account-trigger:hover,
+.python-account-trigger[aria-expanded="true"] {
+    color: #FF6B57;
+}
+
+.python-account-chevron {
+    font-size: 10px;
+    transition: transform .2s ease;
+}
+
+.python-account-trigger[aria-expanded="true"] .python-account-chevron {
+    transform: rotate(180deg);
+}
+
+.python-account-dropdown[hidden] {
+    display: none !important;
+}
+
+.python-account-dropdown {
+    position: absolute;
+    top: calc(100% + 12px);
+    right: 0;
+    z-index: 10000;
+    width: 250px;
+    padding: 10px;
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 14px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, .12);
+}
+
+.python-account-dropdown__header {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 12px;
+    overflow-wrap: anywhere;
+}
+
+.python-account-dropdown__header strong {
+    font-size: 14px;
+    color: #222;
+}
+
+.python-account-dropdown__header small {
+    font-size: 12px;
+    color: #888;
+}
+
+.python-account-dropdown a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 12px;
+    border-radius: 8px;
+    color: #333;
+    text-decoration: none;
+    font-size: 13px;
+}
+
+.python-account-dropdown a:hover {
+    background: #fff2ef;
+    color: #FF6B57;
+}
+
+.python-account-dropdown a i {
+    width: 17px;
+    text-align: center;
+}
+
+.python-account-dropdown__divider {
+    height: 1px;
+    margin: 8px 0;
+    background: #eee;
+}
+
+.python-account-dropdown .python-account-logout {
+    color: #b83b3b;
+}
+
+/* Mantener el desplegable fuera del flujo del encabezado */
+
+.site-header .user-menu .python-account-menu {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+.site-header .user-menu .python-account-dropdown {
+    position: absolute !important;
+    top: calc(100% + 10px);
+    right: 0;
+    left: auto;
+    display: block;
+    width: 250px;
+    height: auto;
+    z-index: 99999;
+    box-sizing: border-box;
+}
+
+.site-header .user-menu .python-account-dropdown[hidden] {
+    display: none !important;
+}
+
+/* Evitar que el menú quede recortado */
+.site-header,
+.site-header .grid-container,
+.site-header .user-menu {
+    overflow: visible;
+}

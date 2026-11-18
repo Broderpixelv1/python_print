@@ -1402,3 +1402,16 @@ add_action('wp_enqueue_scripts', function () {
     );
 
 });
+
+//menu desplegable user
+add_action('wp_enqueue_scripts', function () {
+    if (!is_user_logged_in()) return;
+
+    wp_enqueue_script(
+        'python-menu-cuenta',
+        get_template_directory_uri() . '/assets/js/menu-cuenta.js',
+        array(),
+        filemtime(get_template_directory() . '/assets/js/menu-cuenta.js'),
+        true
+    );
+});
