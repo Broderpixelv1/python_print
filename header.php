@@ -80,12 +80,21 @@
                 </a>
             <?php endif; ?>
 
+            
             <?php if (is_user_logged_in()): ?>
-                <a href="<?php echo esc_url(home_url('/my-account')); ?>"
-                   aria-label="<?php esc_attr_e('Mi cuenta', 'mi-tema-personalizable'); ?>">
-                    <i class="fa-solid fa-user"></i>
-                </a>
+
+                <button
+                    type="button"
+                    class="python-mobile-account-trigger"
+                    aria-expanded="false"
+                    aria-controls="python-mobile-account-dropdown"
+                    aria-label="Abrir menú de mi cuenta"
+                >
+                    <i class="fa-solid fa-circle-user"></i>
+                </button>
+
             <?php else: ?>
+
                 <button
                     type="button"
                     class="python-login-trigger"
@@ -99,6 +108,58 @@
             <?php endif; ?>
 
         </div>
+
+        <!--menu user respopnsivo -->
+
+
+        <?php if (is_user_logged_in()): ?>
+
+        <div
+            id="python-mobile-account-dropdown"
+            class="python-mobile-account-dropdown"
+            hidden
+        >
+            <div class="python-account-dropdown__header">
+                <strong>
+                    <?php echo esc_html(wp_get_current_user()->display_name); ?>
+                </strong>
+                <small>
+                    <?php echo esc_html(wp_get_current_user()->user_email); ?>
+                </small>
+            </div>
+
+            <a href="<?php echo esc_url(wc_get_page_permalink('myaccount')); ?>">
+                <i class="fa-regular fa-user"></i>
+                Mi perfil
+            </a>
+
+            <a href="<?php echo esc_url(home_url('/mi-pedido/')); ?>">
+                <i class="fa-solid fa-cart-shopping"></i>
+                Mi pedido
+            </a>
+
+            <a href="<?php echo esc_url(home_url('/mis-cotizaciones/')); ?>">
+                <i class="fa-regular fa-file-lines"></i>
+                Mis cotizaciones
+            </a>
+
+            <a href="<?php echo esc_url(wc_get_account_endpoint_url('orders')); ?>">
+                <i class="fa-solid fa-box"></i>
+                Mis pedidos
+            </a>
+
+            <div class="python-account-dropdown__divider"></div>
+
+            <a
+                class="python-account-logout"
+                href="<?php echo esc_url(wp_logout_url(home_url('/'))); ?>"
+            >
+                <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                Cerrar sesión
+            </a>
+        </div>
+
+        <?php endif; ?>
 
         <!-- Menú de usuario de escritorio -->
         <div class="user-menu">
