@@ -1,0 +1,243 @@
+/* ========================================
+   PYTHON PRINT — ADMINISTRADOR DE PROFORMAS
+======================================== */
+
+.python-proforma {
+    --pp-coral: #ff4e4e;
+    --pp-text: #24272c;
+    --pp-muted: #737b87;
+    --pp-border: #e7e9ee;
+    --pp-background: #f7f8fa;
+
+    font-family: "Flexo", "Rubik", Arial, sans-serif;
+    color: var(--pp-text);
+    padding: 12px 4px 20px;
+}
+
+/* Encabezado */
+
+.python-proforma__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    padding: 22px 24px;
+    background: var(--pp-background);
+    border-radius: 14px;
+    margin-bottom: 28px;
+}
+
+.python-proforma__header span:first-child {
+    color: var(--pp-muted);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.python-proforma__header h2 {
+    margin: 8px 0 0 !important;
+    padding: 0 !important;
+    font-size: 23px !important;
+    font-weight: 700;
+}
+
+.python-proforma__status {
+    display: inline-flex;
+    padding: 8px 14px;
+    background: #fff0ed;
+    color: #d94242 !important;
+    border-radius: 30px;
+    font-size: 12px !important;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* Títulos */
+
+.python-proforma h3 {
+    margin: 24px 0 16px;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+/* Productos */
+
+.python-proforma__products {
+    display: grid;
+    gap: 14px;
+}
+
+.python-proforma__product {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 22px;
+    border: 1px solid var(--pp-border);
+    border-radius: 14px;
+    background: #fff;
+}
+
+.python-proforma__product > div {
+    flex: 1;
+    min-width: 0;
+}
+
+.python-proforma__product > div > strong {
+    display: block;
+    font-size: 15px;
+    margin-bottom: 12px;
+}
+
+.python-proforma__specs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 7px 20px;
+    color: var(--pp-muted);
+    font-size: 13px;
+}
+
+.python-proforma__specs p,
+.python-proforma__product p {
+    margin: 4px 0;
+}
+
+.python-proforma__specs strong {
+    color: var(--pp-text);
+}
+
+.python-proforma__specs ul {
+    margin: 5px 0 5px 18px;
+}
+
+.python-proforma__product > label {
+    flex: 0 0 170px;
+}
+
+/* Secciones */
+
+.python-proforma__section {
+    padding: 22px;
+    margin-top: 20px;
+    border: 1px solid var(--pp-border);
+    border-radius: 14px;
+    background: #fff;
+}
+
+.python-proforma__section h3 {
+    margin-top: 0;
+}
+
+.python-proforma label {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    color: var(--pp-text);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.python-proforma input,
+.python-proforma select,
+.python-proforma textarea {
+    width: 100%;
+    max-width: 100%;
+    min-height: 42px;
+    padding: 9px 12px;
+    border: 1px solid #dfe2e8;
+    border-radius: 9px;
+    background: #fff;
+    color: var(--pp-text);
+    font-family: inherit;
+    font-size: 14px;
+    box-shadow: none;
+}
+
+.python-proforma input:focus,
+.python-proforma select:focus,
+.python-proforma textarea:focus {
+    border-color: var(--pp-coral);
+    box-shadow: 0 0 0 2px rgba(255, 78, 78, .12);
+    outline: none;
+}
+
+.python-proforma__section > label {
+    margin-bottom: 18px;
+}
+
+.python-proforma__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+/* Resumen financiero */
+
+.python-proforma__summary {
+    margin-top: 22px;
+    padding: 24px;
+    background: var(--pp-background);
+    border-radius: 14px;
+}
+
+.python-proforma__summary > div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 10px 0;
+    font-size: 14px;
+}
+
+.python-proforma__summary > div span {
+    color: var(--pp-muted);
+}
+
+.python-proforma__summary strong {
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}
+
+.python-proforma__summary .python-proforma__total {
+    border-top: 1px solid var(--pp-border);
+    margin-top: 12px;
+    padding-top: 20px;
+}
+
+.python-proforma__total span {
+    color: var(--pp-text) !important;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.python-proforma__total strong {
+    color: var(--pp-coral);
+    font-size: 26px;
+    font-weight: 700;
+}
+
+/* Observaciones */
+
+.python-proforma textarea {
+    min-height: 110px;
+    resize: vertical;
+}
+
+/* Adaptación a pantallas pequeñas */
+
+@media (max-width: 782px) {
+    .python-proforma__header,
+    .python-proforma__product {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .python-proforma__product > label {
+        flex-basis: auto;
+    }
+
+    .python-proforma__grid,
+    .python-proforma__specs {
+        grid-template-columns: 1fr;
+    }
+}

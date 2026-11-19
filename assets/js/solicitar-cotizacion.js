@@ -302,20 +302,90 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    quoteButton.addEventListener('click', async () => {
 
-  quoteButton.addEventListener('click', () => {
-    for (const name of ['perfil', 'pago', 'entrega', 'facturacion']) {
-      if (!completed[name] || !validate(name)) {
-            openSection(name);
-            if (completed[name]) validate(name);
-            else message(`Completa la sección «${sectionNames[name]}» antes de solicitar tu cotización.`);
+        // Comprobar las cuatro secciones.
+        for (const name of ['perfil', 'pago', 'entrega', 'facturacion']) {
+            if (!completed[name] || !validate(name)) {
+                openSection(name);
+
+                if (completed[name]) {
+                    validate(name);
+                } else {
+                    message(`Completa la sección «${sectionNames[name]}».`);
+                }
+
+                return;
+            }
+        }
+
+        if (!document.body.classList.contains('logged-in')) {
+            openSection('perfil');
+            message('Debes iniciar sesión para solicitar una cotización.');
             return;
-       }
-    }
-    // La solicitud todavía no se envía ni se guarda en WordPress.
-    openSection('facturacion');
-    message('Tus datos están completos. El envío de cotizaciones se habilitará cuando conectemos WordPress.');
-  });
+        }
+
+        if (
+            typeof pythonCotizaciones === 'undefined' ||
+            !pythonCotizaciones.ajaxUrl ||
+            !pythonCotizaciones.nonce
+        ) {
+            message('No se pudo conectar con WordPress.');
+            return;
+        }
+
+        quoteButton.disabled = true;
+
+        const textoOriginal = quoteButton.textContent;
+        quoteButton.textContent = 'Enviando solicitud...';
+
+        const body = new URLSearchParams();
+
+        body.append('action', 'python_crear_cotizacion');
+        body.append('nonce', pythonCotizaciones.nonce);
+        body.append('privacidad', field('privacidad').checked ? '1' : '');
+        body.append('terminos', field('terminos').checked ? '1' : '');
+
+        try {
+
+            const response = await fetch(pythonCotizaciones.ajaxUrl, {
+                method: 'POST',
+                credentials: 'same-origin',
+                body
+            });
+
+            const result = await response.json();
+
+            if (!response.ok || !result.success) {
+                openSection('facturacion');
+                message(
+                    result.data?.mensaje ||
+                    'No fue posible registrar la cotización.'
+                );
+                return;
+            }
+
+            alert(
+                `Tu solicitud ${result.data.numero} fue registrada correctamente.`
+            );
+
+            // Impedir un segundo envío desde esta página.
+            quoteButton.textContent = 'Cotización enviada';
+
+        } catch (error) {
+
+            openSection('facturacion');
+            message('Error de conexión. Inténtalo nuevamente.');
+
+        } finally {
+
+            if (quoteButton.textContent !== 'Cotización enviada') {
+                quoteButton.disabled = false;
+                quoteButton.textContent = textoOriginal;
+            }
+        }
+    });
+  
   form.addEventListener('submit', event => event.preventDefault());
     // Recuperar los datos guardados del cliente.
     if (choice('metodo_pago')) {

@@ -1330,6 +1330,9 @@ add_action('template_redirect', function () {
 require_once get_template_directory()
     . '/inc/cotizaciones/registro.php';
 
+require_once get_template_directory()
+    . '/inc/cotizaciones/proforma.php';
+
     /**
  * Python Print — Procesamiento de solicitudes de cotización.
  */
