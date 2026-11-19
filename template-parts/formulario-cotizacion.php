@@ -22,6 +22,17 @@ $pp_referencia_entrega = $pp_logged
 $pp_meta = static function($key) use ($pp_logged, $pp_user) {
     return $pp_logged ? (string) get_user_meta($pp_user->ID, $key, true) : '';
 };
+
+$pp_tipo_cliente = $pp_logged
+    ? get_user_meta($pp_user->ID, 'python_tipo_cliente', true)
+    : '';
+
+$pp_tipo_cliente = in_array(
+    $pp_tipo_cliente,
+    array('natural', 'empresa'),
+    true
+) ? $pp_tipo_cliente : 'natural';
+
 ?>
 <div id="python-quote-form" class="python-quote-modal" hidden>
   <div class="python-quote-modal__backdrop" data-quote-close></div>
@@ -122,17 +133,71 @@ $pp_meta = static function($key) use ($pp_logged, $pp_user) {
         <section class="python-quote-modal__section" data-quote-panel="facturacion" hidden>
           <h3>Datos de facturación</h3>
           <div class="python-quote-options">
-            <label><input type="radio" name="tipo_cliente" value="natural" checked> Persona natural</label>
-            <label><input type="radio" name="tipo_cliente" value="empresa"> Empresa</label>
+            <label>
+              <input
+                  type="radio"
+                  name="tipo_cliente"
+                  value="natural"
+                  <?php checked($pp_tipo_cliente, 'natural'); ?>
+              >
+              Persona natural
+            </label>
+
+            <label>
+                <input
+                    type="radio"
+                    name="tipo_cliente"
+                    value="empresa"
+                    <?php checked($pp_tipo_cliente, 'empresa'); ?>
+                >
+                Empresa
+            </label>
           </div>
           <div class="python-quote-fields python-quote-natural">
-            <label class="python-quote-full">Número de cédula *<input name="cedula" inputmode="numeric" pattern="[0-9]{10}" maxlength="10" title="Ingresa 10 dígitos"></label>
-          </div>
-          <div class="python-quote-fields python-quote-company" hidden>
-            <label class="python-quote-full">Razón social *<input name="razon_social" maxlength="150"></label>
-            <label>Nombre comercial<input name="nombre_comercial" maxlength="150"></label>
-            <label>RUC *<input name="ruc" inputmode="numeric" pattern="[0-9]{13}" maxlength="13" title="Ingresa 13 dígitos"></label>
-          </div>
+            <label class="python-quote-full">
+                Número de cédula *
+                <input
+                    name="cedula"
+                    inputmode="numeric"
+                    pattern="[0-9]{10}"
+                    maxlength="10"
+                    title="Ingresa 10 dígitos"
+                    value="<?php echo esc_attr($pp_meta('python_cedula')); ?>"
+                >
+            </label>
+        </div>
+
+        <div class="python-quote-fields python-quote-company" hidden>
+            <label class="python-quote-full">
+                Razón social *
+                <input
+                    name="razon_social"
+                    maxlength="150"
+                    value="<?php echo esc_attr($pp_meta('billing_company')); ?>"
+                >
+            </label>
+
+            <label>
+                Nombre comercial
+                <input
+                    name="nombre_comercial"
+                    maxlength="150"
+                    value="<?php echo esc_attr($pp_meta('python_nombre_comercial')); ?>"
+                >
+            </label>
+
+            <label>
+                RUC *
+                <input
+                    name="ruc"
+                    inputmode="numeric"
+                    pattern="[0-9]{13}"
+                    maxlength="13"
+                    title="Ingresa 13 dígitos"
+                    value="<?php echo esc_attr($pp_meta('python_ruc')); ?>"
+                >
+            </label>
+        </div>
           <div class="python-quote-consents">
             <label><input type="checkbox" name="privacidad"> <span>He leído la <?php if ($pp_privacy) : ?><a href="<?php echo esc_url($pp_privacy); ?>" target="_blank" rel="noopener">política de privacidad</a><?php else : ?>política de privacidad<?php endif; ?> y autorizo el tratamiento de mis datos para gestionar esta solicitud. *</span></label>
             <label><input type="checkbox" name="terminos"> <span>Acepto los <?php if ($pp_terms) : ?><a href="<?php echo esc_url($pp_terms); ?>" target="_blank" rel="noopener">términos y condiciones</a><?php else : ?>términos y condiciones<?php endif; ?> del servicio. *</span></label>

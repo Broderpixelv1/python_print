@@ -335,6 +335,22 @@ document.addEventListener('DOMContentLoaded', () => {
         completed.entrega = true;
     }
 
+    // Recuperar los datos de facturación guardados.
+    if (
+        choice('tipo_cliente') === 'natural' &&
+        /^[0-9]{10}$/.test(val('cedula'))
+    ) {
+        completed.facturacion = true;
+    }
+
+    if (
+        choice('tipo_cliente') === 'empresa' &&
+        /^[0-9]{13}$/.test(val('ruc')) &&
+        val('razon_social')
+    ) {
+        completed.facturacion = true;
+    }
+
     conditions();
     updateSidebar();
 
