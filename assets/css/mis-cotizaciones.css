@@ -1,0 +1,321 @@
+/* PYTHON PRINT — MIS COTIZACIONES */
+
+.python-quotes-page {
+    width: 100%;
+    min-height: 70vh;
+    padding: 50px 0 85px;
+    background: #f0f3fa;
+}
+
+.python-quotes-container {
+    width: calc(100% - 48px);
+    max-width: 1500px;
+    margin: 0 auto;
+}
+
+.python-quotes-header {
+    margin-bottom: 30px;
+}
+
+.python-quotes-header h1 {
+    margin: 0 0 10px;
+    font-size: clamp(30px, 3vw, 42px);
+    font-weight: 700;
+    letter-spacing: -1px;
+}
+
+.python-quotes-header p {
+    margin: 0;
+    color: #788397;
+    font-size: 15px;
+}
+
+/* Listado de cotizaciones */
+
+.python-quotes-list {
+    display: grid;
+    grid-template-columns: repeat(
+        auto-fill,
+        minmax(min(100%, 340px), 1fr)
+    );
+    gap: 24px;
+    align-items: stretch;
+}
+
+/* Tarjeta */
+
+.python-quote-card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    padding: 24px;
+    background: #fff;
+    border: 1px solid #e7eaf0;
+    border-radius: 22px;
+    transition: box-shadow .2s ease;
+}
+
+.python-quote-card:hover {
+    box-shadow: 0 8px 25px rgba(24, 35, 65, .07);
+}
+
+/* Encabezado */
+
+.python-quote-card__header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.python-quote-card__number {
+    margin: 0 0 5px;
+    color: #f25462;
+    font-size: 20px;
+    font-weight: 700;
+    overflow-wrap: anywhere;
+}
+
+.python-quote-card__date {
+    color: #788397;
+    font-size: 12px;
+}
+
+/* Estados comerciales */
+
+.python-quote-status {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    border-radius: 20px;
+    background: #e4e9f7;
+    color: #596579;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.python-quote-status--pendiente {
+    background: #e4e9f7;
+    color: #596579;
+}
+
+.python-quote-status--en_preparacion {
+    background: #fff3db;
+    color: #986b17;
+}
+
+.python-quote-status--enviada {
+    background: #e5f5eb;
+    color: #24804a;
+}
+
+.python-quote-status--aprobada {
+    background: #e2edff;
+    color: #3264b5;
+}
+
+.python-quote-status--pagada {
+    background: #d9f5e5;
+    color: #187443;
+}
+
+.python-quote-status--rechazada,
+.python-quote-status--cancelada {
+    background: #fce5e7;
+    color: #b94752;
+}
+
+.python-quote-status--vencida {
+    background: #eceef2;
+    color: #626b7b;
+}
+
+/* Productos */
+
+.python-quote-card__body {
+    flex: 1;
+    padding-bottom: 20px;
+}
+
+.python-quote-card__products p {
+    margin: 0 0 8px;
+    color: #465164;
+    font-size: 14px;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+/* Total y botón */
+
+.python-quote-card__footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding-top: 20px;
+    border-top: 1px solid #e7eaf0;
+}
+
+.python-quote-card__total {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.python-quote-card__total span {
+    color: #788397;
+    font-size: 12px;
+}
+
+.python-quote-card__total strong {
+    color: #182235;
+    font-size: 24px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+.python-quote-card__button,
+.python-quotes-empty .python-login-trigger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 12px 20px;
+    border: 0;
+    border-radius: 12px;
+    background: #f25462;
+    color: #fff;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background .2s ease;
+}
+
+.python-quote-card__button:hover,
+.python-quotes-empty .python-login-trigger:hover {
+    background: #db4351;
+    color: #fff;
+}
+
+/* Página sin cotizaciones */
+
+.python-quotes-empty {
+    padding: 70px 24px;
+    border: 1px dashed #d4dae6;
+    border-radius: 22px;
+    background: #fff;
+    text-align: center;
+}
+
+.python-quotes-empty h2 {
+    margin: 0 0 12px;
+    font-size: 25px;
+}
+
+.python-quotes-empty p {
+    margin-bottom: 20px;
+    color: #788397;
+}
+
+/* Responsive */
+
+@media (max-width: 700px) {
+
+    .python-quotes-page {
+        padding: 28px 0 60px;
+    }
+
+    .python-quotes-container {
+        width: calc(100% - 24px);
+    }
+
+    .python-quotes-list {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .python-quote-card {
+        padding: 20px;
+        border-radius: 19px;
+    }
+
+    .python-quote-card__number {
+        font-size: 18px;
+    }
+
+    .python-quote-card__button {
+        width: 100%;
+    }
+
+}
+
+/* Acciones comerciales de la proforma */
+
+.python-quote-summary__actions {
+    margin-top: 24px;
+}
+
+.python-quote-summary__actions form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.python-quote-approve,
+.python-quote-reject {
+    width: 100%;
+    min-height: 48px;
+    padding: 12px 20px;
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background .2s ease;
+}
+
+.python-quote-approve {
+    background: #f25462;
+    border: 1px solid #f25462;
+    color: #fff;
+}
+
+.python-quote-approve:hover {
+    background: #db4351;
+}
+
+.python-quote-reject {
+    background: transparent;
+    border: 1px solid #d4dae6;
+    color: #788397;
+}
+
+.python-quote-reject:hover {
+    background: #fce5e7;
+    color: #b94752;
+}
+
+.python-quote-response {
+    padding: 18px;
+    border-radius: 12px;
+    font-size: 14px;
+}
+
+.python-quote-response p {
+    margin: 8px 0 0;
+}
+
+.python-quote-response--approved {
+    background: #e5f5eb;
+    color: #24804a;
+}
+
+.python-quote-response--rejected {
+    background: #fce5e7;
+    color: #b94752;
+}

@@ -38,6 +38,10 @@ document.addEventListener('DOMContentLoaded', function () {
         return Number.isFinite(n) ? Math.max(0, n) : 0;
     };
 
+    const redondear = valor => {
+    return Math.round((valor + Number.EPSILON) * 100) / 100;
+    };
+
     const dinero = valor => {
         return new Intl.NumberFormat('en-US', {
             style: 'currency',
@@ -50,31 +54,49 @@ document.addEventListener('DOMContentLoaded', function () {
         let subtotal = 0;
 
         precios.forEach(input => {
-            subtotal += numero(input.value);
+            subtotal += redondear(numero(input.value));
         });
 
-        const descuentoIngresado = numero(descuentoInput.value);
+        subtotal = redondear(subtotal);
+
+        const descuentoIngresado = redondear(
+            numero(descuentoInput.value)
+        );
 
         let descuento = 0;
 
         if (descuentoTipo.value === 'porcentaje') {
-            descuento = subtotal * Math.min(descuentoIngresado, 100) / 100;
+
+            descuento = subtotal *
+                Math.min(descuentoIngresado, 100) / 100;
+
         } else {
-            descuento = Math.min(descuentoIngresado, subtotal);
+
+            descuento = Math.min(
+                descuentoIngresado,
+                subtotal
+            );
         }
 
-        const baseImponible = Math.max(0, subtotal - descuento);
+        descuento = redondear(descuento);
 
-        // Tasa de referencia. Debe confirmarse antes de emitir la proforma.
+        const baseImponible = redondear(
+            Math.max(0, subtotal - descuento)
+        );
+
         const tasaIva = 0.15;
 
         const iva = ivaSelect.value === 'con'
-            ? baseImponible * tasaIva
+            ? redondear(baseImponible * tasaIva)
             : 0;
 
-        const envio = numero(envioInput.value);
+        const envio = redondear(
+            numero(envioInput.value)
+        );
 
-        const total = baseImponible + iva + envio;
+        const total = redondear(
+            baseImponible + iva + envio
+        );
 
         campos.subtotal.textContent = dinero(subtotal);
         campos.descuento.textContent = '-' + dinero(descuento);

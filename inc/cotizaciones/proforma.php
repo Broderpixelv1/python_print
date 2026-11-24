@@ -506,6 +506,9 @@ function python_guardar_proforma($post_id, $post, $update) {
         ),
     );
 
+    // Calcular los totales comerciales desde PHP.
+    $datos['totales'] = python_calcular_totales_proforma($datos);
+
     update_post_meta(
         $post_id,
         '_python_proforma',
@@ -566,6 +569,29 @@ function python_guardar_proforma($post_id, $post, $update) {
 
             if ($proforma_valida) {
 
+                // Crear una copia de la proforma comercial.
+                $proforma_publicada = $datos;
+
+                // Registrar los productos y sus combinaciones.
+                $proforma_publicada['productos'] = $productos;
+
+                // Registrar la fecha de emisión.
+                $proforma_publicada['fecha_emision'] = current_time('mysql');
+
+                // Identificador único de la versión comercial.
+                $proforma_publicada['version'] = wp_generate_uuid4();
+
+                // Registrar el administrador responsable.
+                $proforma_publicada['emitida_por'] = get_current_user_id();
+
+                // Guardar la versión publicada.
+                update_post_meta(
+                    $post_id,
+                    '_python_proforma_publicada',
+                    $proforma_publicada
+                );
+
+                // Actualizar el estado comercial.
                 update_post_meta(
                     $post_id,
                     '_python_estado_proforma',
@@ -661,3 +687,69 @@ add_action(
     'admin_notices',
     'python_mostrar_avisos_proforma'
 );
+
+/**
+ * Calcular los totales comerciales de una proforma.
+ */
+function python_calcular_totales_proforma($proforma) {
+
+    $precios = $proforma['precios'] ?? array();
+
+    $subtotal = 0;
+
+    foreach ($precios as $precio) {
+        $subtotal += max(0, (float) $precio);
+    }
+
+    $subtotal = round($subtotal, 2);
+
+    $descuento_ingresado = max(
+        0,
+        (float) ($proforma['descuento'] ?? 0)
+    );
+
+    $tipo_descuento = $proforma['descuento_tipo'] ?? 'porcentaje';
+
+    if ($tipo_descuento === 'porcentaje') {
+
+        $descuento = $subtotal *
+            min($descuento_ingresado, 100) / 100;
+
+    } else {
+
+        $descuento = min(
+            $descuento_ingresado,
+            $subtotal
+        );
+    }
+
+    $descuento = round($descuento, 2);
+
+    $base_imponible = max(0, $subtotal - $descuento);
+
+    $tasa_iva = 0.15;
+
+    $iva = ($proforma['iva'] ?? 'sin') === 'con'
+        ? round($base_imponible * $tasa_iva, 2)
+        : 0;
+
+    $envio = round(
+        max(0, (float) ($proforma['envio'] ?? 0)),
+        2
+    );
+
+    $total = round(
+        $base_imponible + $iva + $envio,
+        2
+    );
+
+    return array(
+        'subtotal'       => $subtotal,
+        'descuento'      => $descuento,
+        'base_imponible' => $base_imponible,
+        'tasa_iva'       => $tasa_iva,
+        'iva'            => $iva,
+        'envio'          => $envio,
+        'total'          => $total,
+    );
+}
