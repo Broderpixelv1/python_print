@@ -241,3 +241,93 @@
         grid-template-columns: 1fr;
     }
 }
+
+/* ========================================
+   ESTADOS DE LA PROFORMA
+======================================== */
+
+.python-proforma__status--pendiente {
+    background: #fff4df;
+    color: #a66b00 !important;
+}
+
+.python-proforma__status--en_preparacion {
+    background: #eaf2ff;
+    color: #2563eb !important;
+}
+
+.python-proforma__status--enviada {
+    background: #f0eaff;
+    color: #7c3aed !important;
+}
+
+.python-proforma__status--aprobada,
+.python-proforma__status--pagada {
+    background: #e7f7ed;
+    color: #16803d !important;
+}
+
+.python-proforma__status--rechazada,
+.python-proforma__status--cancelada {
+    background: #fff0ed;
+    color: #d94242 !important;
+}
+
+.python-proforma__status--vencida {
+    background: #eef0f3;
+    color: #737b87 !important;
+}
+
+
+/* ========================================
+   ACCIONES DE LA PROFORMA
+======================================== */
+
+.python-proforma__actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--pp-border);
+}
+
+.python-proforma__actions .button {
+    min-height: 44px;
+    padding: 0 22px;
+    border-radius: 9px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.python-proforma__actions .button-secondary {
+    background: #fff;
+    border-color: var(--pp-border);
+    color: var(--pp-text);
+}
+
+.python-proforma__actions .button-primary {
+    background: var(--pp-coral);
+    border-color: var(--pp-coral);
+    color: #fff;
+}
+
+.python-proforma__actions .button-primary:hover {
+    background: #e63e3e;
+    border-color: #e63e3e;
+}
+
+@media (max-width: 782px) {
+    .python-proforma__actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .python-proforma__actions .button {
+        width: 100%;
+        text-align: center;
+    }
+}

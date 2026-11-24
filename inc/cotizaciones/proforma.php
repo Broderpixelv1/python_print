@@ -29,6 +29,29 @@ function python_mostrar_panel_proforma($post) {
     );
 
     $proforma = is_array($proforma) ? $proforma : array();
+
+    // Estados disponibles de la proforma.
+    $estados_proforma = array(
+        'pendiente'      => 'Pendiente de revisión',
+        'en_preparacion' => 'En preparación',
+        'enviada'        => 'Enviada al cliente',
+        'aprobada'       => 'Aprobada',
+        'rechazada'      => 'Rechazada',
+        'vencida'        => 'Vencida',
+        'cancelada'      => 'Cancelada',
+        'pagada'         => 'Pagada',
+    );
+
+    // Recuperar el estado actual.
+    $estado_proforma = get_post_meta(
+        $post->ID,
+        '_python_estado_proforma',
+        true
+    );
+
+    if (!isset($estados_proforma[$estado_proforma])) {
+        $estado_proforma = 'pendiente';
+    }
     // Campo de seguridad para guardar la proforma.
     wp_nonce_field(
         'python_guardar_proforma',
@@ -53,8 +76,10 @@ function python_mostrar_panel_proforma($post) {
                 <h2><?php echo esc_html($post->post_title); ?></h2>
             </div>
 
-            <span class="python-proforma__status">
-                En preparación
+            <span class="python-proforma__status python-proforma__status--<?php echo esc_attr($estado_proforma); ?>">
+                <?php echo esc_html(
+                    $estados_proforma[$estado_proforma]
+                ); ?>
             </span>
         </header>
 
@@ -320,10 +345,27 @@ function python_mostrar_panel_proforma($post) {
 
         </div>
 
-        <p class="description">
-            Esta es la estructura inicial del editor.
-            Los cálculos y el guardado se conectarán en los siguientes pasos.
-        </p>
+        <div class="python-proforma__actions">
+
+            <button
+                type="submit"
+                name="python_accion_proforma"
+                value="guardar"
+                class="button button-secondary"
+            >
+                Guardar borrador
+            </button>
+
+            <button
+                type="submit"
+                name="python_accion_proforma"
+                value="enviar"
+                class="button button-primary"
+            >
+                Enviar proforma
+            </button>
+
+        </div>
 
     </div>
 
@@ -469,6 +511,75 @@ function python_guardar_proforma($post_id, $post, $update) {
         '_python_proforma',
         $datos
     );
+    // Procesar la acción comercial de la proforma.
+    $accion_proforma = sanitize_key(
+        wp_unslash($_POST['python_accion_proforma'] ?? '')
+    );
+
+    // Recuperar el estado actual.
+    $estado_actual = get_post_meta(
+        $post_id,
+        '_python_estado_proforma',
+        true
+    );
+
+    if (empty($estado_actual)) {
+        $estado_actual = 'pendiente';
+    }
+
+   // Estados que permiten preparar y reenviar una proforma.
+    if (in_array(
+        $estado_actual,
+        array(
+            'pendiente',
+            'en_preparacion',
+            'enviada',
+            'rechazada',
+            'vencida',
+            'cancelada',
+        ),
+        true
+    )) {
+
+        if ($accion_proforma === 'guardar') {
+
+            update_post_meta(
+                $post_id,
+                '_python_estado_proforma',
+                'en_preparacion'
+            );
+            python_notificar_proforma($post_id, 'guardada');
+
+        } elseif ($accion_proforma === 'enviar') {
+
+            // Validar que existan productos.
+            $proforma_valida = !empty($productos);
+
+            // Validar los precios de cada producto.
+            foreach ($precios_limpios as $precio) {
+
+                if ($precio <= 0) {
+                    $proforma_valida = false;
+                    break;
+                }
+            }
+
+            if ($proforma_valida) {
+
+                update_post_meta(
+                    $post_id,
+                    '_python_estado_proforma',
+                    'enviada'
+                );
+
+                python_notificar_proforma($post_id, 'enviada');
+
+            } else {
+
+                python_notificar_proforma($post_id, 'error_precios');
+            }
+        }
+    }
 }
 
 add_action(
@@ -476,4 +587,77 @@ add_action(
     'python_guardar_proforma',
     10,
     3
+);
+
+/**
+ * Registrar una notificación de la proforma.
+ */
+function python_notificar_proforma($post_id, $mensaje) {
+
+    set_transient(
+        'python_proforma_aviso_' . get_current_user_id() . '_' . $post_id,
+        $mensaje,
+        60
+    );
+}
+
+/**
+ * Mostrar notificaciones en el administrador.
+ */
+function python_mostrar_avisos_proforma() {
+
+    $pantalla = get_current_screen();
+
+    if (!$pantalla || $pantalla->post_type !== 'python_cotizacion') {
+        return;
+    }
+
+    $post_id = absint($_GET['post'] ?? 0);
+
+    if (!$post_id || !current_user_can('edit_post', $post_id)) {
+        return;
+    }
+
+    $clave = 'python_proforma_aviso_' . get_current_user_id() . '_' . $post_id;
+
+    $aviso = get_transient($clave);
+
+    if (!$aviso) {
+        return;
+    }
+
+    delete_transient($clave);
+
+    $mensajes = array(
+
+        'guardada' => array(
+            'tipo' => 'success',
+            'texto' => 'Borrador de la proforma guardado correctamente.',
+        ),
+
+        'enviada' => array(
+            'tipo' => 'success',
+            'texto' => 'Proforma marcada como enviada correctamente.',
+        ),
+
+        'error_precios' => array(
+            'tipo' => 'error',
+            'texto' => 'No se puede enviar la proforma. Debe contener productos y todos deben tener un precio mayor a cero.',
+        ),
+    );
+
+    if (!isset($mensajes[$aviso])) {
+        return;
+    }
+
+    printf(
+        '<div class="notice notice-%s is-dismissible"><p>%s</p></div>',
+        esc_attr($mensajes[$aviso]['tipo']),
+        esc_html($mensajes[$aviso]['texto'])
+    );
+}
+
+add_action(
+    'admin_notices',
+    'python_mostrar_avisos_proforma'
 );
