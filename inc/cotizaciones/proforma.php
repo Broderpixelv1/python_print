@@ -42,11 +42,20 @@ function python_mostrar_panel_proforma($post) {
         'pagada'         => 'Pagada',
     );
 
-    // Recuperar el estado actual.
-    $estado_proforma = get_post_meta(
+    // Recuperar el estado comercial efectivo.
+    $estado_proforma = python_obtener_estado_comercial_proforma(
+        $post->ID
+    );
+
+    // Recuperar las condiciones comerciales publicadas.
+    $proforma_publicada = get_post_meta(
         $post->ID,
-        '_python_estado_proforma',
+        '_python_proforma_publicada',
         true
+    );
+
+    $vencimiento = python_obtener_vencimiento_proforma(
+        $proforma_publicada
     );
 
     if (!isset($estados_proforma[$estado_proforma])) {
@@ -81,6 +90,78 @@ function python_mostrar_panel_proforma($post) {
                     $estados_proforma[$estado_proforma]
                 ); ?>
             </span>
+
+            <?php if ($vencimiento) : ?>
+
+                <div class="python-proforma__validity">
+
+                    <div>
+
+                        <span>Fecha de emisión</span>
+
+                        <strong>
+
+                            <?php echo esc_html(
+                                mysql2date(
+                                    'd/m/Y',
+                                    $proforma_publicada['fecha_emision']
+                                )
+                            ); ?>
+
+                        </strong>
+
+                    </div>
+
+                    <div>
+
+                        <span>Válida hasta</span>
+
+                        <strong>
+
+                            <?php echo esc_html(
+                                $vencimiento->format('d/m/Y')
+                            ); ?>
+
+                        </strong>
+
+                    </div>
+
+                    <div>
+
+                        <span>Vigencia comercial</span>
+
+                        <strong>
+
+                            <?php echo esc_html(
+                                $proforma_publicada['vigencia_dias'] ?? 8
+                            ); ?>
+
+                            días calendario
+
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            <?php endif; ?>
+
+
+            <?php if ($estado_proforma === 'vencida') : ?>
+
+                <div class="python-proforma__expired">
+
+                    <strong>Esta proforma ha vencido.</strong>
+
+                    <p>
+                        Revisa las condiciones comerciales y envía
+                        nuevamente la proforma para generar una
+                        nueva versión con ocho días de vigencia.
+                    </p>
+
+                </div>
+
+            <?php endif; ?>
         </header>
 
         <?php if (in_array(
@@ -630,6 +711,19 @@ function python_guardar_proforma($post_id, $post, $update) {
                 // Registrar la fecha de emisión.
                 $proforma_publicada['fecha_emision'] = current_time('mysql');
 
+                // Registrar la vigencia comercial de la proforma.
+                $proforma_publicada['vigencia_dias'] = 8;
+
+                $fecha_emision = new DateTimeImmutable(
+                    $proforma_publicada['fecha_emision'],
+                    wp_timezone()
+                );
+
+                $proforma_publicada['fecha_vencimiento'] = $fecha_emision
+                    ->modify('+8 days')
+                    ->setTime(23, 59, 59)
+                    ->format('Y-m-d H:i:s');
+
                 // Identificador único de la versión comercial.
                 $proforma_publicada['version'] = wp_generate_uuid4();
 
@@ -804,4 +898,111 @@ function python_calcular_totales_proforma($proforma) {
         'envio'          => $envio,
         'total'          => $total,
     );
+}
+
+/**
+ * Obtener la fecha de vencimiento de una proforma.
+ *
+ * @return DateTimeImmutable|null
+ */
+function python_obtener_vencimiento_proforma($proforma) {
+
+    if (!is_array($proforma)) {
+        return null;
+    }
+
+    try {
+
+        // Recuperar el vencimiento registrado.
+        if (!empty($proforma['fecha_vencimiento'])) {
+
+            return new DateTimeImmutable(
+                $proforma['fecha_vencimiento'],
+                wp_timezone()
+            );
+
+        }
+
+        // Compatibilidad con proformas anteriores.
+        if (!empty($proforma['fecha_emision'])) {
+
+            $vigencia = max(
+                1,
+                (int) ($proforma['vigencia_dias'] ?? 8)
+            );
+
+            $fecha = new DateTimeImmutable(
+                $proforma['fecha_emision'],
+                wp_timezone()
+            );
+
+            return $fecha
+                ->modify('+' . $vigencia . ' days')
+                ->setTime(23, 59, 59);
+
+        }
+
+    } catch (\Throwable $error) {
+
+        return null;
+
+    }
+
+    return null;
+
+}
+
+
+/**
+ * Comprobar si una proforma continúa vigente.
+ */
+function python_proforma_esta_vigente($proforma) {
+
+    $vencimiento = python_obtener_vencimiento_proforma(
+        $proforma
+    );
+
+    if (!$vencimiento) {
+        return false;
+    }
+
+    return current_datetime() <= $vencimiento;
+
+}
+
+
+/**
+ * Obtener el estado comercial efectivo.
+ */
+function python_obtener_estado_comercial_proforma(
+    $cotizacion_id
+) {
+
+    $estado = get_post_meta(
+        $cotizacion_id,
+        '_python_estado_proforma',
+        true
+    );
+
+    if (empty($estado)) {
+        return 'pendiente';
+    }
+
+    // Solo las proformas enviadas pueden vencer.
+    if ($estado !== 'enviada') {
+        return $estado;
+    }
+
+    $proforma = get_post_meta(
+        $cotizacion_id,
+        '_python_proforma_publicada',
+        true
+    );
+
+    if (!python_proforma_esta_vigente($proforma)) {
+        return 'vencida';
+    }
+
+    return $estado;
+
 }

@@ -750,3 +750,104 @@
     text-decoration: none;
     color: #ffffff;
 }
+
+/* Descargar proforma PDF */
+
+.python-quote-download {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 14px 20px;
+    margin-bottom: 16px;
+    border: 1px solid #182235;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #182235;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.2s ease,
+                color 0.2s ease;
+}
+
+.python-quote-download:hover {
+    background: #182235;
+    color: #ffffff;
+}
+
+.python-quote-download:focus-visible {
+    outline: 2px solid #182235;
+    outline-offset: 3px;
+}
+
+.python-quote-download .dashicons {
+    font-size: 22px;
+    width: 22px;
+    height: 22px;
+}
+
+/* Vigencia comercial de la proforma */
+
+.python-quote-validity {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    padding: 20px;
+    margin-top: 20px;
+    background: #f5f6f9;
+    border-radius: 12px;
+}
+
+.python-quote-validity > div {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.python-quote-validity span {
+    color: #667085;
+    font-size: 12px;
+}
+
+.python-quote-validity strong {
+    color: #182235;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+
+/* Proforma vencida */
+
+.python-quote-status--vencida {
+    background: #fff4e5;
+    color: #92400e;
+}
+
+.python-quote-response--expired {
+    padding: 20px;
+    background: #fff4e5;
+    border: 1px solid #f3d19c;
+    border-radius: 10px;
+    color: #92400e;
+}
+
+.python-quote-response--expired a {
+    display: inline-block;
+    margin-top: 10px;
+    color: #92400e;
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+
+@media (max-width: 600px) {
+
+    .python-quote-validity {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+}

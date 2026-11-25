@@ -366,3 +366,57 @@
     line-height: 1.6;
     color: #50575e;
 }
+
+/* Vigencia comercial */
+
+.python-proforma__validity {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    padding: 20px;
+    margin: 20px 0;
+    background: #f5f6f9;
+    border-radius: 8px;
+}
+
+.python-proforma__validity > div {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.python-proforma__validity span {
+    color: #667085;
+    font-size: 12px;
+}
+
+.python-proforma__validity strong {
+    color: #182235;
+    font-size: 14px;
+}
+
+.python-proforma__status--vencida {
+    background: #fff4e5;
+    color: #92400e;
+}
+
+.python-proforma__expired {
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    background: #fff4e5;
+    border-left: 4px solid #d97706;
+    border-radius: 6px;
+    color: #92400e;
+}
+
+.python-proforma__expired p {
+    margin: 8px 0 0;
+}
+
+@media (max-width: 600px) {
+
+    .python-proforma__validity {
+        grid-template-columns: 1fr;
+    }
+
+}

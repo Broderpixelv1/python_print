@@ -18,6 +18,9 @@ $pedido = python_obtener_pedido_cliente(
 );
 
 $tiene_proforma = $detalle['tiene_proforma'];
+$vencimiento = $tiene_proforma
+    ? python_obtener_vencimiento_proforma($proforma)
+    : null;
 
 $productos = $tiene_proforma
     ? ($proforma['productos'] ?? array())
@@ -51,6 +54,61 @@ $productos = $tiene_proforma
             );
             ?>
         </p>
+
+        <?php if ($tiene_proforma && $vencimiento) : ?>
+
+            <div class="python-quote-validity">
+
+                <div>
+
+                    <span>Fecha de emisión</span>
+
+                    <strong>
+
+                        <?php echo esc_html(
+                            mysql2date(
+                                'd/m/Y',
+                                $proforma['fecha_emision']
+                            )
+                        ); ?>
+
+                    </strong>
+
+                </div>
+
+                <div>
+
+                    <span>Válida hasta</span>
+
+                    <strong>
+
+                        <?php echo esc_html(
+                            $vencimiento->format('d/m/Y')
+                        ); ?>
+
+                    </strong>
+
+                </div>
+
+                <div>
+
+                    <span>Vigencia comercial</span>
+
+                    <strong>
+
+                        <?php echo esc_html(
+                            $proforma['vigencia_dias'] ?? 8
+                        ); ?>
+
+                        días calendario
+
+                    </strong>
+
+                </div>
+
+            </div>
+
+        <?php endif; ?>
 
     </header>
 
@@ -367,6 +425,45 @@ $productos = $tiene_proforma
                 </p>
                 <div class="python-quote-summary__actions">
 
+                    <?php if (!empty($proforma['version'])) : ?>
+
+                        <?php
+
+                        $url_pdf = add_query_arg(
+                            array(
+                                'action' => 'python_descargar_pdf_proforma',
+                                'cotizacion_id' => $detalle['id'],
+                                'version' => $proforma['version'],
+                            ),
+                            admin_url('admin-post.php')
+                        );
+
+                        $url_pdf = wp_nonce_url(
+                            $url_pdf,
+                            'python_descargar_pdf_' .
+                                $detalle['id'] . '_' .
+                                $proforma['version'],
+                            'python_pdf_nonce'
+                        );
+
+                        ?>
+
+                        <a
+                            class="python-quote-download"
+                            href="<?php echo esc_url($url_pdf); ?>"
+                        >
+
+                            <span
+                                class="dashicons dashicons-pdf"
+                                aria-hidden="true"
+                            ></span>
+
+                            Descargar proforma PDF
+
+                        </a>
+
+                    <?php endif; ?>
+
                     <?php if (
                         $detalle['estado'] === 'enviada' &&
                         !empty($proforma['version'])
@@ -578,6 +675,29 @@ $productos = $tiene_proforma
                             </div>
 
                         <?php endif; ?>
+                    
+                    <?php elseif ($detalle['estado'] === 'vencida') : ?>
+
+                        <div class="python-quote-response python-quote-response--expired">
+
+                            <strong>Proforma vencida</strong>
+
+                            <p>
+                                El plazo de validez de esta proforma
+                                ha finalizado.
+                            </p>
+
+                            <p>
+                                Comunícate con nuestro equipo comercial
+                                para solicitar una actualización de
+                                tu cotización.
+                            </p>
+
+                            <a href="mailto:info@python.com.ec">
+                                Contactar con Python Print
+                            </a>
+
+                        </div>    
 
                     <?php elseif ($detalle['estado'] === 'rechazada') : ?>
 

@@ -1,0 +1,16 @@
+# Dependencias de Composer
+/vendor/
+
+# Entornos virtuales de Python
+/.venv/
+/venv/
+__pycache__/
+*.pyc
+
+# Archivos temporales
+*.log
+*.tmp
+*.bak
+
+# Configuracion local
+/.vscode/

@@ -74,16 +74,10 @@ function python_obtener_detalle_cotizacion($cotizacion_id) {
         return false;
     }
 
-    // Recuperar el estado comercial.
-    $estado = get_post_meta(
-        $cotizacion_id,
-        '_python_estado_proforma',
-        true
+    // Recuperar el estado comercial efectivo.
+    $estado = python_obtener_estado_comercial_proforma(
+        $cotizacion_id
     );
-
-    if (empty($estado)) {
-        $estado = 'pendiente';
-    }
 
     // Recuperar los productos solicitados.
     $productos = get_post_meta(
@@ -219,6 +213,20 @@ function python_responder_proforma() {
         wp_die(
             'La proforma ha cambiado. Regresa a Mis cotizaciones y revisa la versión actual.'
         );
+    }
+
+    // Comprobar que la proforma no haya vencido.
+    if (!python_proforma_esta_vigente($detalle['proforma'])) {
+
+        wp_die(
+            'Esta proforma ha vencido. Comunícate con Python Print para solicitar una actualización de tu cotización.',
+            'Proforma vencida',
+            array(
+                'response' => 409,
+                'back_link' => true,
+            )
+        );
+
     }
 
     $nuevo_estado = $respuestas[$respuesta];

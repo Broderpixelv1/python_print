@@ -1386,6 +1386,18 @@ require_once get_template_directory()
     . '/inc/cotizaciones/datos-pedidos.php';
 
 /**
+ * Python Print — Motor de notificaciones.
+ */
+require_once get_template_directory()
+    . '/inc/cotizaciones/notificaciones.php';
+
+    /**
+ * Python Print — Generador de documentos PDF.
+ */
+require_once get_template_directory()
+    . '/inc/cotizaciones/pdf-proforma.php';
+
+/**
  * Python Print — Formulario de cotizaciones.
  */
 add_action('wp_enqueue_scripts', function () {
