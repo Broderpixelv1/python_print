@@ -319,3 +319,321 @@
     background: #fce5e7;
     color: #b94752;
 }
+
+/* ========================================
+   DETALLE DE LA COTIZACIÓN
+======================================== */
+
+.python-quote-detail {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(300px, 380px);
+    align-items: start;
+    gap: 24px;
+    color: #182235;
+}
+
+/* Regresar al listado */
+
+.python-quote-detail__back {
+    grid-column: 1 / -1;
+    width: fit-content;
+    color: #788397;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.python-quote-detail__back:hover {
+    color: #f25462;
+}
+
+/* Encabezado de la cotización */
+
+.python-quote-detail__header {
+    grid-column: 1 / -1;
+}
+
+.python-quote-detail__header h2 {
+    margin: 0 0 8px;
+    font-size: clamp(24px, 3vw, 32px);
+    font-weight: 700;
+    letter-spacing: -.5px;
+    color: #182235;
+}
+
+.python-quote-detail__header p {
+    margin: 0;
+    color: #788397;
+    font-size: 14px;
+}
+
+/* Contenedores principales */
+
+.python-quote-detail__products,
+.python-quote-summary {
+    min-width: 0;
+    padding: 24px;
+    background: #fff;
+    border: 1px solid #e7eaf0;
+    border-radius: 22px;
+}
+
+.python-quote-detail__products {
+    grid-column: 1;
+}
+
+.python-quote-summary {
+    grid-column: 2;
+}
+
+.python-quote-detail__products h3,
+.python-quote-summary h3 {
+    margin: 0 0 20px;
+    color: #182235;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.4;
+}
+
+/* ========================================
+   PRODUCTOS Y COMBINACIONES
+======================================== */
+
+.python-quote-product {
+    display: grid;
+    grid-template-columns: 110px minmax(0, 1fr) auto;
+    align-items: start;
+    gap: 20px;
+    padding: 24px 0;
+    border-top: 1px solid #e7eaf0;
+}
+
+.python-quote-product:last-child {
+    padding-bottom: 0;
+}
+
+/* Fotografía del producto */
+
+.python-quote-product__image {
+    width: 110px;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    border-radius: 14px;
+    background: #f0f3fa;
+}
+
+.python-quote-product__image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Información del producto */
+
+.python-quote-product__info {
+    min-width: 0;
+}
+
+.python-quote-product__info h4 {
+    margin: 0 0 12px;
+    color: #182235;
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+}
+
+.python-quote-product__specs {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.python-quote-product__specs p {
+    margin: 0;
+    color: #788397;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.python-quote-product__specs strong {
+    color: #465164;
+    font-weight: 600;
+}
+
+/* Tallas */
+
+.python-quote-product__sizes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 12px;
+}
+
+.python-quote-product__sizes span {
+    padding: 5px 10px;
+    border-radius: 6px;
+    background: #f0f3fa;
+    color: #465164;
+    font-size: 12px;
+}
+
+/* Cantidad */
+
+.python-quote-product__quantity {
+    margin: 14px 0 0;
+    color: #182235;
+    font-size: 14px;
+}
+
+/* Precio por combinación */
+
+.python-quote-product__price {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+    white-space: nowrap;
+}
+
+.python-quote-product__price span {
+    color: #788397;
+    font-size: 12px;
+}
+
+.python-quote-product__price strong {
+    color: #182235;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+/* ========================================
+   RESUMEN FINANCIERO
+======================================== */
+
+.python-quote-summary__rows {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px 0;
+    border-top: 1px solid #e7eaf0;
+}
+
+.python-quote-summary__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    font-size: 14px;
+}
+
+.python-quote-summary__row span {
+    color: #788397;
+}
+
+.python-quote-summary__row strong {
+    color: #182235;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Total */
+
+.python-quote-summary__total {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-top: 20px;
+    border-top: 1px solid #e7eaf0;
+}
+
+.python-quote-summary__total span {
+    color: #182235;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.python-quote-summary__total strong {
+    color: #f25462;
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -1px;
+    font-variant-numeric: tabular-nums;
+}
+
+.python-quote-summary__currency {
+    margin: 12px 0 0;
+    color: #788397;
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+/* Avisos */
+
+.python-quote-detail__notice {
+    grid-column: 1 / -1;
+    padding: 18px 24px;
+    border: 1px solid #e7eaf0;
+    border-radius: 14px;
+    background: #fff;
+    color: #788397;
+    font-size: 14px;
+}
+
+.python-quote-detail__notice p {
+    margin: 0;
+}
+
+/* ========================================
+   DISEÑO RESPONSIVE
+======================================== */
+
+@media (max-width: 1000px) {
+
+    .python-quote-detail {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 20px;
+    }
+
+    .python-quote-detail__products,
+    .python-quote-summary {
+        grid-column: 1 / -1;
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    .python-quote-detail__products,
+    .python-quote-summary {
+        padding: 18px;
+        border-radius: 18px;
+    }
+
+    .python-quote-product {
+        grid-template-columns: 80px minmax(0, 1fr);
+        gap: 14px;
+        padding: 18px 0;
+    }
+
+    .python-quote-product__image {
+        width: 80px;
+        border-radius: 10px;
+    }
+
+    .python-quote-product__info h4 {
+        font-size: 15px;
+    }
+
+    .python-quote-product__price {
+        grid-column: 2;
+        align-items: flex-start;
+    }
+
+    .python-quote-summary__total strong {
+        font-size: 32px;
+    }
+
+}

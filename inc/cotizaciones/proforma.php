@@ -83,6 +83,42 @@ function python_mostrar_panel_proforma($post) {
             </span>
         </header>
 
+        <?php if (in_array(
+            $estado_proforma,
+            array('aprobada', 'pagada'),
+            true
+        )) : ?>
+
+            <div class="python-proforma__locked">
+
+                <span class="dashicons dashicons-lock"></span>
+
+                <div>
+
+                    <strong>Proforma protegida</strong>
+
+                    <p>
+                        <?php if ($estado_proforma === 'pagada') : ?>
+
+                            Esta proforma ya ha sido pagada.
+                            Sus condiciones comerciales no pueden
+                            modificarse.
+
+                        <?php else : ?>
+
+                            El cliente ha aceptado las condiciones
+                            comerciales. No se permite modificar
+                            los valores ni reenviar esta proforma.
+
+                        <?php endif; ?>
+                    </p>
+
+                </div>
+
+            </div>
+
+        <?php endif; ?>
+
         <h3>Productos y combinaciones</h3>
 
         <div class="python-proforma__products">
@@ -429,6 +465,22 @@ function python_guardar_proforma($post_id, $post, $update) {
         wp_is_post_revision($post_id) ||
         !current_user_can('edit_post', $post_id)
     ) {
+        return;
+    }
+
+
+    // Proteger las condiciones comerciales aceptadas.
+    $estado_protegido = get_post_meta(
+        $post_id,
+        '_python_estado_proforma',
+        true
+    );
+
+    if (in_array(
+        $estado_protegido,
+        array('aprobada', 'pagada'),
+        true
+    )) {
         return;
     }
 
