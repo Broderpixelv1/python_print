@@ -1380,6 +1380,12 @@ require_once get_template_directory() . '/inc/cotizaciones/mis-cotizaciones.php'
 require_once get_template_directory() . '/inc/cotizaciones/pedidos.php';
 
 /**
+ * Python Print — Información comercial de pedidos.
+ */
+require_once get_template_directory()
+    . '/inc/cotizaciones/datos-pedidos.php';
+
+/**
  * Python Print — Formulario de cotizaciones.
  */
 add_action('wp_enqueue_scripts', function () {

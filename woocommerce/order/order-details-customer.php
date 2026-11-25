@@ -5,6 +5,13 @@
 
 defined('ABSPATH') || exit;
 
+// Recuperar los datos comerciales originales del pedido.
+$tipo_cliente = $order->get_meta('_python_tipo_cliente');
+$identificacion = $order->get_meta('_python_identificacion');
+$nombre_comercial = $order->get_meta('_python_nombre_comercial');
+$metodo_entrega = $order->get_meta('_python_metodo_entrega');
+$referencia_entrega = $order->get_meta('_python_referencia_entrega');
+
 $facturacion = array(
     'Nombre completo' => trim(
         $order->get_billing_first_name() . ' ' .
@@ -20,6 +27,26 @@ $facturacion = array(
     'Correo electrónico' => $order->get_billing_email(),
 );
 
+
+// Incorporar la información tributaria.
+if (in_array($tipo_cliente, array('natural', 'empresa'), true)) {
+
+    $facturacion['Tipo de cliente'] = $tipo_cliente === 'empresa'
+        ? 'Empresa'
+        : 'Persona natural';
+
+    $facturacion[
+        $tipo_cliente === 'empresa' ? 'RUC' : 'Cédula'
+    ] = $identificacion;
+
+    if ($tipo_cliente === 'empresa') {
+
+        $facturacion['Nombre comercial'] = $nombre_comercial;
+
+    }
+
+}
+
 $envio = array(
     'Destinatario' => trim(
         $order->get_shipping_first_name() . ' ' .
@@ -33,6 +60,29 @@ $envio = array(
     'Código postal'       => $order->get_shipping_postcode(),
     'Teléfono'            => $order->get_shipping_phone(),
 );
+
+// Incorporar la información adicional de entrega.
+if (in_array($metodo_entrega, array('retiro', 'envio'), true)) {
+
+    $envio = array(
+        'Método de entrega' => $metodo_entrega === 'retiro'
+            ? 'Retiro en Python Print'
+            : 'Envío a domicilio',
+    ) + $envio;
+
+    if ($metodo_entrega === 'envio') {
+
+        $envio['Referencia'] = $referencia_entrega;
+
+    } else {
+
+        $envio = array(
+            'Método de entrega' => 'Retiro en Python Print',
+        );
+
+    }
+
+}
 
 // Convertir los códigos de país y provincia en nombres.
 $paises = WC()->countries->get_countries();
@@ -83,8 +133,14 @@ $mostrar_datos = static function ($datos) {
     }
 };
 
-$mostrar_envio = !wc_ship_to_billing_address_only()
-    && $order->needs_shipping_address();
+$mostrar_envio = in_array(
+    $metodo_entrega,
+    array('retiro', 'envio'),
+    true
+) || (
+    !wc_ship_to_billing_address_only()
+    && $order->needs_shipping_address()
+);
 
 ?>
 
@@ -95,7 +151,7 @@ $mostrar_envio = !wc_ship_to_billing_address_only()
         <div class="python-customer-address">
 
             <h2 class="woocommerce-column__title">
-                Dirección de facturación
+                Datos de facturación
             </h2>
 
             <address>
@@ -109,7 +165,7 @@ $mostrar_envio = !wc_ship_to_billing_address_only()
             <div class="python-customer-address">
 
                 <h2 class="woocommerce-column__title">
-                    Dirección de envío
+                    Datos de entrega
                 </h2>
 
                 <address>
