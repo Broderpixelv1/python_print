@@ -1354,6 +1354,11 @@ require_once get_template_directory() . '/inc/cotizaciones/perfil-clientes.php';
 require_once get_template_directory() . '/inc/cotizaciones/mis-cotizaciones.php';
 
 /**
+ * Python Print — Pedidos desde proformas.
+ */
+require_once get_template_directory() . '/inc/cotizaciones/pedidos.php';
+
+/**
  * Python Print — Formulario de cotizaciones.
  */
 add_action('wp_enqueue_scripts', function () {
