@@ -56,9 +56,56 @@ function python_solicitar_acceso_cliente() {
     $token_hash = hash('sha256', $token);
     $token_key = 'python_acceso_' . $token_hash;
 
+    // Recuperar y validar la página de origen.
+    $destino = home_url('/mi-pedido/');
+
+    if (
+        isset($_POST['redirect_to']) &&
+        is_string($_POST['redirect_to'])
+    ) {
+        $destino = wp_validate_redirect(
+            esc_url_raw(
+                wp_unslash($_POST['redirect_to'])
+            ),
+            $destino
+        );
+    }
+
+    // Permitir únicamente páginas del área de cliente.
+    $rutas_permitidas = array(
+        wp_parse_url(home_url('/mi-pedido/'), PHP_URL_PATH),
+        wp_parse_url(home_url('/mis-cotizaciones/'), PHP_URL_PATH),
+        wp_parse_url(home_url('/mi-cuenta/'), PHP_URL_PATH),
+    );
+
+    $ruta = trailingslashit(
+        (string) wp_parse_url($destino, PHP_URL_PATH)
+    );
+
+    $destino_permitido = false;
+
+    foreach ($rutas_permitidas as $ruta_permitida) {
+
+        if (
+            strpos(
+                $ruta,
+                trailingslashit($ruta_permitida)
+            ) === 0
+        ) {
+            $destino_permitido = true;
+            break;
+        }
+    }
+
+    if (!$destino_permitido) {
+        $destino = home_url('/mi-pedido/');
+    }
+
+    // Guardar los datos del enlace de acceso.
     set_transient($token_key, array(
-        'email' => strtolower($email),
-        'created' => time()
+        'email'       => strtolower($email),
+        'created'     => time(),
+        'redirect_to' => $destino
     ), 15 * MINUTE_IN_SECONDS);
 
     $url = add_query_arg(
@@ -198,11 +245,11 @@ function python_verificar_acceso_cliente() {
      * Después de verificar el correo,
      * regresar al cliente a Mi pedido.
      */
-    $pagina_pedido = get_page_by_path('mi-pedido');
-
-    $destino = $pagina_pedido
-        ? get_permalink($pagina_pedido->ID)
-        : home_url('/');
+    // Recuperar el destino guardado en el enlace.
+    $destino = wp_validate_redirect(
+        $datos['redirect_to'] ?? '',
+        home_url('/mi-pedido/')
+    );
 
     wp_safe_redirect($destino);
     exit;

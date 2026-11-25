@@ -532,7 +532,53 @@ $productos = $tiene_proforma
 
                         </div>
 
-                    <?php endif; ?>        
+                    <?php endif; ?>       
+                    
+                    <?php elseif ($detalle['estado'] === 'pagada') : ?>
+
+                        <div class="python-quote-response python-quote-response--approved">
+
+                            <strong>Pago confirmado</strong>
+
+                            <p>
+                                Hemos confirmado la recepción de tu pago.
+                                Gracias por confiar en Python Print.
+                            </p>
+
+                        </div>
+
+                        <?php if ($pedido) : ?>
+
+                            <div class="python-quote-order-status">
+
+                                <strong>
+                                    Pedido n.º <?php echo esc_html(
+                                        $pedido->get_order_number()
+                                    ); ?>
+                                </strong>
+
+                                <p>
+                                    Estado:
+                                    <?php echo esc_html(
+                                        wc_get_order_status_name(
+                                            $pedido->get_status()
+                                        )
+                                    ); ?>
+                                </p>
+
+                                <a
+                                    class="python-quote-pay"
+                                    href="<?php echo esc_url(
+                                        $pedido->get_view_order_url()
+                                    ); ?>"
+                                >
+                                    Ver detalles del pedido
+                                </a>
+
+                            </div>
+
+                        <?php endif; ?>
+
                     <?php elseif ($detalle['estado'] === 'rechazada') : ?>
 
                         <div class="python-quote-response python-quote-response--rejected">

@@ -1,0 +1,609 @@
+/* =========================================
+   PYTHON PRINT - MI CUENTA
+========================================= */
+
+body.woocommerce-account #primary {
+    background: #f0f3fa;
+    min-height: 75vh;
+    padding: 50px 24px 85px;
+    box-sizing: border-box;
+}
+
+/* Contenedor general */
+
+body.woocommerce-account #primary .woocommerce {
+    max-width: 1500px;
+    margin: 0 auto;
+}
+
+body.woocommerce-account #primary .woocommerce:has(> .woocommerce-MyAccount-navigation) {
+    display: grid;
+    grid-template-columns: 260px minmax(0, 1fr);
+    align-items: start;
+    gap: 24px;
+}
+
+/* Evitar que el clearfix de WooCommerce interfiera con el grid */
+
+body.woocommerce-account #primary .woocommerce:has(> .woocommerce-MyAccount-navigation)::before,
+body.woocommerce-account #primary .woocommerce:has(> .woocommerce-MyAccount-navigation)::after {
+    display: none;
+    content: none;
+}
+
+/* Posición de las columnas */
+
+.woocommerce-account .woocommerce-MyAccount-navigation {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.woocommerce-account .woocommerce-MyAccount-content {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+/* Menú lateral */
+
+.woocommerce-account .woocommerce-MyAccount-navigation {
+    float: none;
+    width: 100%;
+    background: #ffffff;
+    border: 1px solid #e7eaf0;
+    border-radius: 22px;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.woocommerce-MyAccount-navigation ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.woocommerce-MyAccount-navigation li {
+    margin: 4px 0;
+    padding: 0;
+}
+
+.woocommerce-MyAccount-navigation li a {
+    display: block;
+    padding: 14px 16px;
+    border-radius: 10px;
+    color: #182235;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+}
+
+.woocommerce-MyAccount-navigation li a:hover,
+.woocommerce-MyAccount-navigation li.is-active a {
+    background: #fff0f1;
+    color: #f25462;
+}
+
+/* Contenido principal */
+
+.woocommerce-account .woocommerce-MyAccount-content {
+    float: none;
+    width: 100%;
+    min-width: 0;
+    background: #ffffff;
+    border: 1px solid #e7eaf0;
+    border-radius: 22px;
+    padding: 30px;
+    box-sizing: border-box;
+    color: #182235;
+}
+
+/* Diseño adaptable */
+
+@media (max-width: 900px) {
+
+    body.woocommerce-account #primary .woocommerce:has(> .woocommerce-MyAccount-navigation) {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .woocommerce-account .woocommerce-MyAccount-content {
+        padding: 20px;
+    }
+
+    .woocommerce-account .woocommerce-MyAccount-navigation {
+        grid-column: 1;
+        grid-row: 1;
+    }
+
+    .woocommerce-account .woocommerce-MyAccount-content {
+        grid-column: 1;
+        grid-row: 2;
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    body.woocommerce-account #primary {
+        padding: 25px 12px 50px;
+    }
+
+    .woocommerce-account .woocommerce-MyAccount-navigation {
+        padding: 12px;
+    }
+
+    .woocommerce-account .woocommerce-MyAccount-content {
+        padding: 15px;
+    }
+
+}
+
+/* Acceso al área de cliente */
+
+.python-account-login {
+    max-width: 460px;
+    margin: 40px auto;
+    padding: 45px 35px;
+    background: #ffffff;
+    border: 1px solid #e7eaf0;
+    border-radius: 22px;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.python-account-login h1 {
+    font-size: 30px;
+    line-height: 1.2;
+    color: #182235;
+    margin: 0 0 20px;
+}
+
+.python-account-login p {
+    font-size: 15px;
+    line-height: 1.6;
+    color: #788397;
+    margin-bottom: 25px;
+}
+
+.python-account-login__button {
+    display: block;
+    width: 100%;
+    padding: 16px 20px;
+    background: #f25462;
+    color: #ffffff;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.python-account-login__button:hover {
+    background: #df4352;
+}
+
+.python-account-login small {
+    display: block;
+    margin-top: 20px;
+    color: #788397;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+/* =========================================
+   TARJETAS DE MIS PEDIDOS
+========================================= */
+
+.python-account-orders__header {
+    margin-bottom: 30px;
+}
+
+.python-account-orders__header h1 {
+    font-size: 30px;
+    color: #182235;
+    margin: 0 0 10px;
+}
+
+.python-account-orders__header p {
+    color: #788397;
+    font-size: 14px;
+    margin: 0;
+}
+
+.python-account-orders__list {
+    display: grid;
+    gap: 20px;
+}
+
+.python-order-card {
+    border: 1px solid #e7eaf0;
+    border-radius: 18px;
+    padding: 24px;
+    background: #ffffff;
+}
+
+.python-order-card__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 15px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e7eaf0;
+}
+
+.python-order-card__header h3 {
+    margin: 0 0 6px;
+    font-size: 20px;
+    color: #182235;
+}
+
+.python-order-card__header p {
+    margin: 0;
+    font-size: 13px;
+    color: #788397;
+}
+
+/* Estados */
+
+.python-order-status {
+    display: inline-block;
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    background: #f0f3fa;
+    color: #788397;
+}
+
+.python-order-status--processing,
+.python-order-status--on-hold {
+    background: #fff5df;
+    color: #996b16;
+}
+
+.python-order-status--completed {
+    background: #e3f3e9;
+    color: #25834c;
+}
+
+.python-order-status--pending {
+    background: #e8efff;
+    color: #4267b2;
+}
+
+.python-order-status--cancelled,
+.python-order-status--failed {
+    background: #fff0f1;
+    color: #c83e4b;
+}
+
+/* Productos */
+
+.python-order-card__products {
+    display: grid;
+    gap: 16px;
+    padding: 22px 0;
+}
+
+.python-order-product {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.python-order-product__image {
+    width: 75px;
+    height: 75px;
+    flex-shrink: 0;
+}
+
+.python-order-product__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+.python-order-product__info strong {
+    font-size: 15px;
+    color: #182235;
+}
+
+.python-order-product__info p {
+    font-size: 13px;
+    color: #788397;
+    margin: 6px 0 0;
+}
+
+/* Total y acciones */
+
+.python-order-card__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+    border-top: 1px solid #e7eaf0;
+    padding-top: 20px;
+}
+
+.python-order-card__total span {
+    display: block;
+    font-size: 13px;
+    color: #788397;
+}
+
+.python-order-card__total strong {
+    display: block;
+    font-size: 26px;
+    color: #f25462;
+}
+
+.python-order-card__total strong span {
+    display: inline;
+    font-size: inherit;
+    color: inherit;
+}
+
+.python-order-card__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.python-order-action {
+    display: inline-block;
+    padding: 12px 22px;
+    border-radius: 10px;
+    background: #f25462;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    text-align: center;
+}
+
+.python-order-action:hover {
+    background: #df4352;
+    color: #ffffff;
+}
+
+.python-order-action--cancel {
+    background: #f0f3fa;
+    color: #788397;
+}
+
+/* Paginación */
+
+.python-orders-pagination {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 24px;
+}
+
+/* Estado vacío */
+
+.python-account-orders__empty {
+    padding: 40px 20px;
+    text-align: center;
+    background: #f0f3fa;
+    border-radius: 16px;
+}
+
+/* Responsive */
+
+@media (max-width: 600px) {
+
+    .python-order-card {
+        padding: 16px;
+    }
+
+    .python-order-card__actions {
+        width: 100%;
+    }
+
+    .python-order-action {
+        flex: 1;
+    }
+
+    .python-order-card__header h3 {
+        font-size: 17px;
+    }
+
+}
+
+/* =========================================
+   DETALLE DEL PEDIDO
+========================================= */
+
+/* Información general del pedido */
+
+.woocommerce-view-order .woocommerce-MyAccount-content > p {
+    padding: 18px 22px;
+    background: #f0f3fa;
+    border-radius: 12px;
+    font-size: 14px;
+    line-height: 1.7;
+    color: #788397;
+    margin: 0 0 30px;
+}
+
+.woocommerce-view-order .woocommerce-MyAccount-content mark {
+    background: transparent;
+    color: #182235;
+    font-weight: 600;
+}
+
+/* Títulos */
+
+.woocommerce-view-order .woocommerce-order-details__title,
+.woocommerce-view-order .woocommerce-column__title {
+    font-size: 24px;
+    color: #182235;
+    margin: 0 0 24px;
+}
+
+/* Tabla de productos */
+
+.woocommerce-view-order table.woocommerce-table--order-details {
+    width: 100%;
+    border: 1px solid #e7eaf0;
+    border-radius: 14px;
+    border-spacing: 0;
+    overflow: hidden;
+    margin-bottom: 35px;
+}
+
+.woocommerce-view-order table.woocommerce-table--order-details thead {
+    background: #f0f3fa;
+}
+
+.woocommerce-view-order table.woocommerce-table--order-details th,
+.woocommerce-view-order table.woocommerce-table--order-details td {
+    padding: 16px 20px;
+    font-size: 14px;
+    border-color: #e7eaf0;
+}
+
+.woocommerce-view-order .woocommerce-table--order-details .product-name {
+    color: #182235;
+}
+
+.woocommerce-view-order .woocommerce-table--order-details .product-name a {
+    color: #182235;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.woocommerce-view-order .woocommerce-table--order-details .product-name a:hover {
+    color: #f25462;
+}
+
+/* Configuraciones del producto */
+
+.woocommerce-view-order .wc-item-meta {
+    list-style: none;
+    padding: 0;
+    margin: 12px 0 0;
+    color: #788397;
+    font-size: 13px;
+    line-height: 1.8;
+}
+
+.woocommerce-view-order .wc-item-meta p {
+    display: inline;
+    margin: 0;
+}
+
+.woocommerce-view-order .wc-item-meta-label {
+    color: #182235;
+}
+
+/* Importes */
+
+.woocommerce-view-order .woocommerce-table--order-details tfoot th {
+    font-weight: 500;
+    color: #788397;
+}
+
+.woocommerce-view-order .woocommerce-table--order-details tfoot td {
+    font-weight: 600;
+    color: #182235;
+}
+
+/* Direcciones del cliente */
+
+.woocommerce-view-order .woocommerce-customer-details {
+    margin-top: 35px;
+}
+
+.woocommerce-view-order .woocommerce-customer-details address {
+    background: #f0f3fa;
+    border: 1px solid #e7eaf0;
+    border-radius: 14px;
+    padding: 22px;
+    font-style: normal;
+    font-size: 14px;
+    line-height: 1.8;
+    color: #788397;
+    box-sizing: border-box;
+    overflow-wrap: anywhere;
+}
+
+/* Diseño adaptable */
+
+@media (max-width: 600px) {
+
+    .woocommerce-view-order .woocommerce-order-details__title,
+    .woocommerce-view-order .woocommerce-column__title {
+        font-size: 20px;
+    }
+
+    .woocommerce-view-order table.woocommerce-table--order-details th,
+    .woocommerce-view-order table.woocommerce-table--order-details td {
+        padding: 12px 10px;
+        font-size: 12px;
+    }
+
+    .woocommerce-view-order .woocommerce-customer-details .woocommerce-column {
+        float: none;
+        width: 100%;
+        margin-bottom: 24px;
+    }
+
+}
+
+/* =========================================
+   DATOS DE FACTURACIÓN Y ENVÍO
+========================================= */
+
+.python-customer-addresses {
+    display: grid;
+    grid-template-columns: repeat(
+        auto-fit,
+        minmax(min(100%, 280px), 1fr)
+    );
+    gap: 24px;
+    align-items: start;
+}
+
+.python-customer-address {
+    min-width: 0;
+}
+
+.python-customer-address address {
+    background: #f0f3fa;
+    border: 1px solid #e7eaf0;
+    border-radius: 14px;
+    padding: 22px;
+    font-style: normal;
+    box-sizing: border-box;
+}
+
+.python-customer-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 10px 0;
+}
+
+.python-customer-field:first-child {
+    padding-top: 0;
+}
+
+.python-customer-field:last-child {
+    padding-bottom: 0;
+}
+
+.python-customer-field__label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #182235;
+}
+
+.python-customer-field__value {
+    font-size: 14px;
+    font-weight: 400;
+    color: #788397;
+    overflow-wrap: anywhere;
+    line-height: 1.5;
+}

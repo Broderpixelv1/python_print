@@ -306,10 +306,33 @@ function python_ajax_crear_cotizacion() {
     update_post_meta($cotizacion_id, '_python_datos_cliente', $datos);
     update_post_meta($cotizacion_id, '_python_productos', $productos);
 
+    // Verificar que los productos quedaron almacenados.
+    if (
+        get_post_meta(
+            $cotizacion_id,
+            '_python_productos',
+            true
+        ) !== $productos
+    ) {
+        wp_send_json_error(array(
+            'mensaje' => 'No fue posible guardar las combinaciones.'
+        ), 500);
+    }
+
+    // Limpiar el borrador persistente del cliente.
+    delete_user_meta(
+        $id,
+        '_python_borrador_pedido'
+    );
+
+    // Vaciar el carrito de WooCommerce.
+    WC()->cart->empty_cart(true);
+
     wp_send_json_success(array(
         'mensaje' => 'Solicitud registrada correctamente.',
         'numero'  => $numero,
         'id'      => $cotizacion_id,
+        'redirect_url' => home_url('/mis-cotizaciones/'),
     ));
 }
 

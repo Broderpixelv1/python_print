@@ -365,12 +365,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            alert(
-                `Tu solicitud ${result.data.numero} fue registrada correctamente.`
-            );
+           // Impedir un segundo envío desde esta página.
+          quoteButton.textContent = 'Cotización enviada';
 
-            // Impedir un segundo envío desde esta página.
-            quoteButton.textContent = 'Cotización enviada';
+          // Redirigir a Mis cotizaciones.
+          window.location.assign(result.data.redirect_url);
 
         } catch (error) {
 

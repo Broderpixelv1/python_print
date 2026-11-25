@@ -719,3 +719,34 @@
     text-decoration: none;
     color: #ffffff;
 }
+
+/* Seguimiento del pedido pagado */
+
+.python-quote-order-status {
+    margin-top: 20px;
+    padding: 18px;
+    background: #f0f3fa;
+    border: 1px solid #e1e6ef;
+    border-radius: 12px;
+    color: #182235;
+}
+
+.python-quote-order-status strong {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+.python-quote-order-status p {
+    margin: 0 0 15px;
+    font-size: 14px;
+}
+
+.python-quote-order-status .python-quote-pay {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+    text-decoration: none;
+    color: #ffffff;
+}

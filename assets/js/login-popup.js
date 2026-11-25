@@ -99,6 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
         body.append('action', 'python_solicitar_acceso');
         body.append('nonce', pythonLogin.nonce);
         body.append('email', email.value.trim());
+        body.append('redirect_to', window.location.href);
 
         try {
             const response = await fetch(pythonLogin.ajaxUrl, {

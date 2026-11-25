@@ -1244,3 +1244,179 @@ function python_obtener_pedido_cliente($cotizacion_id) {
 
     return $pedido;
 }
+
+/**
+ * Sincronizar una proforma cuando su pedido
+ * de WooCommerce ha sido pagado.
+ */
+function python_sincronizar_proforma_pagada($pedido_id) {
+
+    $pedido = wc_get_order($pedido_id);
+
+    if (!$pedido instanceof WC_Order) {
+        return;
+    }
+
+    // Procesar únicamente pedidos de Python Print.
+    if ($pedido->get_created_via() !== 'python_proforma') {
+        return;
+    }
+
+    // Verificar que WooCommerce reconoce el pago.
+    if (!$pedido->is_paid() || !$pedido->get_date_paid()) {
+        return;
+    }
+
+    // Recuperar la cotización asociada.
+    $cotizacion_id = absint(
+        $pedido->get_meta('_python_cotizacion_id')
+    );
+
+    if (
+        !$cotizacion_id ||
+        get_post_type($cotizacion_id) !== 'python_cotizacion'
+    ) {
+        return;
+    }
+
+    // Verificar la relación entre ambos registros.
+    $pedido_asociado = absint(
+        get_post_meta(
+            $cotizacion_id,
+            '_python_pedido_id',
+            true
+        )
+    );
+
+    if ($pedido_asociado !== (int) $pedido_id) {
+        return;
+    }
+
+    // Verificar el propietario de la cotización.
+    $cliente_id = absint(
+        get_post_meta(
+            $cotizacion_id,
+            '_python_cliente_id',
+            true
+        )
+    );
+
+    if (
+        !$cliente_id ||
+        $cliente_id !== (int) $pedido->get_customer_id()
+    ) {
+        return;
+    }
+
+    // Recuperar el estado comercial.
+    $estado = get_post_meta(
+        $cotizacion_id,
+        '_python_estado_proforma',
+        true
+    );
+
+    // Evitar sincronizaciones repetidas.
+    if ($estado !== 'aprobada') {
+        return;
+    }
+
+    // Recuperar la proforma publicada.
+    $proforma = get_post_meta(
+        $cotizacion_id,
+        '_python_proforma_publicada',
+        true
+    );
+
+    // Verificar la versión aprobada.
+    if (
+        empty($proforma['version']) ||
+        $proforma['version'] !==
+        $pedido->get_meta('_python_proforma_version')
+    ) {
+        return;
+    }
+
+    // Verificar el importe y la moneda.
+    if (
+        !isset($proforma['totales']['total']) ||
+        $pedido->get_currency() !== 'USD'
+    ) {
+        return;
+    }
+
+    $total_proforma = (int) round(
+        (float) $proforma['totales']['total'] * 100
+    );
+
+    $total_pedido = (int) round(
+        (float) $pedido->get_total() * 100
+    );
+
+    if ($total_proforma !== $total_pedido) {
+
+        wc_get_logger()->error(
+            'El importe del pedido no coincide con la proforma. Pedido: ' .
+            $pedido_id,
+            array('source' => 'python-pagos')
+        );
+
+        return;
+    }
+
+    // Actualizar el estado comercial.
+    $actualizado = update_post_meta(
+        $cotizacion_id,
+        '_python_estado_proforma',
+        'pagada',
+        'aprobada'
+    );
+
+    if (!$actualizado) {
+        return;
+    }
+
+    // Registrar la información del pago.
+    update_post_meta(
+        $cotizacion_id,
+        '_python_pago',
+        array(
+            'pedido_id' => $pedido_id,
+            'version'   => $proforma['version'],
+            'importe'   => $pedido->get_total(),
+            'moneda'    => $pedido->get_currency(),
+            'metodo'    => $pedido->get_payment_method(),
+            'fecha'     => $pedido->get_date_paid()->date(
+                'Y-m-d H:i:s'
+            ),
+        )
+    );
+
+    // Registrar la sincronización en WooCommerce.
+    $pedido->add_order_note(
+        'Python Print: proforma sincronizada como pagada.'
+    );
+}
+
+/**
+ * Escuchar las confirmaciones de pago de WooCommerce.
+ */
+add_action(
+    'woocommerce_payment_complete',
+    'python_sincronizar_proforma_pagada',
+    20,
+    1
+);
+
+add_action(
+    'woocommerce_order_status_processing',
+    'python_sincronizar_proforma_pagada',
+    20,
+    1
+);
+
+add_action(
+    'woocommerce_order_status_completed',
+    'python_sincronizar_proforma_pagada',
+    20,
+    1
+);
