@@ -1184,3 +1184,63 @@ add_action(
     'admin_post_python_proceder_pago_proforma',
     'python_proceder_pago_proforma'
 );
+
+/**
+ * Obtener el pedido asociado a una cotización
+ * para su visualización por el cliente.
+ */
+function python_obtener_pedido_cliente($cotizacion_id) {
+
+    $detalle = python_obtener_detalle_cotizacion(
+        $cotizacion_id
+    );
+
+    if (!$detalle || !function_exists('wc_get_order')) {
+        return false;
+    }
+
+    $pedido_id = absint(
+        get_post_meta(
+            $cotizacion_id,
+            '_python_pedido_id',
+            true
+        )
+    );
+
+    if (!$pedido_id) {
+        return false;
+    }
+
+    $pedido = wc_get_order($pedido_id);
+
+    if (!$pedido instanceof WC_Order) {
+        return false;
+    }
+
+    // Verificar la propiedad del pedido.
+    if (
+        (int) $pedido->get_customer_id()
+        !== get_current_user_id()
+    ) {
+        return false;
+    }
+
+    // Verificar la relación con la cotización.
+    if (
+        (int) $pedido->get_meta('_python_cotizacion_id')
+        !== (int) $cotizacion_id
+    ) {
+        return false;
+    }
+
+    // Verificar la versión de la proforma.
+    if (
+        empty($detalle['proforma']['version']) ||
+        $pedido->get_meta('_python_proforma_version')
+        !== $detalle['proforma']['version']
+    ) {
+        return false;
+    }
+
+    return $pedido;
+}

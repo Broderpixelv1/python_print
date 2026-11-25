@@ -688,3 +688,34 @@
     line-height: 1.5;
     text-align: center;
 }
+
+/* Estado de pago del pedido */
+
+.python-quote-payment-status {
+    margin-top: 20px;
+    padding: 18px;
+    border: 1px solid #ead8a5;
+    border-radius: 12px;
+    background: #fff8e7;
+    color: #85651c;
+}
+
+.python-quote-payment-status strong {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.python-quote-payment-status p {
+    margin: 0 0 10px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.python-quote-payment-status .python-quote-pay {
+    margin-top: 15px;
+    box-sizing: border-box;
+    text-decoration: none;
+    color: #ffffff;
+}

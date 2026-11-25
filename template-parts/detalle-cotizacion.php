@@ -12,6 +12,11 @@ if (!$detalle) {
 }
 
 $proforma = $detalle['proforma'];
+
+$pedido = python_obtener_pedido_cliente(
+    $detalle['id']
+);
+
 $tiene_proforma = $detalle['tiene_proforma'];
 
 $productos = $tiene_proforma
@@ -431,7 +436,36 @@ $productos = $tiene_proforma
                             </p>
 
                         </div>
+                        
+                        <?php if ($pedido && $pedido->has_status('on-hold')) : ?>
 
+                            <div class="python-quote-payment-status">
+
+                                <strong>Pedido en espera de pago</strong>
+
+                                <p>
+                                    Pedido n.º <?php echo esc_html(
+                                        $pedido->get_order_number()
+                                    ); ?>
+                                </p>
+
+                                <p>
+                                    Estamos a la espera de confirmar
+                                    la recepción de tu transferencia bancaria.
+                                </p>
+
+                                <a
+                                    class="python-quote-pay"
+                                    href="<?php echo esc_url(
+                                        $pedido->get_checkout_order_received_url()
+                                    ); ?>"
+                                >
+                                    Ver instrucciones de pago
+                                </a>
+
+                            </div>
+
+                        <?php elseif (!$pedido || $pedido->needs_payment()) : ?>
                         <form
                             method="post"
                             action="<?php echo esc_url(
@@ -472,7 +506,33 @@ $productos = $tiene_proforma
                             </p>
 
                         </form>
+                    <?php else : ?>
 
+                        <div class="python-quote-payment-status">
+
+                            <strong>
+                                <?php echo esc_html(
+                                    wc_get_order_status_name(
+                                        $pedido->get_status()
+                                    )
+                                ); ?>
+                            </strong>
+
+                            <p>
+                                Pedido n.º <?php echo esc_html(
+                                    $pedido->get_order_number()
+                                ); ?>
+                            </p>
+
+                            <a href="<?php echo esc_url(
+                                $pedido->get_view_order_url()
+                            ); ?>">
+                                Ver detalles del pedido
+                            </a>
+
+                        </div>
+
+                    <?php endif; ?>        
                     <?php elseif ($detalle['estado'] === 'rechazada') : ?>
 
                         <div class="python-quote-response python-quote-response--rejected">
