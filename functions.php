@@ -1187,7 +1187,11 @@ add_filter('woocommerce_cart_needs_payment', function ($needs_payment, $cart) {
  */
 add_action('woocommerce_check_cart_items', function () {
 
-    if (!WC()->cart || !is_checkout()) {
+    if (
+        !WC()->cart ||
+        !is_checkout() ||
+        is_wc_endpoint_url('order-pay')
+    ) {
         return;
     }
 

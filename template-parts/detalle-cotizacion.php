@@ -432,6 +432,47 @@ $productos = $tiene_proforma
 
                         </div>
 
+                        <form
+                            method="post"
+                            action="<?php echo esc_url(
+                                admin_url('admin-post.php')
+                            ); ?>"
+                            class="python-quote-payment-form"
+                        >
+
+                            <input
+                                type="hidden"
+                                name="action"
+                                value="python_proceder_pago_proforma"
+                            >
+
+                            <input
+                                type="hidden"
+                                name="cotizacion_id"
+                                value="<?php echo esc_attr(
+                                    $detalle['id']
+                                ); ?>"
+                            >
+
+                            <?php wp_nonce_field(
+                                'python_pagar_proforma_' . $detalle['id'],
+                                'python_pago_nonce'
+                            ); ?>
+
+                            <button
+                                type="submit"
+                                class="python-quote-pay"
+                            >
+                                Proceder al pago
+                            </button>
+
+                            <p class="python-quote-payment-info">
+                                Selecciona tu método de pago para
+                                completar el pedido.
+                            </p>
+
+                        </form>
+
                     <?php elseif ($detalle['estado'] === 'rechazada') : ?>
 
                         <div class="python-quote-response python-quote-response--rejected">

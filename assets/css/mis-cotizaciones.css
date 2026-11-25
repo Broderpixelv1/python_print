@@ -637,3 +637,54 @@
     }
 
 }
+
+/* =========================================
+   PYTHON PRINT — PAGO DE PROFORMA
+========================================= */
+
+.python-quote-payment-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.python-quote-pay {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 54px;
+    padding: 15px 24px;
+    border: 0;
+    border-radius: 12px;
+    background: #f25462;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+.python-quote-pay:hover {
+    background: #df4654;
+}
+
+.python-quote-pay:active {
+    transform: scale(0.98);
+}
+
+.python-quote-pay:focus-visible {
+    outline: 3px solid rgba(242, 84, 98, 0.35);
+    outline-offset: 3px;
+}
+
+.python-quote-payment-info {
+    margin: 0;
+    color: #788397;
+    font-size: 13px;
+    line-height: 1.5;
+    text-align: center;
+}
