@@ -744,7 +744,51 @@ function python_guardar_proforma($post_id, $post, $update) {
                     'enviada'
                 );
 
-                python_notificar_proforma($post_id, 'enviada');
+                // Enviar la proforma comercial por correo.
+                $resultado_correo = python_enviar_correo_proforma(
+                    $post_id
+                );
+
+                // Registrar el resultado del envío.
+                $correo_enviado = !is_wp_error($resultado_correo)
+                    && $resultado_correo === true;
+
+                update_post_meta(
+                    $post_id,
+                    '_python_envio_correo_proforma',
+                    array(
+
+                        'estado' => $correo_enviado
+                            ? 'enviado'
+                            : 'error',
+
+                        'fecha' => current_time('mysql'),
+
+                        'version' => $proforma_publicada['version'],
+
+                        'error' => is_wp_error($resultado_correo)
+                            ? $resultado_correo->get_error_message()
+                            : '',
+
+                    )
+                );
+
+                // Notificar al administrador.
+                if ($correo_enviado) {
+
+                    python_notificar_proforma(
+                        $post_id,
+                        'correo_enviado'
+                    );
+
+                } else {
+
+                    python_notificar_proforma(
+                        $post_id,
+                        'error_correo'
+                    );
+
+                }
 
             } else {
 
@@ -810,6 +854,21 @@ function python_mostrar_avisos_proforma() {
         'enviada' => array(
             'tipo' => 'success',
             'texto' => 'Proforma marcada como enviada correctamente.',
+            'correo_enviado' => array(
+
+                'tipo' => 'success',
+
+                'texto' => 'Proforma publicada correctamente. El correo comercial con el PDF adjunto fue aceptado por el sistema de envío.',
+
+            ),
+
+            'error_correo' => array(
+
+                'tipo' => 'warning',
+
+                'texto' => 'La proforma fue publicada y está disponible en la cuenta del cliente, pero no fue posible enviar el correo electrónico.',
+
+            ),
         ),
 
         'error_precios' => array(

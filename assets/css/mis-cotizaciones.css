@@ -851,3 +851,269 @@
     }
 
 }
+
+/* Destino de aprobación desde el correo */
+
+#python-proforma-acciones {
+    scroll-margin-top: 120px;
+}
+
+/**
+ * Redirigir al detalle con un aviso comercial.
+ */
+function python_redirigir_aviso_proforma(
+    $cotizacion_id,
+    $aviso
+) {
+
+    $avisos_permitidos = array(
+        'actualizada',
+        'vencida',
+        'no_disponible',
+    );
+
+    if (!in_array(
+        $aviso,
+        $avisos_permitidos,
+        true
+    )) {
+        $aviso = 'no_disponible';
+    }
+
+    $url = add_query_arg(
+        array(
+            'cotizacion' => absint($cotizacion_id),
+            'aviso' => $aviso,
+        ),
+        home_url('/mis-cotizaciones/')
+    );
+
+    nocache_headers();
+
+    wp_safe_redirect($url, 303);
+    exit;
+
+}
+
+
+/* =========================================
+   PYTHON PRINT — POPUP COMERCIAL
+========================================= */
+
+.python-proforma-popup {
+    position: fixed;
+    inset: 0;
+    width: calc(100% - 32px);
+    max-width: 460px;
+    max-height: calc(100% - 32px);
+    box-sizing: border-box;
+    margin: auto;
+    padding: 0;
+    border: 0;
+    border-radius: 24px;
+    background: #ffffff;
+    color: #182235;
+    box-shadow: 0 24px 80px rgba(24, 34, 53, .25);
+    overflow: auto;
+}
+
+/* Cortina de fondo */
+
+.python-proforma-popup::backdrop {
+    background: rgba(24, 34, 53, .55);
+    backdrop-filter: blur(5px);
+}
+
+/* Bloquear desplazamiento de la página */
+
+body:has(.python-proforma-popup[open]) {
+    overflow: hidden;
+}
+
+/* Contenido */
+
+.python-proforma-popup__content {
+    position: relative;
+    padding: 45px 32px 32px;
+    text-align: center;
+}
+
+/* Botón cerrar */
+
+.python-proforma-popup__close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: #f0f3fa;
+    color: #667085;
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+    transition: background-color .2s ease,
+                color .2s ease;
+}
+
+.python-proforma-popup__close:hover {
+    background: #182235;
+    color: #ffffff;
+}
+
+/* Icono comercial */
+
+.python-proforma-popup__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 76px;
+    height: 76px;
+    margin: 0 auto 24px;
+    border-radius: 50%;
+    background: #fff0f2;
+    color: #f25462;
+}
+
+.python-proforma-popup__icon .dashicons {
+    width: 36px;
+    height: 36px;
+    font-size: 36px;
+}
+
+/* Título */
+
+.python-proforma-popup__content h2 {
+    margin: 0 0 16px;
+    color: #182235;
+    font-size: 25px;
+    font-weight: 700;
+    line-height: 1.25;
+    letter-spacing: -.5px;
+}
+
+/* Mensaje */
+
+.python-proforma-popup__content p {
+    margin: 0 0 28px;
+    color: #667085;
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+/* Acciones */
+
+.python-proforma-popup__actions {
+    margin: 0 0 18px;
+}
+
+.python-proforma-popup__button {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 16px 20px;
+    border: 0;
+    border-radius: 12px;
+    background: #f25462;
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color .2s ease,
+                transform .2s ease;
+}
+
+.python-proforma-popup__button:hover {
+    background: #d94352;
+    transform: translateY(-1px);
+}
+
+/* Enlace secundario */
+
+.python-proforma-popup__back {
+    display: inline-block;
+    color: #667085;
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.python-proforma-popup__back:hover {
+    color: #182235;
+    text-decoration: underline;
+}
+
+/* Accesibilidad */
+
+.python-proforma-popup button:focus-visible,
+.python-proforma-popup a:focus-visible {
+    outline: 2px solid #182235;
+    outline-offset: 4px;
+}
+
+/* Animación de entrada */
+
+.python-proforma-popup[open] {
+    animation: python-popup-entrada .25s ease-out;
+}
+
+@keyframes python-popup-entrada {
+
+    from {
+        opacity: 0;
+        transform: translateY(12px) scale(.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+
+}
+
+/* Dispositivos móviles */
+
+@media (max-width: 600px) {
+
+    .python-proforma-popup {
+        border-radius: 20px;
+    }
+
+    .python-proforma-popup__content {
+        padding: 45px 24px 28px;
+    }
+
+    .python-proforma-popup__content h2 {
+        font-size: 22px;
+    }
+
+    .python-proforma-popup__icon {
+        width: 64px;
+        height: 64px;
+    }
+
+}
+
+/* Preferencias de movimiento reducido */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .python-proforma-popup[open] {
+        animation: none;
+    }
+
+    .python-proforma-popup button {
+        transition: none;
+    }
+
+    .python-proforma-popup__button:hover {
+        transform: none;
+    }
+
+}

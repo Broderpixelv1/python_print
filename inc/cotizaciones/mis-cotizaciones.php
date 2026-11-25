@@ -210,9 +210,12 @@ function python_responder_proforma() {
         empty($version_actual) ||
         $version !== $version_actual
     ) {
-        wp_die(
-            'La proforma ha cambiado. Regresa a Mis cotizaciones y revisa la versión actual.'
+
+        python_redirigir_aviso_proforma(
+            $cotizacion_id,
+            'actualizada'
         );
+
     }
 
     // Comprobar que la proforma no haya vencido.
@@ -270,3 +273,159 @@ add_action(
     'admin_post_python_responder_proforma',
     'python_responder_proforma'
 );
+
+/**
+ * Procesar los enlaces comerciales enviados por correo.
+ */
+function python_procesar_enlace_proforma() {
+
+    // Ejecutar únicamente en Mis cotizaciones.
+    if (!is_page('mis-cotizaciones')) {
+        return;
+    }
+
+    // Comprobar si existe una acción comercial.
+    if (
+        !isset($_GET['accion']) ||
+        !is_string($_GET['accion'])
+    ) {
+        return;
+    }
+
+    $accion = sanitize_key(
+        wp_unslash($_GET['accion'])
+    );
+
+    // Permitir únicamente acciones autorizadas.
+    if (!in_array(
+        $accion,
+        array('aprobar', 'descargar'),
+        true
+    )) {
+        return;
+    }
+
+    nocache_headers();
+
+    // Si no existe sesión, mostrar el acceso habitual.
+    if (!is_user_logged_in()) {
+        return;
+    }
+
+    // Recuperar el identificador de la cotización.
+    $cotizacion_id = isset($_GET['cotizacion'])
+        && is_string($_GET['cotizacion'])
+        ? absint($_GET['cotizacion'])
+        : 0;
+
+    // Recuperar la versión solicitada.
+    $version = isset($_GET['version'])
+        && is_string($_GET['version'])
+        ? sanitize_text_field(
+            wp_unslash($_GET['version'])
+        )
+        : '';
+
+    // Verificar la propiedad de la cotización.
+    $detalle = python_obtener_detalle_cotizacion(
+        $cotizacion_id
+    );
+
+    if (!$detalle || !$detalle['tiene_proforma']) {
+
+        wp_die(
+            'No tienes autorización para acceder a esta proforma.',
+            'Acceso no autorizado',
+            array('response' => 403)
+        );
+
+    }
+
+    // Comprobar la versión comercial.
+    $version_actual = $detalle['proforma']['version'] ?? '';
+
+    if (
+        empty($version_actual) ||
+        $version !== $version_actual
+    ) {
+
+        python_redirigir_aviso_proforma(
+            $cotizacion_id,
+            'actualizada'
+        );
+
+    }
+    // Procesar la descarga del PDF.
+    if ($accion === 'descargar') {
+
+        $url_pdf = add_query_arg(
+            array(
+                'action' => 'python_descargar_pdf_proforma',
+                'cotizacion_id' => $cotizacion_id,
+                'version' => $version_actual,
+            ),
+            admin_url('admin-post.php')
+        );
+
+        $url_pdf = add_query_arg(
+            'python_pdf_nonce',
+            wp_create_nonce(
+                'python_descargar_pdf_' .
+                $cotizacion_id . '_' .
+                $version_actual
+            ),
+            $url_pdf
+        );
+
+        wp_safe_redirect($url_pdf);
+        exit;
+
+    }
+
+    // La aprobación se confirma desde el detalle.
+    // Nunca aprobar automáticamente mediante GET.
+
+}
+
+add_action(
+    'template_redirect',
+    'python_procesar_enlace_proforma',
+    10
+);
+
+/**
+ * Redirigir al detalle con un aviso comercial.
+ */
+function python_redirigir_aviso_proforma(
+    $cotizacion_id,
+    $aviso
+) {
+
+    $avisos_permitidos = array(
+        'actualizada',
+        'vencida',
+        'no_disponible',
+    );
+
+    if (!in_array(
+        $aviso,
+        $avisos_permitidos,
+        true
+    )) {
+        $aviso = 'no_disponible';
+    }
+
+    $url = add_query_arg(
+        array(
+            'cotizacion' => absint($cotizacion_id),
+            'aviso' => $aviso,
+        ),
+        home_url('/mis-cotizaciones/')
+    );
+
+    nocache_headers();
+
+    wp_safe_redirect($url, 303);
+    exit;
+
+}

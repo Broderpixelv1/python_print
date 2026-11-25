@@ -423,7 +423,7 @@ $productos = $tiene_proforma
                 <p class="python-quote-summary__currency">
                     Valores expresados en dólares estadounidenses.
                 </p>
-                <div class="python-quote-summary__actions">
+                <div id="python-proforma-acciones" class="python-quote-summary__actions">
 
                     <?php if (!empty($proforma['version'])) : ?>
 

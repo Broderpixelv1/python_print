@@ -95,6 +95,23 @@ get_header();
                         null,
                         array('detalle' => $detalle)
                     );
+                    // Recuperar el aviso comercial.
+                    $aviso = isset($_GET['aviso'])
+                        && is_string($_GET['aviso'])
+                        ? sanitize_key(
+                            wp_unslash($_GET['aviso'])
+                        )
+                        : '';
+
+                    if ($aviso !== '') {
+
+                        get_template_part(
+                            'template-parts/popup-proforma',
+                            null,
+                            array('aviso' => $aviso)
+                        );
+
+                    }
                     ?>
 
                 <?php endif; ?>

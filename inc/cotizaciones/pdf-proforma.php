@@ -260,10 +260,9 @@ function python_descargar_pdf_proforma() {
         $version !== $version_actual
     ) {
 
-        wp_die(
-            'La proforma ha cambiado. Revisa la versión actual.',
-            '',
-            array('response' => 409)
+        python_redirigir_aviso_proforma(
+            $cotizacion_id,
+            'actualizada'
         );
 
     }
@@ -294,10 +293,9 @@ function python_descargar_pdf_proforma() {
         ($proforma_actual['version'] ?? '') !== $version
     ) {
 
-        wp_die(
-            'La proforma ha cambiado. Intenta nuevamente.',
-            '',
-            array('response' => 409)
+       python_redirigir_aviso_proforma(
+            $cotizacion_id,
+            'actualizada'
         );
 
     }
