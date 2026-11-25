@@ -4,7 +4,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('python-quote-request');
   const save = document.getElementById('python-quote-save');
   const quoteButton = document.getElementById('python-open-quote');
-  if (!modal || !form || !save || !quoteButton) return;
+  if (!modal || !form || !save) return;
+
+  const esPaginaDirecciones = Boolean(
+      document.querySelector('.python-account-addresses')
+  );
 
   const panels = [...modal.querySelectorAll('[data-quote-panel]')];
   const error = document.getElementById('python-quote-error');
@@ -64,14 +68,14 @@ document.addEventListener('DOMContentLoaded', () => {
     title.textContent = sectionNames[name];
     message('');
     conditions();
-    quoteButton.setAttribute('aria-expanded', 'true');
+    quoteButton?.setAttribute('aria-expanded', 'true');
     dialog.focus();
   }
 
   function closeModal() {
     modal.hidden = true;
     document.body.classList.remove('python-quote-modal-open');
-    quoteButton.setAttribute('aria-expanded', 'false');
+    quoteButton?.setAttribute('aria-expanded', 'false');
     message('');
     previousFocus?.focus?.();
   }
@@ -215,6 +219,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 completed[active] = true;
+
+                if (esPaginaDirecciones) {
+                    window.location.reload();
+                    return;
+                }
+
                 updateSidebar();
                 closeModal();
 
@@ -302,7 +312,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    quoteButton.addEventListener('click', async () => {
+    quoteButton?.addEventListener('click', async () => {
 
         // Comprobar las cuatro secciones.
         for (const name of ['perfil', 'pago', 'entrega', 'facturacion']) {

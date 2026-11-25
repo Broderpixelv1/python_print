@@ -607,3 +607,285 @@ body.woocommerce-account #primary .woocommerce:has(> .woocommerce-MyAccount-navi
     overflow-wrap: anywhere;
     line-height: 1.5;
 }
+
+/* =========================================
+   INICIO DE MI CUENTA
+========================================= */
+
+.python-account-dashboard__header {
+    margin-bottom: 32px;
+}
+
+.python-account-dashboard__header h1 {
+    font-size: clamp(26px, 3vw, 36px);
+    color: #182235;
+    margin: 0 0 12px;
+}
+
+.python-account-dashboard__header p {
+    color: #788397;
+    font-size: 15px;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.python-account-dashboard__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.python-account-dashboard__card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 26px;
+    background: #ffffff;
+    border: 1px solid #e7eaf0;
+    border-radius: 16px;
+    text-decoration: none;
+    transition: border-color .2s, background .2s;
+}
+
+.python-account-dashboard__card:hover {
+    border-color: #f25462;
+    background: #fffafb;
+}
+
+.python-account-dashboard__card .dashicons {
+    color: #f25462;
+    font-size: 30px;
+    width: 30px;
+    height: 30px;
+}
+
+.python-account-dashboard__card h2 {
+    color: #182235;
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.python-account-dashboard__card p {
+    color: #788397;
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.python-account-dashboard__link {
+    color: #f25462;
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: auto;
+    padding-top: 8px;
+}
+
+@media (max-width: 650px) {
+
+    .python-account-dashboard__grid {
+        grid-template-columns: 1fr;
+    }
+
+    .python-account-dashboard__card {
+        padding: 20px;
+    }
+
+}
+
+/* =========================================
+   MIS DATOS
+========================================= */
+
+.python-profile-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+}
+
+.python-profile-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+}
+
+.python-profile-field--full {
+    grid-column: 1 / -1;
+}
+
+.python-profile-field label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #182235;
+}
+
+.python-profile-field input {
+    width: 100%;
+    min-height: 48px;
+    padding: 12px 16px;
+    border: 1px solid #dce1ea;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #182235;
+    font-size: 14px;
+    box-sizing: border-box;
+    outline: none;
+}
+
+.python-profile-field input:focus {
+    border-color: #f25462;
+}
+
+.python-profile-field input[readonly] {
+    background: #f0f3fa;
+    color: #788397;
+}
+
+.python-profile-field small {
+    font-size: 12px;
+    color: #788397;
+    line-height: 1.6;
+}
+
+.python-profile-security {
+    background: #f0f3fa;
+    border-radius: 14px;
+    padding: 22px;
+    margin: 28px 0;
+}
+
+.python-profile-security strong {
+    color: #182235;
+    font-size: 15px;
+}
+
+.python-profile-security p {
+    color: #788397;
+    font-size: 14px;
+    line-height: 1.7;
+    margin: 8px 0 0;
+}
+
+.python-profile-save {
+    background: #f25462;
+    color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    padding: 15px 28px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.python-profile-save:hover {
+    background: #df4352;
+}
+
+@media (max-width: 650px) {
+
+    .python-profile-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .python-profile-save {
+        width: 100%;
+    }
+
+}
+
+/* =========================================
+   MIS DIRECCIONES
+========================================= */
+
+.python-account-addresses__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+    align-items: start;
+}
+
+.python-account-addresses__card {
+    border: 1px solid #e7eaf0;
+    border-radius: 16px;
+    padding: 26px;
+    background: #ffffff;
+    min-width: 0;
+}
+
+.python-account-addresses__card .dashicons {
+    color: #f25462;
+    font-size: 30px;
+    width: 30px;
+    height: 30px;
+    margin-bottom: 16px;
+}
+
+.python-account-addresses__card h2 {
+    font-size: 22px;
+    font-weight: 600;
+    color: #182235;
+    margin: 0 0 24px;
+}
+
+.python-account-addresses__fields {
+    display: flex;
+    flex-direction: column;
+}
+
+.python-account-addresses__fields .python-customer-field {
+    border-bottom: 1px solid #e7eaf0;
+    padding: 14px 0;
+}
+
+.python-account-addresses__fields .python-customer-field:last-child {
+    border-bottom: none;
+}
+
+@media (max-width: 750px) {
+
+    .python-account-addresses__grid {
+        grid-template-columns: 1fr;
+    }
+
+    .python-account-addresses__card {
+        padding: 20px;
+    }
+
+}
+
+/* =========================================
+   EDITAR DATOS DE FACTURACIÓN Y ENTREGA
+========================================= */
+
+.python-account-addresses__edit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 13px 20px;
+    margin-top: 24px;
+    background: #fff0f1;
+    color: #f25462;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .2s, color .2s;
+}
+
+.python-account-addresses__edit .dashicons {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    color: inherit;
+}
+
+.python-account-addresses__edit:hover {
+    background: #f25462;
+    color: #ffffff;
+}

@@ -1286,7 +1286,10 @@ add_action(
  */
 add_action('wp_enqueue_scripts', function () {
 
-    if (is_page('mi-pedido')) {
+    if (
+        is_page('mi-pedido') ||
+        (is_account_page() && is_wc_endpoint_url('edit-address'))
+    ) {
 
         $archivo = get_template_directory() . '/assets/css/mi-pedido.css';
 
@@ -1381,7 +1384,10 @@ require_once get_template_directory() . '/inc/cotizaciones/pedidos.php';
  */
 add_action('wp_enqueue_scripts', function () {
 
-    if (!is_page('mi-pedido')) {
+    if (
+        !is_page('mi-pedido') &&
+        !(is_account_page() && is_wc_endpoint_url('edit-address'))
+    ) {
         return;
     }
 
@@ -1501,3 +1507,39 @@ add_filter('woocommerce_get_endpoint_url', function (
     return $url;
 
 }, 10, 4);
+
+/* =========================================
+   CONSERVAR CORREO DE ACCESO DEL CLIENTE
+========================================= */
+
+add_action('wp_loaded', function () {
+
+    if (!is_user_logged_in()) {
+        return;
+    }
+
+    if (
+        !isset($_POST['action']) ||
+        $_POST['action'] !== 'save_account_details'
+    ) {
+        return;
+    }
+
+    if (
+        !isset($_POST['save-account-details-nonce']) ||
+        !is_string($_POST['save-account-details-nonce']) ||
+        !wp_verify_nonce(
+            sanitize_text_field(
+                wp_unslash($_POST['save-account-details-nonce'])
+            ),
+            'save_account_details'
+        )
+    ) {
+        return;
+    }
+
+    $cliente = wp_get_current_user();
+
+    $_POST['account_email'] = $cliente->user_email;
+
+}, 5);
