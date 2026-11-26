@@ -113,17 +113,44 @@ function python_solicitar_acceso_cliente() {
         home_url('/')
     );
 
-    $asunto = 'Tu acceso seguro a Python Print';
+    // Enviar correo corporativo de acceso seguro.
+    $enviado = python_enviar_correo(array(
 
-    $mensaje = "Hola,\n\n";
-    $mensaje .= "Recibimos una solicitud para acceder a Python Print.\n\n";
-    $mensaje .= "Utiliza este enlace para ingresar:\n\n";
-    $mensaje .= $url . "\n\n";
-    $mensaje .= "El enlace vence en 15 minutos y solo puede utilizarse una vez.\n\n";
-    $mensaje .= "Si no solicitaste este acceso, puedes ignorar este mensaje.\n\n";
-    $mensaje .= "Python Print";
+        'destinatario' => $email,
 
-    $enviado = wp_mail($email, $asunto, $mensaje);
+        'asunto' => 'Tu acceso seguro a Python Print',
+
+        'titulo' => 'Tu acceso seguro a Python Print',
+
+        'mensaje' => '
+            <p>Hola,</p>
+
+            <p>Hemos recibido una solicitud para acceder
+            a tu cuenta de Python Print.</p>
+
+            <p>Utiliza el siguiente botón para ingresar
+            y consultar tus cotizaciones, pedidos
+            y datos personales.</p>
+
+            <p>Si no solicitaste este acceso,
+            puedes ignorar este mensaje.</p>
+        ',
+
+        'detalles' => array(
+
+            'Vigencia del enlace' => '15 minutos',
+
+            'Número de usos' => 'Un solo uso',
+
+        ),
+
+        'boton_texto' => 'Acceder a mi cuenta',
+
+        'boton_url' => $url,
+
+        'plantilla' => 'base',
+
+    ));
 
     if (!$enviado) {
         delete_transient($token_key);

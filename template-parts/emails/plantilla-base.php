@@ -10,6 +10,9 @@ $mensaje = $args['mensaje'] ?? '';
 $boton_texto = $args['boton_texto'] ?? '';
 $boton_url = $args['boton_url'] ?? '';
 $detalles = $args['detalles'] ?? array();
+// Logotipo corporativo.
+$logo_url = get_template_directory_uri()
+    . '/assets/images/brand/logo-python-print.png';
 
 ?>
 
@@ -70,15 +73,53 @@ $detalles = $args['detalles'] ?? array();
 
             <td align="center" style="
                 background-color:#182235;
-                padding:32px 24px;
+                padding:20px 24px;
                 border-radius:16px 16px 0 0;
             ">
 
-                <span style="
-                    font-size:30px;
-                    font-weight:bold;
+                <table
+                    role="presentation"
+                    cellspacing="0"
+                    cellpadding="0"
+                    border="0"
+                >
+
+                    <tr>
+
+                        <td style="
+                            background-color:#ffffff;
+                           padding:10px 16px;
+                            border-radius:8px;
+                        ">
+
+                            <img
+                                src="<?php echo esc_url($logo_url); ?>"
+                                alt="Python Print"
+                                width="180"
+                                style="
+                                    display:block;
+                                    width:180px;
+                                    max-width:100%;
+                                    height:auto;
+                                "
+                            >
+
+                        </td>
+
+                    </tr>
+
+                </table>
+
+                <p style="
                     color:#ffffff;
-                ">python<span style="color:#f25462;">print</span></span>
+                    font-size:11px;
+                    letter-spacing:1px;
+                    margin:16px 0 0;
+                ">
+
+                    SOLUCIONES DE IDENTIDAD TEXTIL
+
+                </p>
 
             </td>
 
@@ -133,7 +174,8 @@ $detalles = $args['detalles'] ?? array();
                             <tr>
 
                                 <td style="
-                                    padding:14px 18px;
+                                    padding:10px 16px;
+                                    line-height:1.4;
                                     font-size:14px;
                                     color:#667085;
                                 ">
@@ -143,7 +185,8 @@ $detalles = $args['detalles'] ?? array();
                                 </td>
 
                                 <td align="right" style="
-                                    padding:14px 18px;
+                                    padding:10px 16px;
+                                    line-height:1.4;
                                     font-size:14px;
                                     font-weight:bold;
                                     color:#182235;
@@ -167,35 +210,56 @@ $detalles = $args['detalles'] ?? array();
 
                     <table
                         role="presentation"
+                        width="100%"
                         cellspacing="0"
                         cellpadding="0"
                         border="0"
-                        style="margin:28px auto;"
                     >
 
                         <tr>
 
-                            <td
-                                align="center"
-                                bgcolor="#f25462"
-                                style="border-radius:10px;"
-                            >
+                            <td align="center" style="padding:24px 0;">
 
-                                <a
-                                    href="<?php echo esc_url($boton_url); ?>"
-                                    style="
-                                        display:inline-block;
-                                        padding:16px 28px;
-                                        color:#ffffff;
-                                        font-size:15px;
-                                        font-weight:bold;
-                                        text-decoration:none;
-                                    "
+                                <table
+                                    role="presentation"
+                                    align="center"
+                                    cellspacing="0"
+                                    cellpadding="0"
+                                    border="0"
                                 >
 
-                                    <?php echo esc_html($boton_texto); ?>
+                                    <tr>
 
-                                </a>
+                                        <td
+                                            align="center"
+                                            bgcolor="#f25462"
+                                            style="
+                                                border-radius:8px;
+                                                padding:16px 32px;
+                                            "
+                                        >
+
+                                            <a
+                                                href="<?php echo esc_url($boton_url); ?>"
+                                                style="
+                                                    display:block;
+                                                    color:#ffffff;
+                                                    font-size:15px;
+                                                    line-height:1.4;
+                                                    font-weight:bold;
+                                                    text-decoration:none;
+                                                "
+                                            >
+
+                                                <?php echo esc_html($boton_texto); ?>
+
+                                            </a>
+
+                                        </td>
+
+                                    </tr>
+
+                                </table>
 
                             </td>
 
