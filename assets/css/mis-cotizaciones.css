@@ -858,43 +858,6 @@
     scroll-margin-top: 120px;
 }
 
-/**
- * Redirigir al detalle con un aviso comercial.
- */
-function python_redirigir_aviso_proforma(
-    $cotizacion_id,
-    $aviso
-) {
-
-    $avisos_permitidos = array(
-        'actualizada',
-        'vencida',
-        'no_disponible',
-    );
-
-    if (!in_array(
-        $aviso,
-        $avisos_permitidos,
-        true
-    )) {
-        $aviso = 'no_disponible';
-    }
-
-    $url = add_query_arg(
-        array(
-            'cotizacion' => absint($cotizacion_id),
-            'aviso' => $aviso,
-        ),
-        home_url('/mis-cotizaciones/')
-    );
-
-    nocache_headers();
-
-    wp_safe_redirect($url, 303);
-    exit;
-
-}
-
 
 /* =========================================
    PYTHON PRINT — POPUP COMERCIAL
