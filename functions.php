@@ -69,6 +69,37 @@ if (function_exists('is_product_category') && (is_product_category() || is_shop(
         );
     }
 
+
+    // CSS exclusivo de la página de pago.
+    if (
+        function_exists('is_wc_endpoint_url') &&
+        is_wc_endpoint_url('order-pay')
+    ) {
+
+        wp_enqueue_style(
+            'python-checkout',
+            get_template_directory_uri() . '/assets/css/checkout.css',
+            array('mi-tema-main-css'),
+            filemtime(
+                get_template_directory() . '/assets/css/checkout.css'
+            )
+        );
+
+        wp_enqueue_style('dashicons');
+
+        wp_enqueue_script(
+            'python-checkout',
+            get_template_directory_uri() . '/assets/js/checkout.js',
+            array('jquery', 'wc-checkout'),
+            filemtime(
+                get_template_directory() . '/assets/js/checkout.js'
+            ),
+            true
+        );
+
+    }
+
+
     // CSS exclusivo del área de cliente.
     if (function_exists('is_account_page') && is_account_page()) {
 

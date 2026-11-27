@@ -1,0 +1,563 @@
+
+/* =========================================
+   PYTHON PRINT - PÁGINA DE PAGO
+   ========================================= */
+
+.python-checkout {
+    --checkout-primary: #f25462;
+    --checkout-dark: #182235;
+    --checkout-muted: #667085;
+    --checkout-border: #e4e7ec;
+    --checkout-background: #f0f3fa;
+
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 40px 30px 60px;
+    color: var(--checkout-dark);
+}
+
+body.woocommerce-order-pay {
+    background-color: #f0f3fa;
+}
+
+/* Mantener el fondo blanco del encabezado */
+
+body.woocommerce-order-pay .site-header,
+body.woocommerce-order-pay .site-header .grid-container,
+body.woocommerce-order-pay .mega-menu-container {
+    background-color: #ffffff;
+}
+
+/* =========================================
+   INDICADOR DE PROGRESO
+   ========================================= */
+
+.python-checkout__steps {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 18px;
+    margin-bottom: 40px;
+}
+
+.python-checkout__steps > span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #98a2b3;
+}
+
+.python-checkout__steps .is-completed {
+    color: #22965c;
+}
+
+.python-checkout__steps .is-active {
+    color: var(--checkout-primary);
+    font-weight: 700;
+}
+
+.python-checkout__steps .dashicons {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+}
+
+.python-checkout__separator {
+    font-size: 20px !important;
+}
+
+/* =========================================
+   ENCABEZADO
+   ========================================= */
+
+.python-checkout__header {
+    margin-bottom: 30px;
+}
+
+.python-checkout__header h1 {
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 8px;
+}
+
+.python-checkout__header p {
+    font-size: 15px;
+    color: var(--checkout-muted);
+    margin-bottom: 14px;
+}
+
+.python-checkout__order-number {
+    display: inline-block;
+    padding: 7px 12px;
+    border-radius: 6px;
+    background: #e4e9f2;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* =========================================
+   DISTRIBUCIÓN PRINCIPAL
+   ========================================= */
+
+.python-checkout__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+    grid-template-areas: "payment summary";
+    gap: 24px;
+    align-items: start;
+}
+
+.python-checkout__summary,
+.python-checkout__payment {
+    min-width: 0;
+    background: #ffffff;
+    padding: 28px;
+    border: 1px solid var(--checkout-border);
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgba(24, 34, 53, 0.035);
+}
+
+.python-checkout__summary {
+    grid-area: summary;
+}
+
+.python-checkout__payment {
+    grid-area: payment;
+}
+
+.python-checkout__summary h2,
+.python-checkout__payment h2 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 24px;
+}
+
+/* =========================================
+   TABLA DE PRODUCTOS
+   ========================================= */
+
+.python-checkout .python-checkout__table {
+    width: 100%;
+    border: 0;
+    border-collapse: collapse;
+    border-spacing: 0;
+    margin: 0;
+}
+
+.python-checkout .python-checkout__table th,
+.python-checkout .python-checkout__table td {
+    padding: 16px 8px;
+    border: 0;
+    border-bottom: 1px solid var(--checkout-border);
+    font-size: 14px;
+    vertical-align: top;
+}
+
+.python-checkout__table thead th {
+    color: var(--checkout-muted);
+    font-size: 13px;
+    font-weight: 600;
+    text-align: left;
+}
+
+.python-checkout__table .product-quantity {
+    text-align: center;
+    white-space: nowrap;
+}
+
+.python-checkout__table .product-total,
+.python-checkout__table .product-subtotal {
+    text-align: right;
+    white-space: nowrap;
+}
+
+/* =========================================
+   PRODUCTOS
+   ========================================= */
+
+.python-checkout__product {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+}
+
+.python-checkout__product-image {
+    width: 72px;
+    height: 72px;
+    flex: 0 0 72px;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #f5f5f5;
+}
+
+.python-checkout__product-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    margin: 0;
+}
+
+.python-checkout__product-info {
+    flex: 1;
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.python-checkout__product-name {
+    display: block;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.5;
+    margin-bottom: 8px;
+}
+
+.python-checkout .wc-item-meta {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.python-checkout .wc-item-meta li {
+    font-size: 12px;
+    color: var(--checkout-muted);
+    line-height: 1.6;
+    margin-bottom: 3px;
+}
+
+.python-checkout .wc-item-meta p {
+    display: inline;
+    font-size: inherit;
+    margin: 0;
+}
+
+/* =========================================
+   TOTALES
+   ========================================= */
+
+.python-checkout .python-checkout__table tfoot th {
+    text-align: left;
+    font-weight: 500;
+    color: var(--checkout-muted);
+}
+
+.python-checkout .python-checkout__table tfoot td {
+    font-weight: 600;
+}
+
+.python-checkout .python-checkout__total--order_total th,
+.python-checkout .python-checkout__total--order_total td {
+    padding-top: 22px;
+    padding-bottom: 8px;
+    border-bottom: 0;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--checkout-dark);
+}
+
+/* =========================================
+   MÉTODOS DE PAGO
+   ========================================= */
+
+.python-checkout #payment {
+    background: transparent;
+    border-radius: 0;
+}
+
+.python-checkout #payment ul.payment_methods {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 20px;
+    border: 0;
+}
+
+.python-checkout #payment ul.payment_methods > li {
+    background: #ffffff;
+    border: 1px solid var(--checkout-border);
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 12px;
+    line-height: 1.5;
+}
+
+.python-checkout #payment ul.payment_methods > li:has(input:checked) {
+    border-color: var(--checkout-primary);
+    background: #fff9fa;
+}
+
+.python-checkout #payment .payment_methods label {
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.python-checkout #payment input[type="radio"],
+.python-checkout #payment input[type="checkbox"] {
+    accent-color: var(--checkout-primary);
+}
+
+.python-checkout #payment div.payment_box {
+    background: transparent;
+    color: var(--checkout-muted);
+    padding: 12px 0 0;
+    margin: 0;
+    border-radius: 0;
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+.python-checkout #payment div.payment_box::before {
+    display: none;
+}
+
+.python-checkout #payment div.payment_box p {
+    font-size: 13px;
+    line-height: 1.7;
+    margin: 0;
+}
+
+/* =========================================
+   SEGURIDAD Y CONDICIONES
+   ========================================= */
+
+.python-checkout__security {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    background: #f5f7fb;
+    padding: 14px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    color: var(--checkout-muted);
+}
+
+.python-checkout__security .dashicons {
+    flex-shrink: 0;
+    color: #22965c;
+}
+
+.python-checkout__security p {
+    font-size: 13px;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.python-checkout #payment .form-row {
+    padding: 0;
+    margin: 0;
+}
+
+.python-checkout .woocommerce-terms-and-conditions-wrapper {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--checkout-muted);
+    margin-bottom: 16px;
+}
+
+.python-checkout .woocommerce-terms-and-conditions-wrapper a {
+    color: var(--checkout-primary);
+    text-decoration: underline;
+}
+
+/* =========================================
+   BOTÓN DE PAGO
+   ========================================= */
+
+.python-checkout #payment #place_order {
+    display: block;
+    float: none;
+    width: 100%;
+    padding: 17px 20px;
+    border: 0;
+    border-radius: 9px;
+    background: var(--checkout-primary);
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.4;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.python-checkout #payment #place_order:hover {
+    background: #dc4352;
+}
+
+.python-checkout #payment #place_order:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.python-checkout #place_order:focus-visible,
+.python-checkout a:focus-visible {
+    outline: 2px solid var(--checkout-dark);
+    outline-offset: 4px;
+}
+
+/* =========================================
+   SOPORTE
+   ========================================= */
+
+.python-checkout__support {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--checkout-border);
+}
+
+.python-checkout__support .dashicons {
+    color: var(--checkout-muted);
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+}
+
+.python-checkout__support strong {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+
+.python-checkout__support a {
+    font-size: 13px;
+    color: var(--checkout-muted);
+}
+
+.python-checkout__support a:hover {
+    color: var(--checkout-primary);
+}
+
+/* =========================================
+   PIE DE PÁGINA
+   ========================================= */
+
+.python-checkout__footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 32px;
+    font-size: 13px;
+    color: var(--checkout-muted);
+}
+
+/* =========================================
+   RESPONSIVE
+   ========================================= */
+
+@media (max-width: 900px) {
+
+    .python-checkout {
+        padding: 30px 20px 40px;
+    }
+
+    .python-checkout__grid {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-areas:
+            "summary"
+            "payment";
+        gap: 20px;
+    }
+
+    .python-checkout__header h1 {
+        font-size: 28px;
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    .python-checkout {
+        padding: 24px 12px 32px;
+    }
+
+    .python-checkout__steps {
+        gap: 8px;
+        margin-bottom: 28px;
+    }
+
+    .python-checkout__steps > span {
+        font-size: 11px;
+    }
+
+    .python-checkout__steps .dashicons {
+        font-size: 14px;
+        width: 14px;
+        height: 14px;
+    }
+
+    .python-checkout__header h1 {
+        font-size: 25px;
+    }
+
+    .python-checkout__summary,
+    .python-checkout__payment {
+        padding: 18px 14px;
+        border-radius: 12px;
+    }
+
+    .python-checkout__product {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .python-checkout__product-image {
+        width: 54px;
+        height: 54px;
+        flex-basis: 54px;
+    }
+
+    .python-checkout .python-checkout__table th,
+    .python-checkout .python-checkout__table td {
+        padding: 12px 4px;
+        font-size: 12px;
+    }
+
+    .python-checkout__product-name {
+        font-size: 13px;
+    }
+
+    .python-checkout .python-checkout__total--order_total th,
+    .python-checkout .python-checkout__total--order_total td {
+        font-size: 19px;
+    }
+
+}
+
+
+/* =========================================
+   VOLVER A LA COTIZACIÓN
+   ========================================= */
+
+.python-checkout .python-checkout__back {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    margin-top: 18px;
+    padding: 10px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--checkout-muted);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.python-checkout .python-checkout__back:hover {
+    color: var(--checkout-primary);
+}
+
+.python-checkout__back .dashicons {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+}
