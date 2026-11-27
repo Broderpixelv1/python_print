@@ -70,10 +70,14 @@ if (function_exists('is_product_category') && (is_product_category() || is_shop(
     }
 
 
-    // CSS exclusivo de la página de pago.
+    
+    // Recursos de las páginas de pago y confirmación.
     if (
         function_exists('is_wc_endpoint_url') &&
-        is_wc_endpoint_url('order-pay')
+        (
+            is_wc_endpoint_url('order-pay') ||
+            is_wc_endpoint_url('order-received')
+        )
     ) {
 
         wp_enqueue_style(
@@ -87,17 +91,22 @@ if (function_exists('is_product_category') && (is_product_category() || is_shop(
 
         wp_enqueue_style('dashicons');
 
-        wp_enqueue_script(
-            'python-checkout',
-            get_template_directory_uri() . '/assets/js/checkout.js',
-            array('jquery', 'wc-checkout'),
-            filemtime(
-                get_template_directory() . '/assets/js/checkout.js'
-            ),
-            true
-        );
+        if (is_wc_endpoint_url('order-pay')) {
+
+            wp_enqueue_script(
+                'python-checkout',
+                get_template_directory_uri() . '/assets/js/checkout.js',
+                array('jquery', 'wc-checkout'),
+                filemtime(
+                    get_template_directory() . '/assets/js/checkout.js'
+                ),
+                true
+            );
+
+        }
 
     }
+
 
 
     // CSS exclusivo del área de cliente.
