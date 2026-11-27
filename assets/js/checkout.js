@@ -3,51 +3,62 @@
  * Python Print - Página de pago.
  */
 
-document.addEventListener('DOMContentLoaded', function () {
+jQuery(function ($) {
 
-    const formulario = document.querySelector(
-        '.python-checkout #order_review'
-    );
+    const formulario = $('.python-checkout #order_review');
 
-    if (!formulario) {
+    if (!formulario.length) {
         return;
     }
-
-    const boton = formulario.querySelector('#place_order');
-
-    if (!boton) {
-        return;
-    }
-
-    const textoOriginal = boton.textContent.trim();
 
     function actualizarBotonPago() {
 
-        const metodo = formulario.querySelector(
+        const metodo = formulario.find(
             'input[name="payment_method"]:checked'
         );
 
-        if (!metodo) {
+        const boton = formulario.find('#place_order');
+
+        if (!metodo.length || !boton.length) {
             return;
         }
 
-        const texto = metodo.value === 'bacs'
-            ? 'Confirmar pedido'
-            : boton.getAttribute('data-value') || textoOriginal;
+        if (metodo.val() === 'bacs') {
 
-        boton.textContent = texto;
-        boton.value = texto;
+            boton.text('Confirmar pedido');
+            boton.val('Confirmar pedido');
+
+        } else {
+
+            const texto = metodo.attr('data-order_button_text')
+                || boton.attr('data-value');
+
+            if (texto) {
+                boton.text(texto);
+                boton.val(texto);
+            }
+
+        }
 
     }
 
-    formulario.addEventListener('change', function (event) {
-
-        if (event.target.name === 'payment_method') {
-            actualizarBotonPago();
-        }
-
-    });
-
+    // Inicialización de la página.
     actualizarBotonPago();
+
+    // Cambio de método de pago.
+    formulario.on(
+        'change',
+        'input[name="payment_method"]',
+        actualizarBotonPago
+    );
+
+    // Eventos nativos de WooCommerce.
+    $(document.body).on(
+        'payment_method_selected updated_checkout',
+        actualizarBotonPago
+    );
+
+    // Después de cargar todos los recursos.
+    $(window).on('load', actualizarBotonPago);
 
 });
