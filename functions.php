@@ -1601,3 +1601,25 @@ add_action('wp_loaded', function () {
     $_POST['account_email'] = $cliente->user_email;
 
 }, 5);
+
+
+/**
+ * Eliminar la barra lateral del catálogo WooCommerce.
+ */
+add_action('wp', function () {
+
+    if (
+        function_exists('is_shop') &&
+        function_exists('is_product_taxonomy') &&
+        (is_shop() || is_product_taxonomy())
+    ) {
+
+        remove_action(
+            'woocommerce_sidebar',
+            'woocommerce_get_sidebar',
+            10
+        );
+
+    }
+
+});

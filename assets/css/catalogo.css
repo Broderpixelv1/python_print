@@ -117,3 +117,24 @@ body.post-type-archive-product .content-area {
         padding-right: 16px;
     }
 }
+
+
+/* =========================================
+   MIGAS DE PAN DEL CATÁLOGO
+   ========================================= */
+
+.woocommerce .woocommerce-breadcrumb {
+    padding-top: 20px;
+    margin-bottom: 24px;
+    font-size: 13px;
+    color: #98a2b3;
+}
+
+.woocommerce .woocommerce-breadcrumb a {
+    color: #667085;
+    text-decoration: none;
+}
+
+.woocommerce .woocommerce-breadcrumb a:hover {
+    color: #f25462;
+}

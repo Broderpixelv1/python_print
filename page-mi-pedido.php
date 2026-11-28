@@ -16,7 +16,7 @@ $cart = function_exists('WC') ? WC()->cart : null;
     <div class="python-order-container">
 
         <header class="python-order-header">
-            <h1>Mi pedido</h1>
+            <h1>Carrito</h1>
             <p>
                 Revisa tus productos y combinaciones
                 antes de solicitar una cotización.
@@ -232,7 +232,7 @@ $cart = function_exists('WC') ? WC()->cart : null;
         <?php else : ?>
 
             <div class="python-order-empty">
-                <h2>Tu pedido está vacío</h2>
+                <h2>Tu carrito está vacío</h2>
                 <p>Explora nuestro catálogo y agrega tus productos favoritos.</p>
             </div>
 

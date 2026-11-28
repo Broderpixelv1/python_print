@@ -62,11 +62,12 @@
 
         <!-- Acciones móviles: derecha -->
         <div class="mobile-header-right">
-
+            <?php if (false) : ?>
             <a href="<?php echo esc_url(home_url('/favorites')); ?>"
                aria-label="<?php esc_attr_e('Favoritos', 'mi-tema-personalizable'); ?>">
                 <i class="fa-solid fa-heart"></i>
             </a>
+            <?php endif; ?>
 
             <?php if (class_exists('WooCommerce')): ?>
                 <a href="<?php echo esc_url(wc_get_cart_url()); ?>"
@@ -135,7 +136,7 @@
 
             <a href="<?php echo esc_url(home_url('/mi-pedido/')); ?>">
                 <i class="fa-solid fa-cart-shopping"></i>
-                Mi pedido
+                Carrito
             </a>
 
             <a href="<?php echo esc_url(home_url('/mis-cotizaciones/')); ?>">
@@ -165,7 +166,7 @@
         <div class="user-menu">
 
             <div class="help">
-                <a href="<?php echo esc_url(home_url('/help')); ?>">
+                <a href="<?php echo esc_url('https://wa.me/593995932259'); ?>>">
                     <span class="muser-icon"><i class="fa-solid fa-comments"></i></span>
                     <?php esc_html_e('Ayuda', 'mi-tema-personalizable'); ?>
                 </a>
@@ -176,19 +177,21 @@
 
 
                 <!-- Favoritos -->
+                 <?php if (false) : ?>
                 <a href="<?php echo esc_url(home_url('/favorites')); ?>">
                     <span class="muser-icon">
                         <i class="fa-solid fa-heart"></i>
                     </span>
                     Favoritos
                 </a>
+                <?php endif; ?>
 
                 <!-- Mi pedido -->
                 <a href="<?php echo esc_url(home_url('/mi-pedido/')); ?>">
                     <span class="muser-icon">
                         <i class="fa-solid fa-cart-shopping"></i>
                     </span>
-                    Mi pedido
+                    Carrito
                 </a>
 
                 <!-- Menú desplegable del cliente -->
@@ -255,11 +258,12 @@
 
 
             <?php else: ?>
-
+                <?php if (false) : ?>
                 <a href="<?php echo esc_url(home_url('/favorites')); ?>">
                     <span class="muser-icon"><i class="fa-solid fa-heart"></i></span>
-                    <?php esc_html_e('My Favorites', 'mi-tema-personalizable'); ?>
+                    <?php esc_html_e('Favoritos', 'mi-tema-personalizable'); ?>
                 </a>
+                <?php endif; ?>
 
                 <?php if (class_exists('WooCommerce')): ?>
                     <a href="<?php echo esc_url(wc_get_cart_url()); ?>">
@@ -267,7 +271,7 @@
                     <a href="<?php echo esc_url(home_url('/cart')); ?>">
                 <?php endif; ?>
                     <span class="muser-icon"><i class="fa-solid fa-cart-shopping"></i></span>
-                    <?php esc_html_e('Cart', 'mi-tema-personalizable'); ?>
+                    <?php esc_html_e('Carrito', 'mi-tema-personalizable'); ?>
                 </a>
 
                 <button
@@ -280,7 +284,7 @@
                     <span class="muser-icon">
                         <i class="fa-solid fa-circle-user"></i>
                     </span>
-                    <?php esc_html_e('Sign in', 'mi-tema-personalizable'); ?>
+                    <?php esc_html_e('Iniciar sesión', 'mi-tema-personalizable'); ?>
                 </button>
 
             <?php endif; ?>

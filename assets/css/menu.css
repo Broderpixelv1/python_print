@@ -258,3 +258,23 @@ body:has(.mega-menu-container ul li:hover) .cortina {
     }
 
 }
+
+
+/* =========================================
+   BOTÓN DE CIERRE DEL MENÚ RESPONSIVE
+   ========================================= */
+
+.mega-menu-container .btn-close-menu {
+    display: none;
+}
+
+@media (max-width: 991px) {
+
+    .mega-menu-container .btn-close-menu {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+}
+
